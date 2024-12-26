@@ -1,4 +1,18 @@
-BasedOnStyle: LLVM
-IndentWidth: 4
-BreakBeforeBraces: Allman
-ColumnLimit: 100
+# Base Style
+BasedOnStyle: LLVM  # Use LLVM's coding style as the base template.
+
+# Indentation and Tabs
+IndentWidth: 4       # Number of spaces per indentation level.
+UseTab: Never        # Use spaces instead of tabs for indentation.
+
+# Line Breaks and Wrapping
+ColumnLimit: 100               # Maximum number of characters per line.
+BreakBeforeBraces: Allman      # Place braces on a new line (Allman style).
+AllowShortFunctionsOnASingleLine: None  # Ensure functions are formatted consistently over multiple lines.
+
+# Vertical Spacing
+SeparateDefinitionBlocks: Always  # Add a blank line after function definitions to separate them from subsequent code.
+MaxEmptyLinesToKeep: 1            # Allow at most one empty line between functions or other parts of code.
+
+# Pointers and References
+PointerAlignment: Left         # Place '*' or '&' next to the variable type (e.g., `int* ptr`).

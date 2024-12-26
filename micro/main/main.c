@@ -7,41 +7,37 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
-#include "esp_eth.h"
 #include "esp_netif.h"
+#include "esp_tls.h"
+#include "freertos/task.h"
 #include "protocol_examples_common.h"
+#include "sdkconfig.h"
+
 #include <esp_event.h>
+#include <esp_https_server.h>
 #include <esp_log.h>
 #include <esp_system.h>
 #include <esp_wifi.h>
-#include <nvs_flash.h>
-#include <sys/param.h>
-
-#include "esp_tls.h"
-#include "sdkconfig.h"
-#include <esp_https_server.h>
-
-#include "esp_heap_caps.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include <inttypes.h> // For PRIu32 macro
+#include <nvs_flash.h>
 #include <stdio.h>
+#include <sys/param.h>
 
 /* A simple example that demonstrates how to create GET and POST
  * handlers and start an HTTPS server.
  */
 
-static const char *TAG = "example";
+static const char* TAG = "example";
 
 /* Event handler for catching system events */
-static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_id,
-                          void *event_data)
+static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_id,
+                          void* event_data)
 {
     if (event_base == ESP_HTTPS_SERVER_EVENT)
     {
         if (event_id == HTTPS_SERVER_EVENT_ERROR)
         {
-            esp_https_server_last_error_t *last_error = (esp_tls_last_error_t *)event_data;
+            esp_https_server_last_error_t* last_error = (esp_tls_last_error_t*)event_data;
             ESP_LOGE(TAG,
                      "Error event triggered: last_error = %s, last_tls_err = %d, "
                      "tls_flag = %d",
@@ -50,7 +46,8 @@ static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_
         }
     }
 }
-const char *htmlContent =
+
+const char* htmlContent =
     "<!DOCTYPE html>\n"
     "<html lang=\"en\">\n"
     "<head>\n"
@@ -80,7 +77,7 @@ const char *htmlContent =
     "</html>";
 
 /* An HTTP GET handler */
-static esp_err_t root_get_handler(httpd_req_t *req)
+static esp_err_t root_get_handler(httpd_req_t* req)
 {
     httpd_resp_set_type(req, "text/html");
     httpd_resp_send(req, htmlContent, HTTPD_RESP_USE_STRLEN);
@@ -90,11 +87,11 @@ static esp_err_t root_get_handler(httpd_req_t *req)
 
 #if CONFIG_EXAMPLE_ENABLE_HTTPS_USER_CALLBACK
 #ifdef CONFIG_ESP_TLS_USING_MBEDTLS
-static void print_peer_cert_info(const mbedtls_ssl_context *ssl)
+static void print_peer_cert_info(const mbedtls_ssl_context* ssl)
 {
-    const mbedtls_x509_crt *cert;
+    const mbedtls_x509_crt* cert;
     const size_t buf_size = 1024;
-    char *buf = calloc(buf_size, sizeof(char));
+    char* buf = calloc(buf_size, sizeof(char));
     if (buf == NULL)
     {
         ESP_LOGE(TAG, "Out of memory - Callback execution failed!");
@@ -105,7 +102,7 @@ static void print_peer_cert_info(const mbedtls_ssl_context *ssl)
     cert = mbedtls_ssl_get_peer_cert(ssl);
     if (cert != NULL)
     {
-        mbedtls_x509_crt_info((char *)buf, buf_size - 1, "    ", cert);
+        mbedtls_x509_crt_info((char*)buf, buf_size - 1, "    ", cert);
         ESP_LOGI(TAG, "Peer certificate info:\n%s", buf);
     }
     else
@@ -129,11 +126,11 @@ static void print_peer_cert_info(const mbedtls_ssl_context *ssl)
  * The config option is found here - Component config → ESP-TLS
  *
  */
-static void https_server_user_callback(esp_https_server_user_cb_arg_t *user_cb)
+static void https_server_user_callback(esp_https_server_user_cb_arg_t* user_cb)
 {
     ESP_LOGI(TAG, "User callback invoked!");
 #ifdef CONFIG_ESP_TLS_USING_MBEDTLS
-    mbedtls_ssl_context *ssl_ctx = NULL;
+    mbedtls_ssl_context* ssl_ctx = NULL;
 #endif
     switch (user_cb->user_cb_state)
     {
@@ -151,7 +148,7 @@ static void https_server_user_callback(esp_https_server_user_cb_arg_t *user_cb)
         }
         ESP_LOGI(TAG, "Socket FD: %d", sockfd);
 #ifdef CONFIG_ESP_TLS_USING_MBEDTLS
-        ssl_ctx = (mbedtls_ssl_context *)esp_tls_get_ssl_context(user_cb->tls);
+        ssl_ctx = (mbedtls_ssl_context*)esp_tls_get_ssl_context(user_cb->tls);
         if (ssl_ctx == NULL)
         {
             ESP_LOGE(TAG, "Error in obtaining ssl context");
@@ -166,7 +163,7 @@ static void https_server_user_callback(esp_https_server_user_cb_arg_t *user_cb)
         ESP_LOGD(TAG, "At session close");
 #ifdef CONFIG_ESP_TLS_USING_MBEDTLS
         // Logging the peer certificate
-        ssl_ctx = (mbedtls_ssl_context *)esp_tls_get_ssl_context(user_cb->tls);
+        ssl_ctx = (mbedtls_ssl_context*)esp_tls_get_ssl_context(user_cb->tls);
         if (ssl_ctx == NULL)
         {
             ESP_LOGE(TAG, "Error in obtaining ssl context");
@@ -225,10 +222,10 @@ static esp_err_t stop_webserver(httpd_handle_t server)
     return httpd_ssl_stop(server);
 }
 
-static void disconnect_handler(void *arg, esp_event_base_t event_base, int32_t event_id,
-                               void *event_data)
+static void disconnect_handler(void* arg, esp_event_base_t event_base, int32_t event_id,
+                               void* event_data)
 {
-    httpd_handle_t *server = (httpd_handle_t *)arg;
+    httpd_handle_t* server = (httpd_handle_t*)arg;
     if (*server)
     {
         if (stop_webserver(*server) == ESP_OK)
@@ -242,10 +239,10 @@ static void disconnect_handler(void *arg, esp_event_base_t event_base, int32_t e
     }
 }
 
-static void connect_handler(void *arg, esp_event_base_t event_base, int32_t event_id,
-                            void *event_data)
+static void connect_handler(void* arg, esp_event_base_t event_base, int32_t event_id,
+                            void* event_data)
 {
-    httpd_handle_t *server = (httpd_handle_t *)arg;
+    httpd_handle_t* server = (httpd_handle_t*)arg;
     if (*server == NULL)
     {
         *server = start_webserver();
