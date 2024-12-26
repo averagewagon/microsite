@@ -61,7 +61,7 @@ const char *htmlContent =
     "0; padding: 0;\">\n"
     "    <header style=\"background-color: #4CAF50; color: white; padding: "
     "20px; text-align: center;\">\n"
-    "        <h1>Welcome to My Website</h1>\n"
+    "        <h1>Hi Rory!!</h1>\n"
     "    </header>\n"
     "    <main style=\"padding: 20px;\">\n"
     "        <p style=\"font-size: 18px; color: #333;\">This is an example "
@@ -183,14 +183,14 @@ static httpd_handle_t start_webserver(void) {
   httpd_ssl_config_t conf = HTTPD_SSL_CONFIG_DEFAULT();
 
   extern const unsigned char servercert_start[] asm(
-      "_binary_servercert_pem_start");
-  extern const unsigned char servercert_end[] asm("_binary_servercert_pem_end");
+      "_binary_fullchain_pem_start");
+  extern const unsigned char servercert_end[] asm("_binary_fullchain_pem_end");
   conf.servercert = servercert_start;
   conf.servercert_len = servercert_end - servercert_start;
 
   extern const unsigned char prvtkey_pem_start[] asm(
-      "_binary_prvtkey_pem_start");
-  extern const unsigned char prvtkey_pem_end[] asm("_binary_prvtkey_pem_end");
+      "_binary_privkey_pem_start");
+  extern const unsigned char prvtkey_pem_end[] asm("_binary_privkey_pem_end");
   conf.prvtkey_pem = prvtkey_pem_start;
   conf.prvtkey_len = prvtkey_pem_end - prvtkey_pem_start;
 
@@ -234,28 +234,12 @@ static void connect_handler(void *arg, esp_event_base_t event_base,
   }
 }
 
-void monitor_task(void *pvParameter) {
-
-  while (1) {
-    // Memory Usage
-    size_t free_heap = esp_get_free_heap_size();
-    size_t min_free_heap = esp_get_minimum_free_heap_size();
-
-    printf("Free heap: %d bytes\n", free_heap);
-    printf("Minimum free heap: %d bytes\n", min_free_heap);
-
-    vTaskDelay(pdMS_TO_TICKS(1000)); // Delay for 1 second
-  }
-}
-
 void app_main(void) {
   static httpd_handle_t server = NULL;
 
   ESP_ERROR_CHECK(nvs_flash_init());
   ESP_ERROR_CHECK(esp_netif_init());
   ESP_ERROR_CHECK(esp_event_loop_create_default());
-
-  xTaskCreate(&monitor_task, "monitor_task", 2048, NULL, 5, NULL);
 
   /* Register event handlers to start server when Wi-Fi or Ethernet is
    * connected, and stop server when disconnection happens.
