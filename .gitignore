@@ -123,3 +123,6 @@ XUNIT_RESULT*.xml
 
 # Vale
 .vale/styles/*
+
+# ESP-IDF
+sdkconfig.old
