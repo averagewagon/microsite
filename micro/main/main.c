@@ -31,7 +31,7 @@
  * handlers and start an HTTPS server.
  */
 
-static const char* TAG = "example";
+static const char* TAG = "microsite";
 
 void init_littlefs()
 {
@@ -64,7 +64,7 @@ void init_littlefs()
     ret = esp_littlefs_info(conf.partition_label, &total, &used);
     if (ret == ESP_OK)
     {
-        ESP_LOGI(TAG, "LittleFS Partition: Total = %d bytes, Used = %d bytes", total, used);
+        ESP_LOGI(TAG, "LittleFS Partition: Total = %zu bytes, Used = %zu bytes", total, used);
     }
     else
     {
@@ -154,8 +154,6 @@ static esp_err_t root_get_handler(httpd_req_t* req)
     return ESP_OK;
 }
 
-#if CONFIG_EXAMPLE_ENABLE_HTTPS_USER_CALLBACK
-#ifdef CONFIG_ESP_TLS_USING_MBEDTLS
 static void print_peer_cert_info(const mbedtls_ssl_context* ssl)
 {
     const mbedtls_x509_crt* cert;
@@ -181,7 +179,7 @@ static void print_peer_cert_info(const mbedtls_ssl_context* ssl)
 
     free(buf);
 }
-#endif
+
 /**
  * Example callback function to get the certificate of connected clients,
  * whenever a new SSL connection is created and closed
@@ -198,9 +196,7 @@ static void print_peer_cert_info(const mbedtls_ssl_context* ssl)
 static void https_server_user_callback(esp_https_server_user_cb_arg_t* user_cb)
 {
     ESP_LOGI(TAG, "User callback invoked!");
-#ifdef CONFIG_ESP_TLS_USING_MBEDTLS
     mbedtls_ssl_context* ssl_ctx = NULL;
-#endif
     switch (user_cb->user_cb_state)
     {
     case HTTPD_SSL_USER_CB_SESS_CREATE:
@@ -216,7 +212,6 @@ static void https_server_user_callback(esp_https_server_user_cb_arg_t* user_cb)
             break;
         }
         ESP_LOGI(TAG, "Socket FD: %d", sockfd);
-#ifdef CONFIG_ESP_TLS_USING_MBEDTLS
         ssl_ctx = (mbedtls_ssl_context*)esp_tls_get_ssl_context(user_cb->tls);
         if (ssl_ctx == NULL)
         {
@@ -225,12 +220,10 @@ static void https_server_user_callback(esp_https_server_user_cb_arg_t* user_cb)
         }
         // Logging the current ciphersuite
         ESP_LOGI(TAG, "Current Ciphersuite: %s", mbedtls_ssl_get_ciphersuite(ssl_ctx));
-#endif
         break;
 
     case HTTPD_SSL_USER_CB_SESS_CLOSE:
         ESP_LOGD(TAG, "At session close");
-#ifdef CONFIG_ESP_TLS_USING_MBEDTLS
         // Logging the peer certificate
         ssl_ctx = (mbedtls_ssl_context*)esp_tls_get_ssl_context(user_cb->tls);
         if (ssl_ctx == NULL)
@@ -239,14 +232,12 @@ static void https_server_user_callback(esp_https_server_user_cb_arg_t* user_cb)
             break;
         }
         print_peer_cert_info(ssl_ctx);
-#endif
         break;
     default:
         ESP_LOGE(TAG, "Illegal state!");
         return;
     }
 }
-#endif
 
 static const httpd_uri_t root = {.uri = "/", .method = HTTP_GET, .handler = root_get_handler};
 
@@ -269,9 +260,7 @@ static httpd_handle_t start_webserver(void)
     conf.prvtkey_pem = prvtkey_pem_start;
     conf.prvtkey_len = prvtkey_pem_end - prvtkey_pem_start;
 
-#if CONFIG_EXAMPLE_ENABLE_HTTPS_USER_CALLBACK
     conf.user_cb = https_server_user_callback;
-#endif
     esp_err_t ret = httpd_ssl_start(&server, &conf);
     if (ESP_OK != ret)
     {
@@ -334,18 +323,10 @@ void app_main(void)
      * connected, and stop server when disconnection happens.
      */
 
-#ifdef CONFIG_EXAMPLE_CONNECT_WIFI
     ESP_ERROR_CHECK(
         esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &server));
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED,
                                                &disconnect_handler, &server));
-#endif // CONFIG_EXAMPLE_CONNECT_WIFI
-#ifdef CONFIG_EXAMPLE_CONNECT_ETHERNET
-    ESP_ERROR_CHECK(
-        esp_event_handler_register(IP_EVENT, IP_EVENT_ETH_GOT_IP, &connect_handler, &server));
-    ESP_ERROR_CHECK(esp_event_handler_register(ETH_EVENT, ETHERNET_EVENT_DISCONNECTED,
-                                               &disconnect_handler, &server));
-#endif // CONFIG_EXAMPLE_CONNECT_ETHERNET
     ESP_ERROR_CHECK(
         esp_event_handler_register(ESP_HTTPS_SERVER_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
 
