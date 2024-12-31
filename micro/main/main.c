@@ -7,6 +7,8 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
+#include "freertos/FreeRTOS.h"
+
 #include "esp_netif.h"
 #include "esp_tls.h"
 #include "freertos/task.h"
