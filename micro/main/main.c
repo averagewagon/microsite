@@ -25,11 +25,78 @@
 #include <stdio.h>
 #include <sys/param.h>
 
+#include "esp_littlefs.h"
+
 /* A simple example that demonstrates how to create GET and POST
  * handlers and start an HTTPS server.
  */
 
 static const char* TAG = "example";
+
+void init_littlefs()
+{
+    esp_vfs_littlefs_conf_t conf = {
+        .base_path = "/littlefs",
+        .partition_label = "littlefs",
+        .format_if_mount_failed = true,
+        .dont_mount = false,
+    };
+
+    esp_err_t ret = esp_vfs_littlefs_register(&conf);
+    if (ret != ESP_OK)
+    {
+        if (ret == ESP_FAIL)
+        {
+            ESP_LOGE(TAG, "Failed to mount or format filesystem");
+        }
+        else if (ret == ESP_ERR_NOT_FOUND)
+        {
+            ESP_LOGE(TAG, "Failed to find LittleFS partition");
+        }
+        else
+        {
+            ESP_LOGE(TAG, "Failed to initialize LittleFS (%s)", esp_err_to_name(ret));
+        }
+        return;
+    }
+
+    size_t total = 0, used = 0;
+    ret = esp_littlefs_info(conf.partition_label, &total, &used);
+    if (ret == ESP_OK)
+    {
+        ESP_LOGI(TAG, "LittleFS Partition: Total = %d bytes, Used = %d bytes", total, used);
+    }
+    else
+    {
+        ESP_LOGE(TAG, "Failed to get LittleFS partition info (%s)", esp_err_to_name(ret));
+    }
+}
+
+void test_littlefs()
+{
+    // Write a test file
+    FILE* f = fopen("/littlefs/hello.txt", "w");
+    if (f == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to open file for writing");
+        return;
+    }
+    fprintf(f, "Hello LittleFS!\n");
+    fclose(f);
+    ESP_LOGI(TAG, "File written");
+
+    // Read the test file
+    f = fopen("/littlefs/hello.txt", "r");
+    if (f == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to open file for reading");
+        return;
+    }
+    char buffer[64];
+    fgets(buffer, sizeof(buffer), f);
+    fclose(f);
+    ESP_LOGI(TAG, "Read from file: '%s'", buffer);
+}
 
 /* Event handler for catching system events */
 static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_id,
@@ -258,6 +325,10 @@ void app_main(void)
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
+
+    /* Initialize LittleFS */
+    init_littlefs();
+    test_littlefs();
 
     /* Register event handlers to start server when Wi-Fi or Ethernet is
      * connected, and stop server when disconnection happens.
