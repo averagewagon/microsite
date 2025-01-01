@@ -4,12 +4,12 @@ body {
   padding: 0;
   background-color: #f9f9f9;
   color: #333;
+  text-align: center;
 }
 
 header {
   background-color: #4caf50;
   color: white;
-  text-align: center;
   padding: 20px 0;
 }
 
@@ -19,7 +19,6 @@ main {
 }
 
 footer {
-  text-align: center;
   padding: 10px 0;
   background-color: #f1f1f1;
   font-size: 14px;
