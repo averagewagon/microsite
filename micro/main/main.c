@@ -340,7 +340,6 @@ static void https_server_user_callback(esp_https_server_user_cb_arg_t* user_cb)
 /**
  * Configures and starts the HTTPS server with necessary SSL certificates and handlers.
  */
-
 static httpd_handle_t start_webserver(void)
 {
     httpd_handle_t server = NULL;
