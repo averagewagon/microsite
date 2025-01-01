@@ -418,10 +418,8 @@ CONFIG_PARTITION_TABLE_MD5=y
 # end of Partition Table
 
 #
-# Example Configuration
+# Microsite Configuration
 #
-CONFIG_EXAMPLE_ENABLE_HTTPS_USER_CALLBACK=y
-# end of Example Configuration
 
 #
 # Example Connection Configuration
@@ -496,7 +494,7 @@ CONFIG_COMPILER_RT_LIB_GCCLIB=y
 CONFIG_COMPILER_RT_LIB_NAME="gcc"
 CONFIG_COMPILER_ORPHAN_SECTIONS_WARNING=y
 # CONFIG_COMPILER_ORPHAN_SECTIONS_PLACE is not set
-# CONFIG_COMPILER_STATIC_ANALYZER is not set
+CONFIG_COMPILER_STATIC_ANALYZER=y
 # end of Compiler options
 
 #
