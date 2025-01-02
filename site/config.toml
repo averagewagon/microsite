@@ -7,11 +7,17 @@ title = "Joni's Microsite"
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
 
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = false
-
 # For overriding the default output directory `public`, set it to another value (e.g.: "docs")
 output_dir = "build"
+
+# When set to "true", the generated HTML files are minified.
+minify_html = true
+
+# When set to "true", a feed is automatically generated.
+generate_feeds = true
+
+# The filenames to use for the feeds. Used as the template filenames, too.
+feed_filenames = ["atom.xml", "rss.xml"]
 
 [markdown]
 # Whether to do syntax highlighting
@@ -21,4 +27,16 @@ highlight_theme = "css"
 
 [extra]
 # Put all your custom variables here
+favicon = "img/favicon.ico"
 
+# Whether footnotes are rendered in the GitHub-style (at the bottom, with back references)
+# or plain (in the place, where they are defined)
+bottom_footnotes = true
+
+# Setting copy_button = true will add a small copy button to the top right of code blocks
+copy_button = true
+
+# Whether to build a search index to be used later on by a JavaScript library
+build_search_index = false
+
+theme_switcher = false

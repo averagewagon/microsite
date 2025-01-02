@@ -7,6 +7,7 @@ template = "section.html"
 header = {title = "Joni's Microsite" }
 section_path = "blog/_index.md"
 max_posts = 4
+copy_button = true
 +++
 
 Microsite is a static website hosted on an ESP32 microcontroller. The project
