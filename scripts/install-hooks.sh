@@ -3,8 +3,12 @@
 # Enable strict error handling for better script durability
 set -eu
 
-# Run shellcheck on the current script
-command -v shellcheck >/dev/null 2>&1 && shellcheck "$0" || echo "Shellcheck not found, skipping..."
+# Run shellcheck on the current script if available
+if command -v shellcheck >/dev/null 2>&1; then
+    shellcheck "$0" || echo "Shellcheck found issues."
+else
+    echo "Shellcheck not found, skipping..."
+fi
 
 # Determine the root of the Git repository
 REPO_ROOT=$(git rev-parse --show-toplevel)
