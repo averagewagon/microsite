@@ -1,0 +1,4 @@
+sitemap.xml
+sitemap_style.xsl
+robots.txt
+img/favicon.ico

@@ -1,3 +1,12 @@
++++
+title = "A Fake Blog Post"
+date = 2023-11-21
+description = "This blog post doesn't actually exist, it's an illusion I made to confuse you!"
+
+[extra]
++++
+
+```sh
 #!/bin/sh
 
 # Enable strict error handling for better script durability
@@ -75,10 +84,6 @@ if [ ! -d "$SITE_DIR" ]; then
     error "$SITE_DIR does not exist. Create it and add your site files."
 fi
 
-# Ensure extra files are removed
-echo "Removing unreferenced files from the build directory..."
-"${REPO_ROOT}/scripts/delete-extras.sh"
-
 # Pre-check directory size
 check_directory_size
 
@@ -94,11 +99,7 @@ fi
 
 echo "LittleFS image created at $OUTPUT_IMAGE"
 
-# Flashing process
-echo "Erasing LittleFS partition at offset $OFFSET..."
-esptool.py --port /dev/ttyUSB0 erase_region "$OFFSET" "$PARTITION_SIZE_DEC" || error "Failed to erase LittleFS partition."
+# Flashing process...
+echo "Flashing process starts here..."
 
-echo "Flashing $OUTPUT_IMAGE to LittleFS partition at offset $OFFSET..."
-esptool.py --port /dev/ttyUSB0 --baud 115200 write_flash "$OFFSET" "$OUTPUT_IMAGE" || error "Failed to flash LittleFS image to ESP32."
-
-echo "LittleFS image successfully flashed!"
+```
