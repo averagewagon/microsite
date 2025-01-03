@@ -4,6 +4,16 @@
 at **[averagewagon.dev](https://averagewagon.dev)**. This project experiments
 with running a functional website on resource-limited hardware.
 
+## Feature List
+
+- **ESP32-Based Multi-Page Website**:
+  - Used the ESP32-PICO-KIT_V4 because that's what I had lying around
+  - Uses the default WiFi stack for connectivity
+  - Serves multiple static pages using LittleFS as the filesystem.
+- **Zola Static Site Generator**:
+  - The website is built using the Zola static site generator
+  - Utilizes the tabi theme for Zola
+
 ## Prerequisites
 
 - ESP-IDF v5.1+
@@ -26,8 +36,6 @@ with running a functional website on resource-limited hardware.
   handler
   - Unnecessary code size
   - WiFi SSID/Passphrase is currently handled through config fields
-- Use some sort of static site builder focused on blogs
-  - It'll probably be Jekyll but maybe something new will catch my eye
 - Implement a more secure certificate storage method, such as an HSM
   - Certificate/Pkey is currently copied into flash memory
 - Put my [motorcycle game](https://github.com/averagewagon/wasm4-zig-game) on
