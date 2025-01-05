@@ -87,3 +87,10 @@ echo "Cleanup complete. All unreferenced files and empty folders have been remov
 
 # Clean up temporary file
 rm -f "$TEMP_WHITELIST"
+
+# Remove query parameters from resource links in HTML files
+# TODO: When I finish writing a better HTTPD, remove this since URIs can be handled correctly
+find "$BUILD_DIR" -type f -name "*.html" | while read -r html_file; do
+    sed -i -E 's/(href|src)="([^"]+)\?[^"]*"/\1="\2"/g' "$html_file"
+    echo "Cleaned query parameters in: $html_file"
+done
