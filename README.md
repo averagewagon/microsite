@@ -25,11 +25,12 @@ with running a functional website on resource-limited hardware.
 
 ### Short-Term
 
+- Reuse HTTPS session when multiple requests are made
 - Serve gzip'd resources instead of uncompressed resources
 - Replace the ESP32's `protocol_examples_common` module with a small WiFi
   handler
-  - Unnecessary code size
   - WiFi SSID/Passphrase is currently handled through config fields
+  - Unnecessary code size
 - Implement a more secure certificate storage method, such as an HSM
   - Certificate/Pkey is currently copied into flash memory
 - Put my [motorcycle game](https://github.com/averagewagon/wasm4-zig-game) on
