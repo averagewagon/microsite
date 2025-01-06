@@ -26,12 +26,6 @@ with running a functional website on resource-limited hardware.
 ### Short-Term
 
 - Serve gzip'd resources instead of uncompressed resources
-- Add support for wildcard URI handling
-  - esp_http_server doesn't supported wildcard URI handling
-  - Currently can't support a custom 404 page, for instance
-  - Map requests for `{url}/page` to `{url}/page.html`
-  - There are some cursed dynamic memory allocations to work around URI handler
-    limits
 - Replace the ESP32's `protocol_examples_common` module with a small WiFi
   handler
   - Unnecessary code size

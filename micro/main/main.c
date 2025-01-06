@@ -218,34 +218,40 @@ static const char* get_mime_type(const char* filename)
 }
 
 /**
- * Serves files from LittleFS based on the requested URI.
- */
-/**
  * Handles incoming HTTP requests by serving files from LittleFS.
+ * If no matching file is found, redirects to 404.html.
+ * Automatically redirects subfolder root paths to index.html.
+ * Strips query and fragment parts from the URI.
  * @param req The HTTP request object.
  * @return ESP_OK on success, ESP_FAIL on failure.
  */
 static esp_err_t file_server_handler(httpd_req_t* req)
 {
+    char stripped_uri[MAX_URI_LENGTH];
     char filepath[MAX_URI_LENGTH + 20U];
     ESP_LOGI(TAG, "Incoming request for URI: %s", req->uri);
 
+    // Strip query and fragment from the URI
+    size_t len = strcspn(req->uri, "?#");
+    snprintf(stripped_uri, sizeof(stripped_uri), "%.*s", (int)len, req->uri);
+    ESP_LOGI(TAG, "Stripped URI: %s", stripped_uri);
+
     // Check for URI length
-    if (strlen(req->uri) >= sizeof(filepath) - strlen("/littlefs"))
+    if (strlen(stripped_uri) >= sizeof(filepath) - strlen("/littlefs"))
     {
-        ESP_LOGE(TAG, "URI too long: %s", req->uri);
+        ESP_LOGE(TAG, "URI too long: %s", stripped_uri);
         httpd_resp_send_err(req, HTTPD_414_URI_TOO_LONG, "URI too long");
         return ESP_FAIL;
     }
 
-    // Map root path ("/") to "/index.html"
-    if (strcmp(req->uri, "/") == 0)
+    // Redirect root path ("/") and subfolder root paths ("/subfolder/") to index.html
+    if (stripped_uri[strlen(stripped_uri) - 1] == '/')
     {
-        snprintf(filepath, sizeof(filepath), "/littlefs/index.html");
+        snprintf(filepath, sizeof(filepath), "/littlefs%sindex.html", stripped_uri);
     }
     else
     {
-        snprintf(filepath, sizeof(filepath), "/littlefs%s", req->uri);
+        snprintf(filepath, sizeof(filepath), "/littlefs%s", stripped_uri);
     }
 
     ESP_LOGI(TAG, "Mapped URI to file path: %s", filepath);
@@ -255,8 +261,16 @@ static esp_err_t file_server_handler(httpd_req_t* req)
     if (!f)
     {
         ESP_LOGW(TAG, "File not found: %s", filepath);
-        httpd_resp_send_err(req, HTTPD_404_NOT_FOUND, "File not found");
-        return ESP_FAIL;
+
+        // Redirect to 404.html
+        snprintf(filepath, sizeof(filepath), "/littlefs/404.html");
+        f = fopen(filepath, "r");
+        if (!f)
+        {
+            ESP_LOGE(TAG, "404.html not found in LittleFS");
+            httpd_resp_send_err(req, HTTPD_404_NOT_FOUND, "404 Not Found");
+            return ESP_FAIL;
+        }
     }
 
     // Determine MIME type using helper function
@@ -345,30 +359,9 @@ static httpd_handle_t start_webserver(void)
     httpd_handle_t server = NULL;
     ESP_LOGI(TAG, "Starting server");
 
-    // Determine the number of files in LittleFS
-    int file_count = 0;
-    DIR* dir = opendir("/littlefs");
-    if (!dir)
-    {
-        ESP_LOGE(TAG, "Failed to open /littlefs directory");
-        return NULL;
-    }
-
-    struct dirent* entry;
-    while ((entry = readdir(dir)) != NULL)
-    {
-        if (entry->d_type == DT_REG) // Count only regular files
-        {
-            file_count++;
-        }
-    }
-    closedir(dir);
-
-    ESP_LOGI(TAG, "Number of files in LittleFS: %d", file_count);
-
-    // Adjust max_uri_handlers to file count + 1 (for the root handler)
     httpd_ssl_config_t conf = HTTPD_SSL_CONFIG_DEFAULT();
-    conf.httpd.max_uri_handlers = file_count + 1; // Includes root URI
+    conf.httpd.uri_match_fn = httpd_uri_match_wildcard; // Enables wildcard URI handling
+    conf.httpd.max_uri_handlers = 1;                    // Only need the root wildcard handler
 
     // Set up SSL certificate
     extern const unsigned char servercert_start[] asm("_binary_fullchain_pem_start");
@@ -391,67 +384,17 @@ static httpd_handle_t start_webserver(void)
         return NULL;
     }
 
-    // Register the root handler
+    // Register the wildcard andler
     static const httpd_uri_t root_handler = {
-        .uri = "/",
+        .uri = "*",
         .method = HTTP_GET,
         .handler = file_server_handler,
     };
-    ESP_LOGI(TAG, "Registering root URI handler");
+    ESP_LOGI(TAG, "Registering wildcard URI handler");
     if (httpd_register_uri_handler(server, &root_handler) != ESP_OK)
     {
-        ESP_LOGE(TAG, "Failed to register root URI handler");
+        ESP_LOGE(TAG, "Failed to register wildcard URI handler");
     }
-
-    // TODO: Fix this, it's cursed
-    // esp_http_server doesn't support wildcards in URI handling.
-    // This block reads every file from the littlefs file system, and dynamically allocates a new
-    // URI handler for each one, and registers them all to use the same file_server_handler.
-    // Supremely wasteful of memory - would be much better to add wildcard support to
-    // esp_http_server.
-    dir = opendir("/littlefs");
-    if (!dir)
-    {
-        ESP_LOGE(TAG, "Failed to reopen /littlefs directory");
-        return NULL;
-    }
-
-    while ((entry = readdir(dir)) != NULL)
-    {
-        if (entry->d_type == DT_REG) // Only regular files
-        {
-            char uri[258];
-            if (strlen(entry->d_name) + 2 >= sizeof(uri)) // Check for overflow
-            {
-                ESP_LOGW(TAG, "URI too long for file: %s", entry->d_name);
-                continue; // Skip this file
-            }
-
-            snprintf(uri, sizeof(uri), "/%s", entry->d_name);
-
-            // Allocate a URI handler dynamically
-            httpd_uri_t* file_handler = malloc(sizeof(httpd_uri_t));
-            if (!file_handler)
-            {
-                ESP_LOGE(TAG, "Failed to allocate memory for URI handler");
-                break;
-            }
-
-            file_handler->uri = strdup(uri); // Persist the URI string
-            file_handler->method = HTTP_GET;
-            file_handler->handler = file_server_handler;
-            file_handler->user_ctx = NULL;
-
-            ESP_LOGI(TAG, "Registering URI: %s", uri);
-            if (httpd_register_uri_handler(server, file_handler) != ESP_OK)
-            {
-                ESP_LOGE(TAG, "Failed to register URI handler for %s", uri);
-                free((void*)file_handler->uri); // Cast away const for free
-                free(file_handler);
-            }
-        }
-    }
-    closedir(dir);
 
     return server;
 }
