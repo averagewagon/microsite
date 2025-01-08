@@ -2,4 +2,4 @@
 nvs,      data, nvs,     0x9000,   0x5000,
 phy_init, data, phy,     0xe000,   0x1000,
 app0,     app,  factory, 0x10000,  0x170000,
-littlefs, data, littlefs,0x180000, 0x60000
+littlefs, data, littlefs,0x180000, 0xE80000
