@@ -278,7 +278,7 @@ static esp_err_t file_server_handler(httpd_req_t* req)
     httpd_resp_set_type(req, mime_type);
 
     // Serve the file in chunks
-    char buffer[4096];
+    char buffer[256];
     size_t read_bytes;
     while ((read_bytes = fread(buffer, 1, sizeof(buffer), f)) > 0)
     {

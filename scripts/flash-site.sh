@@ -96,9 +96,9 @@ echo "LittleFS image created at $OUTPUT_IMAGE"
 
 # Flashing process
 echo "Erasing LittleFS partition at offset $OFFSET..."
-esptool.py --port /dev/ttyUSB0 erase_region "$OFFSET" "$PARTITION_SIZE_DEC" || error "Failed to erase LittleFS partition."
+esptool.py --port /dev/ttyACM0 erase_region "$OFFSET" "$PARTITION_SIZE_DEC" || error "Failed to erase LittleFS partition."
 
 echo "Flashing $OUTPUT_IMAGE to LittleFS partition at offset $OFFSET..."
-esptool.py --port /dev/ttyUSB0 --baud 115200 write_flash "$OFFSET" "$OUTPUT_IMAGE" || error "Failed to flash LittleFS image to ESP32."
+esptool.py --port /dev/ttyACM0 --baud 115200 write_flash "$OFFSET" "$OUTPUT_IMAGE" || error "Failed to flash LittleFS image to ESP32."
 
 echo "LittleFS image successfully flashed!"
