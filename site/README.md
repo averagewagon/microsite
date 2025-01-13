@@ -112,6 +112,11 @@ This script compresses an input image three times to optimize size.
    <html lang="en">
      <head>
        <title>My New Blog Post</title>
+       <link
+         rel="icon"
+         href="<!-- {{IMAGE:logos/favicon.ico}} -->"
+         type="image/x-icon"
+       />
        <!-- {{STYLE:main.css}} -->
      </head>
      <body>
@@ -120,7 +125,7 @@ This script compresses an input image three times to optimize size.
          <h1>My New Post</h1>
          <p>Hello, world!</p>
          <img
-           src="data:image/webp;base64,<!-- {{IMAGE:blog/compressed_image_2.webp}} -->"
+           src="<!-- {{IMAGE:blog/compressed_image_2.webp}} -->"
            alt="Blog Image"
          />
        </main>

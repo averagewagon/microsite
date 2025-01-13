@@ -75,14 +75,16 @@ find "$BUILD_DIR" -type f -name "*.html" | while IFS= read -r file; do
         mv "$file.tmp" "$file"
     done
 
-    # Substitute image placeholders like {{IMAGE:logos/logo.webp}} with base64-encoded data
-    grep -o "{{IMAGE:[^}]*}}" "$file" | while IFS= read -r img; do
-        img_path=$(echo "$img" | sed -e 's/{{IMAGE:\(.*\)}}/\1/')
+    # Substitute image placeholders like <!-- {{IMAGE:logos/logo.webp}} --> with base64-encoded data
+    grep -o "<!-- {{IMAGE:[^}]*}} -->" "$file" | while IFS= read -r img_comment; do
+        img_path=$(echo "$img_comment" | sed -e 's/<!-- {{IMAGE:\(.*\)}} -->/\1/')
         full_img_path="$IMAGES_DIR/$img_path"
         [ -f "$full_img_path" ] || error "Image not found: $full_img_path"
         base64_data=$(base64 -w 0 "$full_img_path") || error "Failed to encode $img_path"
-        sed -i "s~$img~data:image/$(basename "$img_path" | awk -F. '{print $NF}');base64,$base64_data~g" "$file" || error "Failed to substitute image $img in $file"
+        img_mime_type=$(basename "$img_path" | awk -F. '{print $NF}')
+        sed -i "s~$img_comment~data:image/$img_mime_type;base64,$base64_data~g" "$file" || error "Failed to substitute image $img_comment in $file"
     done
+
 done
 
 # Minify HTML files to reduce file size
