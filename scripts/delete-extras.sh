@@ -18,7 +18,7 @@ error() {
 
 # Paths and variables
 REPO_ROOT=$(git rev-parse --show-toplevel)
-BUILD_DIR="${REPO_ROOT}/site/build"
+BUILD_DIR="${REPO_ROOT}/site/build/output"
 WHITELIST_FILE="${REPO_ROOT}/scripts/whitelist.txt"
 TEMP_WHITELIST=$(mktemp)
 
