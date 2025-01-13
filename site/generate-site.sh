@@ -36,15 +36,15 @@ rsync -a --include '*/' --include '*.html' --exclude '*' "$CONTENT_DIR/" "$BUILD
 # Perform dynamic template substitutions for HTML files
 echo "Performing template substitutions..."
 find "$BUILD_DIR" -type f -name "*.html" | while IFS= read -r file; do
-    # Substitute template placeholders like {{TEMPLATE:header}}
+    # Substitute template placeholders like {{TEMPLATE:header.html}}
     grep -o "{{TEMPLATE:[^}]*}}" "$file" | while IFS= read -r template; do
         template_name=$(echo "$template" | sed -e 's/{{TEMPLATE:\(.*\)}}/\1/')
-        template_file="$TEMPLATES_DIR/$template_name.html"
+        template_file="$TEMPLATES_DIR/$template_name"
         [ -f "$template_file" ] || error "Template file not found: $template_file"
         sed -i "/$template/{
-            r $template_file
-            d
-        }" "$file" || error "Failed to substitute template $template in $file"
+        r $template_file
+        d
+    }" "$file" || error "Failed to substitute template $template in $file"
     done
 
     # Substitute CSS styles like {{STYLE:main.css}}

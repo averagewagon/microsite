@@ -41,7 +41,7 @@ check_directory_size() {
 
 # Paths and variables
 REPO_ROOT=$(git rev-parse --show-toplevel)
-SITE_DIR="${REPO_ROOT}/site/build"
+SITE_DIR="${REPO_ROOT}/site/build/output"
 OUTPUT_DIR="${REPO_ROOT}/scripts/build"
 PARTITIONS_FILE="${REPO_ROOT}/micro/partitions.csv"
 OUTPUT_IMAGE="${OUTPUT_DIR}/littlefs_image.bin"
