@@ -1,4 +1,5 @@
-sitemap.xml
-sitemap_style.xsl
+favicon.ico
 robots.txt
-img/favicon.ico
+rss.xml
+sitemap_style.xsl
+sitemap.xml
