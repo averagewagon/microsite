@@ -1,17 +1,114 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    font-family: sans-serif;
+    background-color: #121212;
+    /* Dark mode */
+    color: #ffffff;
+    /* High contrast text */
+    line-height: 1.6;
+    display: flex;
+    /* Flex for centering */
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    min-height: 100vh;
+    /* Full viewport height */
 }
 
-h1 {
-    color: #333;
+.container {
+    max-width: 1000px;
+    /* Increased width for desktop */
+    width: 100%;
+    /* Scale for smaller screens */
+    padding: 1rem;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    /* Subtle shadow */
+    display: flex;
+    flex-direction: column;
+    /* Stack header, main, footer */
+    gap: 1rem;
+}
+
+/* Header and Navigation */
+header {
+    padding: 1rem;
+    background-color: #1e1e1e;
+    border-bottom: 2px solid #333;
     text-align: center;
 }
 
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Main Content */
+main {
+    padding: 1rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+    /* Slightly smaller font size for headings */
+    margin-top: 0;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    /* Ensure images don't overflow */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    margin: 1rem auto;
+    /* Center images within content */
+}
+
+/* Footer */
 footer {
+    padding: 1rem;
+    background-color: #1e1e1e;
     text-align: center;
-    font-size: 0.8rem;
-    color: #666;
+    font-size: 0.9rem;
+    border-top: 2px solid #333;
+}
+
+/* Responsive Layout for Mobile */
+@media (max-width: 768px) {
+    body {
+        font-size: 0.85rem;
+        /* Reduce font size on mobile for better fit */
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    main {
+        padding: 0.5rem;
+    }
 }
