@@ -1,54 +1,285 @@
-/* General Styles */
+/* ============================================================= */
+/* ======================= GENERAL STYLES ====================== */
+/* ============================================================= */
+:root {
+    /* ---------------------------------------------------------------- */
+    /* Core Colors */
+    /* ---------------------------------------------------------------- */
+
+    /* Background color */
+    --background: #121212;
+
+    /* Content background */
+    --foreground: #1e1e1e;
+
+    /* Lines, subtle dividers */
+    --light-accent: #333333;
+
+    /* Hover effects, pop-outs */
+    --dark-accent: #181818;
+
+    /* ---------------------------------------------------------------- */
+    /* Text Colors */
+    /* ---------------------------------------------------------------- */
+
+    /* Standard text color */
+    --text: #ffffff;
+
+    /* Less prominent text (e.g., metadata) */
+    --muted-text: #b3b3b3;
+
+    /* Headings and special text */
+    --signature: #85ffc6;
+
+    /* ---------------------------------------------------------------- */
+    /* Link Colors */
+    /* ---------------------------------------------------------------- */
+
+    /* Non-visited links */
+    --link: #66b2ff;
+
+    /* Slightly darker hover for links */
+    --link-hover: #559add;
+
+    /* Visited links */
+    --link-visited: plum;
+
+    /* Slightly darker hover for visited links */
+    --link-visited-hover: #b180b1;
+
+    /* ---------------------------------------------------------------- */
+    /* Misc Colors */
+    /* ---------------------------------------------------------------- */
+
+    /* Bright orange for focus states */
+    --focus: #ff9900;
+
+
+    /* ---------------------------------------------------------------- */
+    /* Font Families */
+    /* ---------------------------------------------------------------- */
+
+    --font-sans: "Liberation Sans", "DejaVu Sans", "Noto Sans", "FreeSans", sans-serif;
+    --font-serif: "EB Garamond", "Crimson Text", "Noto Serif", "FreeSerif", serif;
+    --font-mono: "Liberation Mono", "DejaVu Sans Mono", "Noto Mono", "FreeMono", monospace;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: "Liberation Sans", "DejaVu Sans", "Noto Sans", "FreeSans", sans-serif;
-    /* Default font */
-    background-color: #121212;
-    /* Dark mode */
-    color: #ffffff;
-    /* High contrast text */
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--text);
     line-height: 1.6;
-
-    letter-spacing: 0.02rem;
     display: flex;
-    /* Flex for centering */
     justify-content: center;
-    /* Center horizontally */
     align-items: center;
-    /* Center vertically */
     min-height: 100vh;
-    /* Full viewport height */
 }
 
 .container {
     max-width: 950px;
-    /* Wider for desktop readability */
     width: 100%;
-    /* Scales on smaller screens */
     padding: 0 2rem;
-    background-color: #1e1e1e;
-    /* Subtle shadow */
+    background-color: var(--foreground);
     display: flex;
     flex-direction: column;
-    /* Stack header, main, footer */
+}
+
+main {
+    margin: 0 1rem;
 }
 
 hr {
     border: none;
-    /* Remove default border styling */
-    height: 2px;
-    /* Thickness of the line */
-    background-color: #333;
-    /* Neutral gray color for contrast */
+    border-top: 3px dotted var(--signature);
+    border-bottom: 3px dotted var(--signature);
+    height: 3px;
     margin: 1rem 0;
-    /* Add vertical spacing above and below */
+}
+
+p {
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+em {
+    color: var(--text);
+    font-size: 1rem;
+}
+
+strong {
+    color: var(--text);
+    font-size: 1rem;
+}
+
+blockquote {
+    color: var(--muted-text);
+    margin: 1rem 0 1rem 1.5rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--light-accent);
+    font-size: 1rem;
+}
+
+pre,
+code {
+    color: var(--text);
+    font-style: var(--font-mono);
+    background-color: var(--dark-accent);
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+
+figcaption {
+    color: var(--muted-text);
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--link-hover);
+}
+
+a:visited {
+    color: var(--link-visited);
+}
+
+a:visited:hover {
+    color: var(--link-visited-hover);
+}
+
+main h1::before {
+    content: "# ";
+}
+
+main h2::before {
+    content: "## ";
+}
+
+main h3::before {
+    content: "### ";
+}
+
+main h4::before {
+    content: "#### ";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-mono);
+    color: var(--signature);
+}
+
+h1 {
+    font-size: 2.5rem;
+    line-height: 1.3;
+    margin: 2rem 0 1rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    margin: 1.5rem 0 0.75rem;
+}
+
+h3 {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 1.25rem 0 0.5rem;
+}
+
+h4 {
+    font-size: 0.9rem;
+    font-weight: normal;
+    line-height: 1.6;
+    margin: 0.5rem 0 0.5rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+th,
+td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--light-accent);
+}
+
+th {
+    background-color: var(--dark-accent);
+    color: var(--text);
+    font-size: 1rem;
+}
+
+td {
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+/* ============================================================= */
+/* ====================== FOOTNOTE STYLES ====================== */
+/* ============================================================= */
+
+.footnotes {
+    font-size: 0.85rem;
+    color: var(--muted-text);
+    margin-top: 2rem;
+    border-top: 1px solid var(--light-accent);
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.footnotes h2 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.footnotes ol {
+    padding-left: 1.5rem;
+}
+
+.footnotes li {
+    margin-bottom: 0.5rem;
+}
+
+.footnotes a {
+    color: var(--link);
+    text-decoration: none;
+}
+
+.footnotes a:hover {
+    text-decoration: underline;
 }
 
 
-/* Header and Navigation */
+/* ============================================================= */
+/* ======================= HEADER STYLES ======================= */
+/* ============================================================= */
 header {
-    background-color: #1e1e1e;
+    background-color: var(--foreground);
     text-align: center;
     padding-top: 1rem;
 }
@@ -68,11 +299,9 @@ nav ul {
 }
 
 nav a {
-    color: lightblue;
-    /* Soft blue for links */
+    color: var(--link);
     text-decoration: none;
     font-size: 1.3rem;
-    /* Increased font size for navigation links */
     position: relative;
 }
 
@@ -82,121 +311,42 @@ nav a::after {
     left: 0;
     right: 0;
     bottom: -2px;
-    /* Space between text and underline */
     height: 2px;
-    /* Thickness of underline */
-    background-color: lightblue;
-    /* Same as link color */
+    background-color: var(--link);
 }
 
 nav a:visited {
-    color: plum;
-    /* Light purple for visited links */
+    color: var(--link-visited);
 }
 
 nav a:visited::after {
-    background-color: plum;
+    background-color: var(--link-visited);
 }
 
 nav a:hover::after {
-    background-color: #66b2ff;
-    /* Lighter blue on hover */
+    background-color: var(--link-hover);
 }
 
-/* Main Content */
-main {
-    margin: 0 1rem;
-}
-
-/* Headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: "EB Garamond", "Crimson Text", "Noto Serif", "FreeSerif", serif;
-    color: #85ffc6;
-}
-
-h1::before {
-    content: "# ";
-}
-
-main h2::before {
-    content: "## ";
-}
-
-h3::before {
-    content: "### ";
-}
-
-h4::before {
-    content: "#### ";
-}
-
-h1 {
-    font-size: 2.5rem;
-    line-height: 1.3;
-    /* Slightly tighter for large headings */
-    margin: 2rem 0 1rem;
-    /* More space above, less below */
-}
-
-h2 {
-    font-size: 1.4rem;
-    line-height: 1.4;
-    margin: 1.5rem 0 0.75rem;
-}
-
-h3 {
-    font-size: 1.2rem;
-    line-height: 1.5;
-    margin: 1.25rem 0 0.5rem;
-}
-
-h4 {
-    font-size: .9rem;
-    font-weight: normal;
-    letter-spacing: .1rem;
-    line-height: 1.6;
-    /* Same as h5 for consistency */
-    margin: 0.5rem 0 0.5rem;
-}
-
-/* Images */
-img {
-    max-width: 100%;
-    /* Ensure images don't overflow */
-    height: auto;
-    /* Maintain aspect ratio */
-    display: block;
-    margin: 1rem auto;
-    /* Center images within content */
-}
-
-/* Footer */
+/* ============================================================= */
+/* ======================= FOOTER STYLES ======================= */
+/* ============================================================= */
 footer {
-    background-color: #1e1e1e;
+    background-color: var(--foreground);
     text-align: center;
     font-size: 0.85rem;
-    /* Slightly smaller for footer text */
 }
 
-/* Responsive Layout for Non-Mobile */
+/* ============================================================= */
+/* ===================== RESPONSIVE STYLES ===================== */
+/* ============================================================= */
 @media (min-width: 769px) {
-    img {
-        max-width: calc(100% - 2.4em);
-    }
-
-    /* Only indent sections on wide screens */
     section>*:not(h2, h1) {
         margin-left: 1.2rem;
         margin-right: 1.2rem;
+        max-width: calc(100% - 2.4em);
     }
 }
 
-/* Responsive Layout for Mobile */
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
