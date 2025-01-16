@@ -94,15 +94,15 @@ blockquote {
     font-size: 1rem;
 }
 
-pre,
-code {
-    color: var(--text);
+pre {
     font-style: var(--font-mono);
     background-color: var(--dark-accent);
     font-size: 0.9rem;
-    padding: 0.5rem;
+    padding: 1rem;
     margin: 1rem 0;
-    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
 }
 
 figcaption {
@@ -170,29 +170,30 @@ img {
 }
 
 /* Table Styling */
-table {
+.table {
     width: 100%;
     border-collapse: collapse;
     margin: 1.5rem 0;
 }
 
-th,
-td {
+.table th,
+.table td {
     padding: 0.75rem;
     text-align: left;
     border-bottom: 1px solid var(--light-accent);
 }
 
-th {
+.table th {
     background-color: var(--dark-accent);
     color: var(--text);
     font-size: 1rem;
 }
 
-td {
+.table td {
     color: var(--text);
     font-size: 0.95rem;
 }
+
 
 /* ============================================================= */
 /* ======================= HEADER STYLES ======================= */

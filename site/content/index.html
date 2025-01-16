@@ -14,6 +14,7 @@
     <link rel="icon" href="<!-- {{IMAGE:logos/favicon.ico}} -->" type="image/x-icon">
 
     <!-- {{STYLE:main.css}} -->
+    <!-- {{STYLE:code.css}} -->
 </head>
 
 <body>
@@ -131,10 +132,69 @@
                     useful in academic or editorial writing.
                 </blockquote>
 
-                <!-- <pre><code>// Preformatted text and code blocks are crucial for displaying code snippets
-            function exampleFunction() {
-                console.log('This is a test of a preformatted code block.');
-            }</code></pre> -->
+                <div class="highlight">
+                    <table class="highlighttable">
+                        <tr>
+                            <th colspan="2" class="filename"><span class="filename">suckmy.txt</span></th>
+                        </tr>
+                        <tr>
+                            <td class="linenos">
+                                <div class="linenodiv">
+                                    <pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre>
+                                </div>
+                            </td>
+                            <td class="code">
+                                <div>
+                                    <pre><span></span><span class="ch">#!/bin/sh</span>
+
+<span class="c1"># Enable strict error handling for better script durability</span>
+<span class="nb">set</span><span class="w"> </span>-eu
+
+<span class="c1"># Run shellcheck on the current script if available</span>
+<span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>shellcheck<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span>shellcheck<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$0</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Shellcheck found issues.&quot;</span>
+<span class="k">else</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Shellcheck not found, skipping...&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1"># Determine the root of the Git repository</span>
+<span class="nv">REPO_ROOT</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>--show-toplevel<span class="k">)</span>
+
+<span class="c1"># Remove any existing pre-commit hook</span>
+rm<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_ROOT</span><span class="s2">/.git/hooks/pre-commit&quot;</span>
+
+<span class="c1"># Create a symlink to the pre-commit hook script</span>
+ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_ROOT</span><span class="s2">/scripts/pre-commit&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_ROOT</span><span class="s2">/.git/hooks/pre-commit&quot;</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Pre-commit hook installed as a symlink.&quot;</span>
+</pre>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
 
                 <h3>Footnotes</h3>
                 <p>
@@ -191,7 +251,7 @@
                     tabular information.
                     Here’s a simple example:
                 </p>
-                <table>
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Feature</th>
