@@ -5,62 +5,31 @@
     /* ---------------------------------------------------------------- */
     /* Core Colors */
     /* ---------------------------------------------------------------- */
-
-    /* Background color (darker matte look, like PCB base) */
-    --background: #0f0f0f;
-
-    /* Content background (rich dark gray, resembling silkscreen areas) */
-    --foreground: #210928;
-
-    /* Lines, subtle dividers (slightly more copper-like for PCB traces) */
+    --background: #171717;
+    --foreground: #1e1e1e;
     --light-accent: #4c4c4c;
-
-    /* Hover effects, pop-outs (darker copper-inspired tone) */
     --dark-accent: #292929;
+    --signature: #ffb657;
+    --decorative: #461f51;
 
     /* ---------------------------------------------------------------- */
     /* Text Colors */
     /* ---------------------------------------------------------------- */
-
-    /* Standard text color (bright white for high contrast) */
     --text: #ffffff;
-
-    /* Less prominent text (e.g., metadata, subtle labels) */
-    --muted-text: #cad5fe;
-
-    /* Headings and special text (copper-inspired, bold signature color) */
-    --signature: #ffb657;
-    /* Classic gold-like copper color */
-
+    --text-muted: #b0b0b0;
+    --text-heading: #eccba1;
 
     /* ---------------------------------------------------------------- */
     /* Link Colors */
     /* ---------------------------------------------------------------- */
-
-    /* Non-visited links */
     --link: #6ee3ff;
-
-    /* Slightly darker hover for links */
     --link-hover: #52c6ff;
-
-    /* Visited links */
     --link-visited: #ffb6ff;
-
-    /* Slightly darker hover for visited links */
     --link-visited-hover: #e092e0;
-
-    /* ---------------------------------------------------------------- */
-    /* Misc Colors */
-    /* ---------------------------------------------------------------- */
-
-    /* Bright orange for focus states */
-    --focus: #ff9900;
-
 
     /* ---------------------------------------------------------------- */
     /* Font Families */
     /* ---------------------------------------------------------------- */
-
     --font-sans: "Liberation Sans", "DejaVu Sans", "Noto Sans", "FreeSans", sans-serif;
     --font-serif: "EB Garamond", "Crimson Text", "Noto Serif", "FreeSerif", serif;
     --font-mono: "Liberation Mono", "DejaVu Sans Mono", "Noto Mono", "FreeMono", monospace;
@@ -80,24 +49,26 @@ body {
 }
 
 .container {
-    max-width: 950px;
+    max-width: 60rem;
     width: 100%;
-    padding: 0 2rem;
     background-color: var(--foreground);
     display: flex;
     flex-direction: column;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.8),
+        0px 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 main {
     margin: 0 1rem;
+    padding: 0 2rem;
 }
 
 hr {
     border: none;
-    border-top: 3px dotted var(--signature);
-    border-bottom: 3px dotted var(--signature);
+    border-top: 5px dotted var(--signature);
+    border-bottom: 5px dotted var(--signature);
     height: 3px;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
 }
 
 p {
@@ -116,7 +87,7 @@ strong {
 }
 
 blockquote {
-    color: var(--muted-text);
+    color: var(--text-muted);
     margin: 1rem 0 1rem 1.5rem;
     padding-left: 1rem;
     border-left: 4px solid var(--light-accent);
@@ -135,7 +106,7 @@ code {
 }
 
 figcaption {
-    color: var(--muted-text);
+    color: var(--text-muted);
     font-size: 0.85rem;
     text-align: center;
     margin-top: 0.5rem;
@@ -162,23 +133,20 @@ a:visited:hover {
 h1,
 h2,
 h3,
-h4,
-h5,
-h6 {
-    font-family: var(--font-mono);
-    color: var(--signature);
+h4 {
+    color: var(--text-heading);
 }
 
 h1 {
     font-size: 2.5rem;
     line-height: 1.3;
-    margin: 2rem 0 1rem;
+    margin: 2rem auto 1rem;
 }
 
 h2 {
     font-size: 1.4rem;
     line-height: 1.4;
-    margin: 1.5rem 0 0.75rem;
+    margin: 1.5rem auto 0.75rem;
 }
 
 h3 {
@@ -193,6 +161,7 @@ h4 {
     line-height: 1.6;
     margin: 0.5rem 0 0.5rem;
 }
+
 
 img {
     max-width: 100%;
@@ -226,26 +195,83 @@ td {
 }
 
 /* ============================================================= */
+/* ======================= HEADER STYLES ======================= */
+/* ============================================================= */
+
+
+header {
+    display: flex;
+    padding: 1.5rem 3rem;
+    background-color: var(--decorative);
+    color: var(--text);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.8), 0px 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+header a {
+
+    display: inline-block;
+    text-align: center;
+}
+
+header h2 {
+    display: inline-block;
+    text-align: center;
+    background-color: var(--background);
+    color: var(--text);
+    border-top: 6px dashed grey;
+    border-bottom: 6px dashed grey;
+    padding: 1rem 2rem;
+    margin: 1rem 1rem;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 1);
+}
+
+header nav {
+    flex-grow: 1;
+    display: flex;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    flex-grow: 1;
+    flex-wrap: wrap;
+}
+
+header nav ul li {
+    border: 2px solid var(--dark-accent);
+    display: flex;
+    min-width: 7rem;
+}
+
+header nav ul li a {
+    background-color: var(--background);
+    padding: 0.5rem 1rem;
+    text-decoration: underline;
+    font-size: 1.2rem;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+header nav ul li a:hover {
+    background-color: var(--dark-accent);
+}
+
+/* ============================================================= */
 /* ====================== FOOTNOTE STYLES ====================== */
 /* ============================================================= */
 
 .footnotes {
     font-size: 0.85rem;
-    color: var(--muted-text);
-    margin-top: 2rem;
-    border-top: 1px solid var(--light-accent);
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-top: 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
-.footnotes h2 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    text-align: center;
-}
 
 .footnotes ol {
     padding-left: 1.5rem;
+    color: var(--text-muted);
 }
 
 .footnotes li {
@@ -263,64 +289,14 @@ td {
 
 
 /* ============================================================= */
-/* ======================= HEADER STYLES ======================= */
-/* ============================================================= */
-header {
-    background-color: var(--foreground);
-    text-align: center;
-    padding-top: 1rem;
-}
-
-header h2 {
-    margin: 0;
-    font-size: 2rem;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-}
-
-nav a {
-    color: var(--link);
-    text-decoration: none;
-    font-size: 1.3rem;
-    position: relative;
-}
-
-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -2px;
-    height: 2px;
-    background-color: var(--link);
-}
-
-nav a:visited {
-    color: var(--link-visited);
-}
-
-nav a:visited::after {
-    background-color: var(--link-visited);
-}
-
-nav a:hover::after {
-    background-color: var(--link-hover);
-}
-
-/* ============================================================= */
 /* ======================= FOOTER STYLES ======================= */
 /* ============================================================= */
 footer {
     background-color: var(--foreground);
     text-align: center;
     font-size: 0.85rem;
+    border-top: 1px solid var(--light-accent);
+    margin: 1rem;
 }
 
 /* ============================================================= */
@@ -332,19 +308,42 @@ footer {
         margin-right: 1.2rem;
         max-width: calc(100% - 2.4em);
     }
+
+    header nav {
+        justify-content: flex-end;
+    }
+
+    header nav ul {
+        justify-content: flex-end;
+    }
+
+    header nav ul li a {
+        align-items: center;
+        flex-grow: 1;
+    }
 }
 
 @media (max-width: 768px) {
-    .container {
+    main {
         padding: 1rem;
     }
 
-    nav ul {
+    header {
         flex-direction: column;
-        gap: 0.5rem;
+        padding: 1rem;
     }
 
-    main {
-        margin: 0 0.5rem;
+    header nav ul {
+        padding: 0px;
+        margin: 1rem;
+    }
+
+    header nav ul li {
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    header nav ul li a {
+        justify-content: center;
     }
 }
