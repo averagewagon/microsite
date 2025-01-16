@@ -6,46 +6,48 @@
     /* Core Colors */
     /* ---------------------------------------------------------------- */
 
-    /* Background color */
-    --background: #121212;
+    /* Background color (darker matte look, like PCB base) */
+    --background: #0f0f0f;
 
-    /* Content background */
-    --foreground: #1e1e1e;
+    /* Content background (rich dark gray, resembling silkscreen areas) */
+    --foreground: #210928;
 
-    /* Lines, subtle dividers */
-    --light-accent: #333333;
+    /* Lines, subtle dividers (slightly more copper-like for PCB traces) */
+    --light-accent: #4c4c4c;
 
-    /* Hover effects, pop-outs */
-    --dark-accent: #181818;
+    /* Hover effects, pop-outs (darker copper-inspired tone) */
+    --dark-accent: #292929;
 
     /* ---------------------------------------------------------------- */
     /* Text Colors */
     /* ---------------------------------------------------------------- */
 
-    /* Standard text color */
+    /* Standard text color (bright white for high contrast) */
     --text: #ffffff;
 
-    /* Less prominent text (e.g., metadata) */
-    --muted-text: #b3b3b3;
+    /* Less prominent text (e.g., metadata, subtle labels) */
+    --muted-text: #cad5fe;
 
-    /* Headings and special text */
-    --signature: #85ffc6;
+    /* Headings and special text (copper-inspired, bold signature color) */
+    --signature: #ffb657;
+    /* Classic gold-like copper color */
+
 
     /* ---------------------------------------------------------------- */
     /* Link Colors */
     /* ---------------------------------------------------------------- */
 
     /* Non-visited links */
-    --link: #66b2ff;
+    --link: #6ee3ff;
 
     /* Slightly darker hover for links */
-    --link-hover: #559add;
+    --link-hover: #52c6ff;
 
     /* Visited links */
-    --link-visited: plum;
+    --link-visited: #ffb6ff;
 
     /* Slightly darker hover for visited links */
-    --link-visited-hover: #b180b1;
+    --link-visited-hover: #e092e0;
 
     /* ---------------------------------------------------------------- */
     /* Misc Colors */
@@ -141,7 +143,8 @@ figcaption {
 
 a {
     color: var(--link);
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 a:hover {
@@ -154,22 +157,6 @@ a:visited {
 
 a:visited:hover {
     color: var(--link-visited-hover);
-}
-
-main h1::before {
-    content: "# ";
-}
-
-main h2::before {
-    content: "## ";
-}
-
-main h3::before {
-    content: "### ";
-}
-
-main h4::before {
-    content: "#### ";
 }
 
 h1,
