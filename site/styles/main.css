@@ -322,6 +322,10 @@ footer {
         align-items: center;
         flex-grow: 1;
     }
+
+    .container {
+        margin: 2rem 0;
+    }
 }
 
 @media (max-width: 768px) {
