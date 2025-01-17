@@ -1,62 +1,65 @@
-# Microsite - [averagewagon.dev](https://averagewagon.dev)
+# Microsite - [joni-on-micro.site](https://joni-on-micro.site)
 
-**Microsite** is a small static website hosted on an ESP32-S3 microcontroller,
-live at **[averagewagon.dev](https://averagewagon.dev)**. This project
-experiments with running a functional website on resource-limited hardware.
+**Microsite** is a static website hosted on an **ESP32-S3 microcontroller**.
+This project is an experiment in running a functional web server on
+resource-constrained hardware. You can check it out live at
+**[joni-on-micro.site](https://joni-on-micro.site)**.
 
-## Feature List
+## Project Overview
 
-- **ESP32-Based Multi-Page Website**:
-  - Running on the ESP32-S3 for fast crypto operations and memory/storage
-    - Currently using an `ESP32-S3-DevKitC-1-N16R8`
-    - Will upgrade to the
-      [LILYGO T-ETH-LITE](https://lilygo.cc/products/t-eth-lite) to use Ethernet
-      instead of WiFi
-  - Uses the default WiFi stack for connectivity
-  - Serves multiple static pages using LittleFS as the filesystem.
+Microsite explores how to serve a static website from a microcontroller while
+balancing efficiency, creativity, and the limitations of embedded hardware. It’s
+a hands-on dive into constrained web design and minimal hosting.
+
+### Current Features
+
+- **ESP32-S3 Web Hosting**:
+
+  - Hosted on an `ESP32-S3-DevKitC-1-N16R8` for its crypto capabilities and
+    ample memory/storage.
+  - Transitioning to [LILYGO T-ETH-LITE](https://lilygo.cc/products/t-eth-lite)
+    to switch from WiFi to Ethernet, improving stability and latency.
+  - Uses LittleFS to manage static files effectively.
+
 - **Custom Static Site Generator**:
-  - The website is built using a custom POSIX shell-based static site generator
-  - Supports multi-page hosting, template substitutions, and Base64-encoded
-    assets for self-contained pages.
-  - Focuses on including all resources into a single HTML file, to minimize
-    HTTPS sessions (which are very expensive to set up on my dinky little MCU)
 
-## Prerequisites
+  - Built as a POSIX shell-based static site generator that handles template
+    substitutions, Base64-encoded assets, and bundles all resources into a
+    single `.html` file.
+  - Designed to minimize HTTPS session overhead and reduce resource usage.
 
-- ESP-IDF v5.1+
-- Shellcheck
-- mklittlefs
+- **Small Test Website**:
+  - Includes a simple test website created with the static site generator,
+    deployed on the ESP32-S3 to showcase its capabilities.
 
-## To-Do List
+## Development Roadmap
 
-### Short-Term
+### Short-Term Goals
 
-- Reuse HTTPS session when multiple requests are made
-- Serve gzip'd resources instead of uncompressed resources
-- Replace the ESP32's `protocol_examples_common` module with a small WiFi
-  handler
-  - WiFi SSID/Passphrase is currently handled through config fields
-  - Unnecessary code size
-- Implement a more secure certificate storage method, such as an HSM
-  - Certificate/Pkey is currently copied into flash memory
-- Put my [motorcycle game](https://github.com/averagewagon/wasm4-zig-game) on
-  the site
-- Load LittleFS contents into memory at boot and serve from a preloaded cache
+- Serve gzip- or brotli-compressed resources for better performance.
+- Host a highly compressed webm video.
+- Implement a table of contents handler for the static site generator.
+- Add support for perma-linkable headers in the static site generator.
+- Securely store certificates with a hardware security module (HSM).
+- Preload LittleFS contents into memory at boot for faster response times.
+- Add interactive content, such as hosting
+  [my motorcycle game](https://github.com/averagewagon/wasm4-zig-game).
 
-### Long-Term
+### Long-Term Goals
 
-- Add a page for basic site statistics (e.g. CPU usage, memory usage, power
-  usage, uptime, requests served)
-- Implement proper dynamic DNS system instead of just manually updating
-  Namecheap when my IP rotates
-- Stress test the site to get some interesting statistics
-- Investigate additional hardware modules
-  - Ethernet PHY (maybe the W5500, but it has no PoE)
-  - External storage (e.g. SPI NOR flash)
-  - Hardware crypto accelerator
-  - Hardware security module
-  - Solar power, or some other cute power strategy
-- Manufacture a custom PCB and housing
-  - Wouldn't it be cute if it fit into 3.5 inch HDD drive cages
-- Host a blog, with the first entry being about web hosting on MCUs
-- Implement RSS/Atom feed publisher
+- Add a site statistics page to show CPU usage, memory usage, uptime, power
+  consumption, and requests served.
+- Implement a dynamic DNS system to automate IP address updates.
+- Stress test the site to gather interesting performance data.
+- Explore additional hardware enhancements:
+  - Ethernet PHY for more reliable networking.
+  - External SPI NOR flash for larger hosting capacity.
+  - Hardware crypto accelerators for faster secure transactions.
+  - Solar power or other innovative energy solutions.
+- Build a microcontroller-based load balancer and set up a fleet of
+  microcontroller web hosts to distribute traffic and improve scalability.
+- Experiment with hosting personal image and file storage on a microcontroller.
+- Try hosting a git server entirely on a microcontroller as an unconventional
+  use case.
+- Design and manufacture a custom PCB and housing, possibly sized to fit a
+  3.5-inch HDD drive cage for compactness and style.
