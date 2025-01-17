@@ -21,6 +21,7 @@ CONTENT_DIR="content"
 IMAGES_DIR="images"
 STYLES_DIR="styles"
 TEMPLATES_DIR="templates"
+CODE_DIR="code"
 BUILD_DIR="build"
 OUTPUT_DIR="$BUILD_DIR/output"
 
@@ -84,6 +85,42 @@ find "$BUILD_DIR" -type f -name "*.html" | while IFS= read -r file; do
         img_mime_type=$(basename "$img_path" | awk -F. '{print $NF}')
         sed -i "s~$img_comment~data:image/$img_mime_type;base64,$base64_data~g" "$file" || error "Failed to substitute image $img_comment in $file"
     done
+
+    # echo "Performing code block substitutions..."
+    # find "$BUILD_DIR" -type f -name "*.html" >/tmp/html_files
+    # while IFS= read -r file; do
+    #     grep -o "{{CODE:[^}]*}}" "$file" >/tmp/code_placeholders
+    #     while IFS= read -r code_placeholder; do
+    #         # Extract file path from the placeholder
+    #         code_file=$(echo "$code_placeholder" | sed -e 's/{{CODE:\(.*\)}}/\1/')
+    #         full_code_path="$CODE_DIR/$code_file"
+
+    #         # Check if the code file exists
+    #         if [ ! -f "$full_code_path" ]; then
+    #             error "Code file not found: $full_code_path"
+    #         fi
+
+    #         # Generate a valid filename for the debug output
+    #         pygment_output_path="$BUILD_DIR/debug_$(echo "$code_file" | tr '/' '_').txt"
+
+    #         # Generate highlighted code using Pygments (snippet only)
+    #         highlighted_code=$(pygmentize -g -f html -O nowrap "$full_code_path") || error "Failed to highlight code $code_file"
+
+    #         # Save the raw Pygments output for debugging
+    #         echo "$highlighted_code" >"$pygment_output_path"
+
+    #         # Escape special characters in the highlighted code for substitution
+    #         escaped_code=$(printf '%s' "$highlighted_code" | sed 's/[&/\]/\\&/g')
+
+    #         # Replace the placeholder with the highlighted code
+    #         awk -v placeholder="$code_placeholder" -v replacement="$escaped_code" '
+    #     BEGIN { RS=""; ORS="\n\n" } # Treat the file as a single record
+    #     { gsub(placeholder, replacement) } 1' "$file" >"$file.tmp" || error "Failed to substitute code $code_placeholder in $file"
+
+    #         # Replace the original file with the updated file
+    #         mv "$file.tmp" "$file"
+    #     done </tmp/code_placeholders
+    # done </tmp/html_files
 
 done
 
