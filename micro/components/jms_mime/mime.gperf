@@ -1,5 +1,5 @@
 %{
-#include "jms/mime/priv_mime_hash.h"
+#include "priv_mime_hash.h"
 %}
 %%
 aac, "audio/aac"

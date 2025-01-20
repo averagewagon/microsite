@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "jms/error/error.h"
+#include "jms_error.h"
 
 /**
  * @brief Determines the MIME type based on the file extension.
