@@ -1,7 +1,9 @@
-#include "jms/mime/mime.h"
-#include "jms/mime/priv_mime_hash.h"
 #include <stdio.h>
 #include <string.h>
+
+#include "jms_error.h"
+#include "jms_mime.h"
+#include "priv_mime_hash.h"
 
 jms_err_t jms_mime_getType(const char* filename, char* out_mime_type, size_t out_mime_size)
 {

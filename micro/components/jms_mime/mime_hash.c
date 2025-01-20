@@ -26,7 +26,8 @@
 
 #line 1 "mime.gperf"
 
-#include "jms/mime/priv_mime_hash.h"
+#include "priv_mime_hash.h"
+#include "string.h"
 
 #define TOTAL_KEYWORDS  76
 #define MIN_WORD_LENGTH 2
