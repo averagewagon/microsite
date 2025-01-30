@@ -36,6 +36,8 @@ a hands-on dive into constrained web design and minimal hosting.
 
 ### Short-Term Goals
 
+- Implement a watchdog which resets the board if it hasn't received a request in
+  a while
 - Serve gzip- or brotli-compressed resources for better performance.
 - Host a highly compressed webm video.
 - Implement a table of contents handler for the static site generator.
