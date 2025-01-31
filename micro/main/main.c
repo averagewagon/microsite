@@ -25,6 +25,12 @@
 #include "protocol_examples_common.h"
 #include "sdkconfig.h"
 
+// hehe
+#include "jms_error.h"
+#include "jms_filesystem.h"
+#include "jms_mime.h"
+#include "jms_webserver.h"
+
 // === Global Variables ===
 static const char* TAG = "microsite";
 
@@ -450,6 +456,8 @@ void app_main(void)
 {
     // TODO: Why is this null thing here? Is it necessary?
     static httpd_handle_t server = NULL;
+
+    jms_ws_stop();
 
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());

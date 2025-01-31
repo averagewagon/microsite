@@ -6,7 +6,7 @@
 
 #include "jms_error.h"
 
-#define TAG "jms_fs"
+#define TAG "JMS_FS"
 
 static bool fs_initialized = false; // Track filesystem state
 
