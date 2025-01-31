@@ -40,7 +40,7 @@ but not exposed externally.
 
 ```c
 // Examples
-jms_mime_getType(); // Public API
+jms_mime_get_type(); // Public API
 in_word_set();      // Private gperf-generated function
 ```
 

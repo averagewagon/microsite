@@ -53,11 +53,6 @@ a hands-on dive into constrained web design and minimal hosting.
   consumption, and requests served.
 - Implement a dynamic DNS system to automate IP address updates.
 - Stress test the site to gather interesting performance data.
-- Explore additional hardware enhancements:
-  - Ethernet PHY for more reliable networking.
-  - External SPI NOR flash for larger hosting capacity.
-  - Hardware crypto accelerators for faster secure transactions.
-  - Solar power or other innovative energy solutions.
 - Build a microcontroller-based load balancer and set up a fleet of
   microcontroller web hosts to distribute traffic and improve scalability.
 - Experiment with hosting personal image and file storage on a microcontroller.
