@@ -9,7 +9,7 @@
 
 static const char* TAG = "JMS_MIME";
 
-jms_err_t jms_mime_getType(const char* filename, char* out_mime_type, size_t out_mime_size)
+jms_err_t jms_mime_get_type(const char* filename, char* out_mime_type, size_t out_mime_size)
 {
     if (filename == NULL || out_mime_type == NULL || out_mime_size == 0)
     {

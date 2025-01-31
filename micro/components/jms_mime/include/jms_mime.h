@@ -14,6 +14,6 @@
  * @param out_mime_size The size of the output buffer.
  * @return JMS_OK on success, an error code on failure.
  */
-jms_err_t jms_mime_getType(const char* filename, char* out_mime_type, size_t out_mime_size);
+jms_err_t jms_mime_get_type(const char* filename, char* out_mime_type, size_t out_mime_size);
 
 #endif // JMS_MIME_H

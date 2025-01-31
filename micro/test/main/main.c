@@ -1,6 +1,7 @@
 #include "unity.h"
 #include <stdio.h>
 
+#include "test_filesystem.c"
 #include "test_mime.c"
 
 void app_main(void)
