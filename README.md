@@ -5,21 +5,16 @@ This project is an experiment in running a functional web server on
 resource-constrained hardware. You can check it out live at
 **[joni-on-micro.site](https://joni-on-micro.site)**.
 
-## Project Overview
-
-Microsite explores how to serve a static website from a microcontroller while
-balancing efficiency, creativity, and the limitations of embedded hardware. It’s
-a hands-on dive into constrained web design and minimal hosting.
-
-### Current Features
+## Current Features
 
 - **ESP32-S3 Web Hosting**:
 
   - Hosted on an `ESP32-S3-DevKitC-1-N16R8` for its crypto capabilities and
     ample memory/storage.
-  - Transitioning to [LILYGO T-ETH-LITE](https://lilygo.cc/products/t-eth-lite)
-    to switch from WiFi to Ethernet, improving stability and latency.
-  - Uses LittleFS to manage static files effectively.
+  - Integrates LittleFS with Espressif's httpd to serve static files out of the
+    filesystem
+  - Handles basic web behavior like HTTPS session management, hierarchical
+    pages, brotli compression, 404 page redirection, etc.
 
 - **Custom Static Site Generator**:
 
@@ -32,31 +27,44 @@ a hands-on dive into constrained web design and minimal hosting.
   - Includes a simple test website created with the static site generator,
     deployed on the ESP32-S3 to showcase its capabilities.
 
-## Development Roadmap
+## Future
 
 ### Short-Term Goals
 
-- Implement a watchdog which resets the board if it hasn't received a request in
-  a while
-- Serve gzip- or brotli-compressed resources for better performance.
-- Host a highly compressed webm video.
-- Implement a table of contents handler for the static site generator.
-- Add support for perma-linkable headers in the static site generator.
-- Securely store certificates with a hardware security module (HSM).
-- Preload LittleFS contents into memory at boot for faster response times.
-- Add interactive content, such as hosting
-  [my motorcycle game](https://github.com/averagewagon/wasm4-zig-game).
+- MCU webserver improvements:
+
+  - Create a memory cache of website content
+  - Replace WiFi with Ethernet for lower latency and better reliability
+  - Add SD card support
+  - Finish porting the project to the
+    [LILYGO T-ETH-LITE](https://lilygo.cc/products/t-eth-lite)
+  - Implement a watchdog reset if the board becomes unresponsive
+
+- Website improvements:
+
+  - Fork ESP-IDF `httpd` to allow more low-level control over request handling,
+    remove unnecessary copies, etc.
+  - Make it tolerable to actually write for the blog, like a markdown-to-html
+    generator
+  - Add table of contents generation and permalinkable headers
+  - Host compressed `.webm` video content
 
 ### Long-Term Goals
 
-- Add a site statistics page to show CPU usage, memory usage, uptime, power
-  consumption, and requests served.
-- Implement a dynamic DNS system to automate IP address updates.
-- Stress test the site to gather interesting performance data.
-- Build a microcontroller-based load balancer and set up a fleet of
-  microcontroller web hosts to distribute traffic and improve scalability.
-- Experiment with hosting personal image and file storage on a microcontroller.
-- Try hosting a git server entirely on a microcontroller as an unconventional
-  use case.
-- Design and manufacture a custom PCB and housing, possibly sized to fit a
-  3.5-inch HDD drive cage for compactness and style.
+- Improving the "production-readiness" of the site:
+
+  - Use OpenWRT-based router to enable round-robin load balancing across
+    multiple Microsite boards.
+  - Set up a way to monitor and update all boards remotely.
+  - Conduct stress testing to measure performance limits.
+
+- Custom Hardware & PCB:
+
+  - Create a custom PCB with HSM, Ethernet, SD card
+  - Design an enclosure sized to fit a 3.5-inch HDD drive cage, so it looks like
+    a tiny version of a server chassis
+
+- Creating content:
+  - Add a site statistics page showing: CPU usage, memory usage, uptime, and
+    request metrics.
+  - Write a blog post about making the website itself
