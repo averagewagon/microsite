@@ -28,7 +28,8 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
     char buffer[512];
     size_t bytes_read = 0;
     const char* mime_type;
-    int use_brotli = strstr(request->accept_encoding, "br") != NULL;
+    const char* selected_filepath = filepath;
+    const char* content_encoding = NULL;
 
     // Step 1: Identify MIME type first
     if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
@@ -36,32 +37,31 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
         mime_type = "application/octet-stream";
     }
 
-    // Step 2: Check if Brotli (.br) version exists (only for .html files)
-    char brotli_filepath[256];
-    if (use_brotli && strstr(filepath, ".html"))
+    // Step 2: Check if Brotli version is available
+    if (strstr(request->accept_encoding, "br") != NULL)
     {
+        char brotli_filepath[256];
         snprintf(brotli_filepath, sizeof(brotli_filepath), "%s.br", filepath);
+
         if (jms_fs_exists(brotli_filepath) == JMS_OK)
         {
-            ESP_LOGI(TAG, "Serving Brotli-compressed file: %s", brotli_filepath);
-            if (jms_fs_open(brotli_filepath, &file_handle) == JMS_OK)
-            {
-                jms_ws_set_response_headers(request, "200 OK", "text/html", "br", "max-age=86400");
-                goto serve;
-            }
+            ESP_LOGI(TAG, "Using Brotli version: %s", brotli_filepath);
+            selected_filepath = brotli_filepath;
+            content_encoding = "br";
         }
     }
 
-    // Step 3: Open normal file if Brotli is unavailable
-    if (jms_fs_exists(filepath) != JMS_OK || jms_fs_open(filepath, &file_handle) != JMS_OK)
+    // Step 3: Verify file exists and open it
+    if (jms_fs_exists(selected_filepath) != JMS_OK ||
+        jms_fs_open(selected_filepath, &file_handle) != JMS_OK)
     {
         return JMS_ERR_FS_FILE_NOT_FOUND;
     }
 
-    jms_ws_set_response_headers(request, "200 OK", mime_type, NULL, "max-age=86400");
+    // Step 4: Set headers
+    jms_ws_set_response_headers(request, "200 OK", mime_type, content_encoding, "max-age=86400");
 
-serve:
-    // Step 4: Stream file content in chunks
+    // Step 5: Stream file content in chunks
     while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) == JMS_OK &&
            bytes_read > 0)
     {
