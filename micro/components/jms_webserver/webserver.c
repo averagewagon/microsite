@@ -29,12 +29,6 @@ static void jms_ws_parse_request(httpd_req_t* req, jms_ws_request_t* out_request
         out_request->query_length = 0;
     }
 
-    if (httpd_req_get_hdr_value_str(req, "Accept", out_request->accept,
-                                    sizeof(out_request->accept)) != ESP_OK)
-    {
-        out_request->accept[0] = '\0';
-    }
-
     if (httpd_req_get_hdr_value_str(req, "Accept-Encoding", out_request->accept_encoding,
                                     sizeof(out_request->accept_encoding)) != ESP_OK)
     {

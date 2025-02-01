@@ -4,8 +4,7 @@
 #include "jms_error.h"
 #include <stdint.h>
 
-#define JMS_WS_ACCEPT_SIZE   64
-#define JMS_WS_ENCODING_SIZE 32
+#define JMS_WS_ENCODING_SIZE 64
 
 /**
  * @brief Struct representing an incoming HTTP request.
@@ -16,7 +15,6 @@ typedef struct
     const char* path;
     const char* query;
     size_t query_length;
-    char accept[JMS_WS_ACCEPT_SIZE];
     char accept_encoding[JMS_WS_ENCODING_SIZE];
     void* internal_req;
 } jms_ws_request_t;
