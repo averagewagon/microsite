@@ -1,6 +1,7 @@
 #ifndef JMS_ERROR_H
 #define JMS_ERROR_H
 
+#include <assert.h>
 #include <esp_log.h>
 #include <stdint.h>
 
