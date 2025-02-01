@@ -23,26 +23,41 @@ calculate_dir_size() {
 
 # Pre-check if the directory size exceeds the partition size
 check_directory_size() {
-    DIR_SIZE=$(calculate_dir_size "$SITE_DIR")
+    DIR_SIZE=$(calculate_dir_size "$OUTPUT_RESOURCES")
     echo "Directory size: $DIR_SIZE bytes"
     echo "Partition size: $PARTITION_SIZE_DEC bytes"
 
     if [ "$DIR_SIZE" -gt "$PARTITION_SIZE_DEC" ]; then
-        echo "Warning: The site directory is larger than the partition size."
+        echo "Warning: The resources directory is larger than the partition size."
         PERCENTAGE_OVER=$((DIR_SIZE * 100 / PARTITION_SIZE_DEC))
         echo "It is $PERCENTAGE_OVER% of the partition size."
         echo "Please reduce the size of the site directory or increase the partition size."
 
         echo "Largest files in the site directory:"
-        find "$SITE_DIR" -type f -exec du -h {} + | sort -rh | head -10
+        find "$OUTPUT_RESOURCES" -type f -exec du -h {} + | sort -rh | head -10
         exit 1
     fi
+}
+
+# Function to compress files with Brotli
+compress_with_brotli() {
+    if ! command -v brotli >/dev/null 2>&1; then
+        error "Brotli (brotli) is not installed or not in PATH. Install it with: sudo apt install brotli"
+    fi
+
+    echo "Compressing .html files with Brotli..."
+    find "$OUTPUT_RESOURCES" -type f -name "*.html" | while IFS= read -r file; do
+        # Compress file and save as .br
+        brotli -f --best "$file" -o "$file.br"
+        echo "Compressed: $file -> $file.br"
+    done
 }
 
 # Paths and variables
 REPO_ROOT=$(git rev-parse --show-toplevel)
 SITE_DIR="${REPO_ROOT}/site/build/output"
 OUTPUT_DIR="${REPO_ROOT}/scripts/build"
+OUTPUT_RESOURCES="${OUTPUT_DIR}/resources"
 PARTITIONS_FILE="${REPO_ROOT}/micro/partitions.csv"
 OUTPUT_IMAGE="${OUTPUT_DIR}/littlefs_image.bin"
 
@@ -75,20 +90,23 @@ if [ ! -d "$SITE_DIR" ]; then
     error "$SITE_DIR does not exist. Create it and add your site files."
 fi
 
-# Ensure extra files are removed
-echo "Removing unreferenced files from the build directory..."
-"${REPO_ROOT}/scripts/delete-extras.sh"
+# Create and clean the output directory
+rm -rf "$OUTPUT_DIR" || true
+mkdir -p "$OUTPUT_RESOURCES"
+
+# Copy all files from SITE_DIR to OUTPUT_RESOURCES
+echo "Copying files from $SITE_DIR to $OUTPUT_RESOURCES..."
+cp -r "$SITE_DIR/"* "$OUTPUT_RESOURCES/"
+
+# Compress files with Brotli
+compress_with_brotli
 
 # Pre-check directory size
 check_directory_size
 
-# Create and clean the output directory
-rm -rf "$OUTPUT_DIR" || true
-mkdir -p "$OUTPUT_DIR"
-
-# Package the site directory into a LittleFS image
-echo "Packaging $SITE_DIR into $OUTPUT_IMAGE..."
-if ! mklittlefs -c "$SITE_DIR" -p 256 -b 4096 -s "$PARTITION_SIZE_DEC" "$OUTPUT_IMAGE"; then
+# Package the resources directory into a LittleFS image
+echo "Packaging $OUTPUT_RESOURCES into $OUTPUT_IMAGE..."
+if ! mklittlefs -c "$OUTPUT_RESOURCES" -p 256 -b 4096 -s "$PARTITION_SIZE_DEC" "$OUTPUT_IMAGE"; then
     error "Failed to create LittleFS image. The directory size likely exceeds the partition size."
 fi
 

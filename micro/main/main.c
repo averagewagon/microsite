@@ -22,19 +22,65 @@
 
 static const char* TAG = "microsite";
 
-static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
+static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
 {
-    char filepath[256];
     jms_fs_handle_t file_handle;
     char buffer[512];
     size_t bytes_read = 0;
+    const char* mime_type;
+    int use_brotli = strstr(request->accept_encoding, "br") != NULL;
+
+    // Step 1: Identify MIME type first
+    if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
+    {
+        mime_type = "application/octet-stream";
+    }
+
+    // Step 2: Check if Brotli (.br) version is available (only for .html files)
+    char brotli_filepath[256];
+    if (use_brotli && strstr(filepath, ".html"))
+    {
+        snprintf(brotli_filepath, sizeof(brotli_filepath), "%s.br", filepath);
+        if (jms_fs_open(brotli_filepath, &file_handle) == JMS_OK)
+        {
+            ESP_LOGI(TAG, "Serving Brotli-compressed file: %s", brotli_filepath);
+            jms_ws_set_response_headers(request, "200 OK", "text/html", "br", "max-age=86400");
+            goto serve;
+        }
+    }
+
+    // Step 3: Open normal file if Brotli is unavailable
+    if (jms_fs_open(filepath, &file_handle) != JMS_OK)
+    {
+        return JMS_ERR_FS_FILE_NOT_FOUND;
+    }
+
+    jms_ws_set_response_headers(request, "200 OK", mime_type, NULL, "max-age=86400");
+
+serve:
+    // Step 4: Stream file content in chunks
+    while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) == JMS_OK &&
+           bytes_read > 0)
+    {
+        jms_ws_response_send_chunk(request, buffer, bytes_read);
+    }
+
+    // End chunked response
+    jms_ws_response_send_chunk(request, NULL, 0);
+    jms_fs_close(&file_handle);
+    return JMS_OK;
+}
+
+static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
+{
+    char filepath[256];
 
     ESP_LOGI(TAG, "Incoming request: %s", request->path);
 
-    // Resolve file path
+    // Step 1: Determine base filepath
     if (strcmp(request->path, "/") == 0)
     {
-        snprintf(filepath, sizeof(filepath), "/littlefs/index.html");
+        strcpy(filepath, "/littlefs/index.html");
     }
     else if (request->path[strlen(request->path) - 1] == '/')
     {
@@ -47,46 +93,25 @@ static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
 
     ESP_LOGI(TAG, "Resolved file path: %s", filepath);
 
-    // Open file
-    jms_err_t fs_result = jms_fs_open(filepath, &file_handle);
-    if (fs_result != JMS_OK)
+    // Step 2: Serve the file (handles Brotli fallback logic)
+    if (serve_file(request, filepath) == JMS_OK)
     {
-        ESP_LOGW(TAG, "File not found: %s", filepath);
-
-        // Try serving /littlefs/404.html
-        snprintf(filepath, sizeof(filepath), "/littlefs/404.html");
-        fs_result = jms_fs_open(filepath, &file_handle);
-
-        if (fs_result != JMS_OK)
-        {
-            // If 404.html also doesn't exist, return a hardcoded response
-            ESP_LOGW(TAG, "404.html not found, serving built-in response.");
-            jms_ws_set_response_headers(request, "404 Not Found", "text/html", NULL, "max-age=60");
-            return jms_ws_response_send(request, "<h1>404 Not Found</h1>", 22);
-        }
+        return JMS_OK;
     }
 
-    // Determine MIME type
-    const char* mime_type;
-    if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
+    // Step 3: Serve 404.html if file is missing
+    ESP_LOGW(TAG, "File not found: %s, trying 404 fallback.", filepath);
+    strcpy(filepath, "/littlefs/404.html");
+
+    if (serve_file(request, filepath) == JMS_OK)
     {
-        mime_type = "application/octet-stream";
+        return JMS_OK;
     }
 
-    // Set headers
-    jms_ws_set_response_headers(request, "200 OK", mime_type, NULL, "max-age=86400");
-
-    // Send file in chunks
-    while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) == JMS_OK &&
-           bytes_read > 0)
-    {
-        jms_ws_response_send_chunk(request, buffer, bytes_read);
-    }
-
-    // End chunked response
-    jms_ws_response_send_chunk(request, NULL, 0);
-    jms_fs_close(&file_handle);
-    return JMS_OK;
+    // Step 4: If 404.html is missing, serve built-in response
+    ESP_LOGW(TAG, "404.html not found, serving built-in response.");
+    jms_ws_set_response_headers(request, "404 Not Found", "text/html", NULL, "max-age=60");
+    return jms_ws_response_send(request, "<h1>404 Not Found</h1>", 22);
 }
 
 /**
@@ -119,6 +144,8 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base, int32_t e
     {
         ESP_LOGE(TAG, "Failed to stop HTTPS server, %u", (uint16_t)err);
     }
+
+    ESP_ERROR_CHECK(example_connect());
 }
 
 /**
