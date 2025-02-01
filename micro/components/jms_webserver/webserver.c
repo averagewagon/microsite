@@ -3,7 +3,7 @@
 #include <esp_log.h>
 #include <string.h>
 
-#define TAG "JMS_WS"
+#define TAG "jms_ws"
 
 static jms_ws_handler_t request_handler = NULL;
 static httpd_handle_t server_handle = NULL;
@@ -15,9 +15,8 @@ static void jms_ws_parse_request(httpd_req_t* req, jms_ws_request_t* out_request
 {
     out_request->method = http_method_str(req->method);
     out_request->path = req->uri;
-    out_request->internal_req = req; // Store opaque pointer
+    out_request->internal_req = req;
 
-    // Locate query string in URI (if present)
     char* query_start = strchr(req->uri, '?');
     if (query_start)
     {
@@ -30,7 +29,6 @@ static void jms_ws_parse_request(httpd_req_t* req, jms_ws_request_t* out_request
         out_request->query_length = 0;
     }
 
-    // Headers (Use fixed-size buffers)
     if (httpd_req_get_hdr_value_str(req, "Accept", out_request->accept,
                                     sizeof(out_request->accept)) != ESP_OK)
     {
@@ -55,72 +53,16 @@ static esp_err_t jms_ws_request_handler(httpd_req_t* req)
         return ESP_FAIL;
     }
 
-    // Parse the request
     jms_ws_request_t request;
     jms_ws_parse_request(req, &request);
-
-    // Call the user-provided handler
     return request_handler(&request);
 }
 
 /**
- * @brief Sends an HTTP response.
+ * @brief Starts the web server with optional SSL certificates.
  */
-jms_err_t jms_ws_send_response(const jms_ws_request_t* request, const char* status,
-                               const char* content_type, const char* content_encoding,
-                               const char* cache_control, const char* content,
-                               size_t content_length)
-{
-    if (!request || !request->internal_req || !status || !content_type)
-    {
-        return JMS_ERR_INVALID_ARG;
-    }
-
-    httpd_req_t* req = (httpd_req_t*)request->internal_req;
-
-    if (httpd_resp_set_status(req, status) != ESP_OK)
-    {
-        return JMS_ERR_INVALID_ARG;
-    }
-
-    if (httpd_resp_set_type(req, content_type) != ESP_OK)
-    {
-        return JMS_ERR_INVALID_ARG;
-    }
-
-    if (content_encoding && httpd_resp_set_hdr(req, "Content-Encoding", content_encoding) != ESP_OK)
-    {
-        return JMS_ERR_INVALID_ARG;
-    }
-
-    if (cache_control && httpd_resp_set_hdr(req, "Cache-Control", cache_control) != ESP_OK)
-    {
-        return JMS_ERR_INVALID_ARG;
-    }
-
-    // Send response body
-    if (content && content_length > 0)
-    {
-        if (httpd_resp_send(req, content, content_length) != ESP_OK)
-        {
-            return JMS_ERR_INVALID_ARG;
-        }
-    }
-    else
-    {
-        if (httpd_resp_send(req, NULL, 0) != ESP_OK)
-        {
-            return JMS_ERR_INVALID_ARG;
-        }
-    }
-
-    return JMS_OK;
-}
-
-/**
- * @brief Starts the HTTPS server with SSL certificates.
- */
-jms_err_t jms_ws_start(jms_ws_handler_t handler)
+jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert, size_t cert_len,
+                       const unsigned char* pkey, size_t pkey_len)
 {
     if (!handler)
     {
@@ -134,16 +76,19 @@ jms_err_t jms_ws_start(jms_ws_handler_t handler)
     conf.httpd.uri_match_fn = httpd_uri_match_wildcard;
     conf.httpd.max_uri_handlers = 1;
 
-    // Load SSL certificates
-    extern const unsigned char servercert_start[] asm("_binary_fullchain_pem_start");
-    extern const unsigned char servercert_end[] asm("_binary_fullchain_pem_end");
-    conf.servercert = servercert_start;
-    conf.servercert_len = servercert_end - servercert_start;
-
-    extern const unsigned char prvtkey_pem_start[] asm("_binary_privkey_pem_start");
-    extern const unsigned char prvtkey_pem_end[] asm("_binary_privkey_pem_end");
-    conf.prvtkey_pem = prvtkey_pem_start;
-    conf.prvtkey_len = prvtkey_pem_end - prvtkey_pem_start;
+    // Set up SSL only if cert and key are provided
+    if (cert && cert_len > 0 && pkey && pkey_len > 0)
+    {
+        conf.servercert = cert;
+        conf.servercert_len = cert_len;
+        conf.prvtkey_pem = pkey;
+        conf.prvtkey_len = pkey_len;
+        ESP_LOGI(TAG, "Starting HTTPS server with SSL certificates.");
+    }
+    else
+    {
+        ESP_LOGE(TAG, "No SSL certificate provided");
+    }
 
     if (httpd_ssl_start(&server_handle, &conf) != ESP_OK)
     {
@@ -151,7 +96,6 @@ jms_err_t jms_ws_start(jms_ws_handler_t handler)
         return JMS_ERR_WS_INIT_FAILED;
     }
 
-    // Register the wildcard handler
     static const httpd_uri_t uri_handler = {
         .uri = "*",
         .method = HTTP_GET,
@@ -165,7 +109,7 @@ jms_err_t jms_ws_start(jms_ws_handler_t handler)
         return JMS_ERR_WS_INIT_FAILED;
     }
 
-    ESP_LOGI(TAG, "HTTPS server started.");
+    ESP_LOGI(TAG, "Web server started.");
     return JMS_OK;
 }
 
@@ -182,4 +126,72 @@ jms_err_t jms_ws_stop(void)
         return JMS_OK;
     }
     return JMS_ERR_WS_NOT_INITIALIZED;
+}
+
+/**
+ * @brief Sets response headers before sending content.
+ */
+jms_err_t jms_ws_set_response_headers(const jms_ws_request_t* request, const char* status,
+                                      const char* content_type, const char* content_encoding,
+                                      const char* cache_control)
+{
+    if (!request || !request->internal_req || !status || !content_type)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    httpd_req_t* req = (httpd_req_t*)request->internal_req;
+
+    if (httpd_resp_set_status(req, status) != ESP_OK ||
+        httpd_resp_set_type(req, content_type) != ESP_OK ||
+        (content_encoding &&
+         httpd_resp_set_hdr(req, "Content-Encoding", content_encoding) != ESP_OK) ||
+        (cache_control && httpd_resp_set_hdr(req, "Cache-Control", cache_control) != ESP_OK))
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    return JMS_OK;
+}
+
+/**
+ * @brief Sends the entire response body in one call.
+ */
+jms_err_t jms_ws_response_send(const jms_ws_request_t* request, const char* content,
+                               size_t content_length)
+{
+    if (!request || !request->internal_req || (content_length > 0 && !content))
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    httpd_req_t* req = (httpd_req_t*)request->internal_req;
+
+    if (httpd_resp_send(req, content, content_length) != ESP_OK)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    return JMS_OK;
+}
+
+/**
+ * @brief Sends a chunk of response data. Send NULL and 0 to signal the end.
+ */
+jms_err_t jms_ws_response_send_chunk(const jms_ws_request_t* request, const char* content,
+                                     size_t content_length)
+{
+    if (!request || !request->internal_req)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    httpd_req_t* req = (httpd_req_t*)request->internal_req;
+
+    if (httpd_resp_send_chunk(req, content, content_length) != ESP_OK)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    return JMS_OK;
 }
