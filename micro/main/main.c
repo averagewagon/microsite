@@ -26,6 +26,7 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
 {
     jms_fs_handle_t file_handle;
     char buffer[512];
+    char brotli_filepath[256];
     size_t bytes_read = 0;
     const char* mime_type;
     const char* selected_filepath = filepath;
@@ -40,7 +41,6 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
     // Step 2: Check if Brotli version is available
     if (strstr(request->accept_encoding, "br") != NULL)
     {
-        char brotli_filepath[256];
         snprintf(brotli_filepath, sizeof(brotli_filepath), "%s.br", filepath);
 
         if (jms_fs_exists(brotli_filepath) == JMS_OK)
