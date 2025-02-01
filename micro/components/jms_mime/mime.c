@@ -9,9 +9,9 @@
 
 static const char* TAG = "JMS_MIME";
 
-jms_err_t jms_mime_get_type(const char* filename, char* out_mime_type, size_t out_mime_size)
+jms_err_t jms_mime_get_type(const char* filename, const char** out_mime_type)
 {
-    if (filename == NULL || out_mime_type == NULL || out_mime_size == 0)
+    if (filename == NULL || out_mime_type == NULL)
     {
         return JMS_ERR_INVALID_ARG;
     }
@@ -26,13 +26,7 @@ jms_err_t jms_mime_get_type(const char* filename, char* out_mime_type, size_t ou
     const struct mime_entry* entry = in_word_set(ext, strlen(ext));
     if (entry)
     {
-        size_t mime_len = strlen(entry->mime_type);
-        if (mime_len >= out_mime_size)
-        {
-            return JMS_ERR_INVALID_ARG;
-        }
-        strncpy(out_mime_type, entry->mime_type, out_mime_size);
-        out_mime_type[out_mime_size - 1] = '\0';
+        *out_mime_type = entry->mime_type;
         return JMS_OK;
     }
 
