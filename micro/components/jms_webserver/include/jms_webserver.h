@@ -18,7 +18,7 @@ typedef struct
     size_t query_length;
     char accept[JMS_WS_ACCEPT_SIZE];
     char accept_encoding[JMS_WS_ENCODING_SIZE];
-    void* internal_req; // Opaque pointer to `httpd_req_t`
+    void* internal_req;
 } jms_ws_request_t;
 
 /**
@@ -30,29 +30,17 @@ typedef struct
 typedef jms_err_t (*jms_ws_handler_t)(const jms_ws_request_t* request);
 
 /**
- * @brief Sends an HTTP response.
- *
- * @param request The request object containing the internal reference.
- * @param status The full status line (e.g., "200 OK", "404 Not Found").
- * @param content_type The MIME type (e.g., "text/html").
- * @param content_encoding The content encoding (e.g., "br", NULL if none).
- * @param cache_control The cache control policy (e.g., "max-age=86400").
- * @param content The response body.
- * @param content_length The length of the response body.
- * @return JMS_OK on success, `JMS_ERR_INVALID_ARG` on failure.
- */
-jms_err_t jms_ws_send_response(const jms_ws_request_t* request, const char* status,
-                               const char* content_type, const char* content_encoding,
-                               const char* cache_control, const char* content,
-                               size_t content_length);
-
-/**
- * @brief Starts the web server.
+ * @brief Starts the HTTPS server with optional SSL certificates.
  *
  * @param handler The function to handle HTTP requests.
+ * @param cert Pointer to the SSL certificate (PEM format), or NULL for HTTP-only.
+ * @param cert_len Length of the certificate.
+ * @param pkey Pointer to the private key (PEM format), or NULL for HTTP-only.
+ * @param pkey_len Length of the private key.
  * @return JMS_OK on success, `JMS_ERR_INVALID_ARG` if handler is NULL.
  */
-jms_err_t jms_ws_start(jms_ws_handler_t handler);
+jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert, size_t cert_len,
+                       const unsigned char* pkey, size_t pkey_len);
 
 /**
  * @brief Stops the web server.
@@ -60,5 +48,41 @@ jms_err_t jms_ws_start(jms_ws_handler_t handler);
  * @return JMS_OK on success, `JMS_ERR_WS_NOT_INITIALIZED` if the server was not running.
  */
 jms_err_t jms_ws_stop(void);
+
+/**
+ * @brief Sets response headers before sending content.
+ *
+ * @param request The incoming request.
+ * @param status The full status line (e.g., "200 OK").
+ * @param content_type The MIME type (e.g., "text/html").
+ * @param content_encoding The content encoding (e.g., "br", NULL if none).
+ * @param cache_control The cache control policy (e.g., "max-age=86400").
+ * @return JMS_OK on success, JMS_ERR_INVALID_ARG if parameters are invalid.
+ */
+jms_err_t jms_ws_set_response_headers(const jms_ws_request_t* request, const char* status,
+                                      const char* content_type, const char* content_encoding,
+                                      const char* cache_control);
+
+/**
+ * @brief Sends the entire response body in one call.
+ *
+ * @param request The incoming request.
+ * @param content The response body.
+ * @param content_length The length of the response body.
+ * @return JMS_OK on success, JMS_ERR_INVALID_ARG on failure.
+ */
+jms_err_t jms_ws_response_send(const jms_ws_request_t* request, const char* content,
+                               size_t content_length);
+
+/**
+ * @brief Sends a chunk of response data. Send NULL and 0 to signal the end.
+ *
+ * @param request The incoming request.
+ * @param content A pointer to the chunk data.
+ * @param content_length The size of the chunk.
+ * @return JMS_OK on success, JMS_ERR_INVALID_ARG on failure.
+ */
+jms_err_t jms_ws_response_send_chunk(const jms_ws_request_t* request, const char* content,
+                                     size_t content_length);
 
 #endif // JMS_WEBSERVER_H
