@@ -36,21 +36,24 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
         mime_type = "application/octet-stream";
     }
 
-    // Step 2: Check if Brotli (.br) version is available (only for .html files)
+    // Step 2: Check if Brotli (.br) version exists (only for .html files)
     char brotli_filepath[256];
     if (use_brotli && strstr(filepath, ".html"))
     {
         snprintf(brotli_filepath, sizeof(brotli_filepath), "%s.br", filepath);
-        if (jms_fs_open(brotli_filepath, &file_handle) == JMS_OK)
+        if (jms_fs_exists(brotli_filepath) == JMS_OK)
         {
             ESP_LOGI(TAG, "Serving Brotli-compressed file: %s", brotli_filepath);
-            jms_ws_set_response_headers(request, "200 OK", "text/html", "br", "max-age=86400");
-            goto serve;
+            if (jms_fs_open(brotli_filepath, &file_handle) == JMS_OK)
+            {
+                jms_ws_set_response_headers(request, "200 OK", "text/html", "br", "max-age=86400");
+                goto serve;
+            }
         }
     }
 
     // Step 3: Open normal file if Brotli is unavailable
-    if (jms_fs_open(filepath, &file_handle) != JMS_OK)
+    if (jms_fs_exists(filepath) != JMS_OK || jms_fs_open(filepath, &file_handle) != JMS_OK)
     {
         return JMS_ERR_FS_FILE_NOT_FOUND;
     }

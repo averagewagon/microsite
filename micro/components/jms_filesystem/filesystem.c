@@ -1,7 +1,9 @@
 #include "jms_filesystem.h"
 #include <esp_littlefs.h>
 #include <esp_log.h>
+#include <esp_vfs.h>
 #include <stdio.h>
+#include <sys/stat.h>
 
 #define TAG "JMS_FS"
 
@@ -34,6 +36,31 @@ jms_err_t jms_fs_init(void)
     fs_initialized = true;
     ESP_LOGI(TAG, "LittleFS initialized.");
     return JMS_OK;
+}
+
+/**
+ * @brief Checks if a file exists using `stat()` for efficiency.
+ */
+jms_err_t jms_fs_exists(const char* path)
+{
+    if (!fs_initialized)
+    {
+        ESP_LOGE(TAG, "Filesystem not initialized");
+        return JMS_ERR_FS_NOT_INITIALIZED;
+    }
+    if (!path)
+    {
+        ESP_LOGE(TAG, "Invalid argument to jms_fs_exists");
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    struct stat st;
+    if (stat(path, &st) == 0)
+    {
+        return JMS_OK; // File exists
+    }
+
+    return JMS_ERR_FS_FILE_NOT_FOUND;
 }
 
 /**

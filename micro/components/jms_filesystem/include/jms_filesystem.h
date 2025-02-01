@@ -19,6 +19,14 @@ typedef struct
 jms_err_t jms_fs_init(void);
 
 /**
+ * @brief Checks if a file exists.
+ *
+ * @param path The file path.
+ * @return JMS_OK if the file exists, JMS_ERR_FS_FILE_NOT_FOUND otherwise.
+ */
+jms_err_t jms_fs_exists(const char* path);
+
+/**
  * @brief Opens a file for reading.
  *
  * @param path The file path.
