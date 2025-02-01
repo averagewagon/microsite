@@ -2,7 +2,6 @@
 #include <esp_littlefs.h>
 #include <esp_log.h>
 #include <stdio.h>
-#include <string.h>
 
 #define TAG "JMS_FS"
 
