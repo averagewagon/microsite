@@ -52,15 +52,25 @@ static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
     if (fs_result != JMS_OK)
     {
         ESP_LOGW(TAG, "File not found: %s", filepath);
-        jms_ws_set_response_headers(request, "404 Not Found", "text/html", NULL, "max-age=60");
-        return jms_ws_response_send(request, "<h1>404 Not Found</h1>", 22);
+
+        // Try serving /littlefs/404.html
+        snprintf(filepath, sizeof(filepath), "/littlefs/404.html");
+        fs_result = jms_fs_open(filepath, &file_handle);
+
+        if (fs_result != JMS_OK)
+        {
+            // If 404.html also doesn't exist, return a hardcoded response
+            ESP_LOGW(TAG, "404.html not found, serving built-in response.");
+            jms_ws_set_response_headers(request, "404 Not Found", "text/html", NULL, "max-age=60");
+            return jms_ws_response_send(request, "<h1>404 Not Found</h1>", 22);
+        }
     }
 
     // Determine MIME type
-    char mime_type[64];
-    if (jms_mime_get_type(filepath, mime_type, sizeof(mime_type)) != JMS_OK)
+    const char* mime_type;
+    if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
     {
-        strncpy(mime_type, "application/octet-stream", sizeof(mime_type));
+        mime_type = "application/octet-stream";
     }
 
     // Set headers
