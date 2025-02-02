@@ -14,7 +14,7 @@ resource-constrained hardware. You can check it out live at
   - Integrates LittleFS with Espressif's httpd to serve static files out of the
     filesystem
   - Handles basic web behavior like HTTPS session management, hierarchical
-    pages, brotli compression, 404 page redirection, etc.
+    pages, brotli compression, hotcaching pages, 404 page redirection, etc.
 
 - **Custom Static Site Generator**:
 
@@ -33,12 +33,13 @@ resource-constrained hardware. You can check it out live at
 
 - MCU webserver improvements:
 
-  - Create a memory cache of website content
+  - Implement smarter bootup caching logic, based on... something?
   - Replace WiFi with Ethernet for lower latency and better reliability
   - Add SD card support
   - Finish porting the project to the
     [LILYGO T-ETH-LITE](https://lilygo.cc/products/t-eth-lite)
   - Implement a watchdog reset if the board becomes unresponsive
+  - Figure out if there's a way around the mbedtls 0x0050 concurrency bottleneck
 
 - Website improvements:
 
