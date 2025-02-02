@@ -28,43 +28,80 @@ static const char* TAG = "microsite";
 static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
 {
     jms_fs_handle_t file_handle;
-    char buffer[512];
+    char buffer[16384];
     char brotli_filepath[256];
     size_t bytes_read = 0;
     const char* mime_type;
     const char* selected_filepath = filepath;
     const char* content_encoding = NULL;
+    const uint8_t* cached_data;
+    size_t cached_size;
+    bool is_html = strstr(filepath, ".html") != NULL;
 
-    // Step 1: Identify MIME type first
-    if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
-    {
-        mime_type = "application/octet-stream";
-    }
+    ESP_LOGI(TAG, "Serving file: %s", filepath);
 
-    // Step 2: Check if Brotli version is available
-    if (strstr(request->accept_encoding, "br") != NULL)
+    // Step 1: If this is an HTML file, check for Brotli-encoded version in cache
+    if (is_html && strstr(request->accept_encoding, "br") != NULL)
     {
         snprintf(brotli_filepath, sizeof(brotli_filepath), "%s.br", filepath);
+        if (jms_cache_get(brotli_filepath, &cached_data, &cached_size) == JMS_OK)
+        {
+            ESP_LOGI(TAG, "Serving Brotli version from cache: %s", brotli_filepath);
 
+            if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
+            {
+                mime_type = "application/octet-stream";
+            }
+
+            jms_ws_set_response_headers(request, "200 OK", mime_type, "br", "max-age=86400");
+            return jms_ws_response_send(request, (const char*)cached_data, cached_size);
+        }
+    }
+
+    // Step 2: Check if the original file is in cache
+    if (jms_cache_get(filepath, &cached_data, &cached_size) == JMS_OK)
+    {
+        ESP_LOGI(TAG, "Serving from cache: %s", filepath);
+
+        if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
+        {
+            mime_type = "application/octet-stream";
+        }
+
+        jms_ws_set_response_headers(request, "200 OK", mime_type, NULL, "max-age=86400");
+        return jms_ws_response_send(request, (const char*)cached_data, cached_size);
+    }
+
+    // Step 3: If this is an HTML file, check for Brotli version in the filesystem
+    if (is_html && strstr(request->accept_encoding, "br") != NULL)
+    {
+        snprintf(brotli_filepath, sizeof(brotli_filepath), "%s.br", filepath);
         if (jms_fs_exists(brotli_filepath) == JMS_OK)
         {
-            ESP_LOGI(TAG, "Using Brotli version: %s", brotli_filepath);
+            ESP_LOGI(TAG, "Using Brotli version from filesystem: %s", brotli_filepath);
             selected_filepath = brotli_filepath;
             content_encoding = "br";
         }
     }
 
-    // Step 3: Verify file exists and open it
+    // Step 4: Verify file exists and open it
     if (jms_fs_exists(selected_filepath) != JMS_OK ||
         jms_fs_open(selected_filepath, &file_handle) != JMS_OK)
     {
+        ESP_LOGW(TAG, "File not found: %s", selected_filepath);
         return JMS_ERR_FS_FILE_NOT_FOUND;
     }
 
-    // Step 4: Set headers
+    // Step 5: Identify MIME type
+    if (jms_mime_get_type(selected_filepath, &mime_type) != JMS_OK)
+    {
+        mime_type = "application/octet-stream";
+    }
+
+    // Step 6: Set response headers
     jms_ws_set_response_headers(request, "200 OK", mime_type, content_encoding, "max-age=86400");
 
-    // Step 5: Stream file content in chunks
+    // Step 7: Stream file content in chunks
     while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) == JMS_OK &&
            bytes_read > 0)
     {
