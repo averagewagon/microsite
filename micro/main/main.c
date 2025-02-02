@@ -15,12 +15,15 @@
 #include "protocol_examples_common.h"
 #include "sdkconfig.h"
 
+#include "jms_cache.h"
 #include "jms_error.h"
 #include "jms_filesystem.h"
 #include "jms_mime.h"
 #include "jms_webserver.h"
 
 static const char* TAG = "microsite";
+
+#define CACHE_MAX_SIZE (7 * 1024 * 1024) // 7MB cache
 
 static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
 {
@@ -162,12 +165,41 @@ void app_main(void)
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
+    // Initialize the filesystem
     JMS_HANDLE_ERR(TAG, jms_fs_init());
 
+    // Log available memory before caching
+    ESP_LOGI(TAG, "Total free heap: %zu bytes", heap_caps_get_free_size(MALLOC_CAP_8BIT));
+    ESP_LOGI(TAG, "Largest free block: %zu bytes",
+             heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
+    ESP_LOGI(TAG, "Total SPIRAM free heap: %zu bytes", heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+    ESP_LOGI(TAG, "Largest SPIRAM free block: %zu bytes",
+             heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
+
+    // Define the list of critical files for caching
+    static const char* cached_files[] = {
+        "/littlefs/index.html.br",     // Brotli compressed HTML (preferred)
+        "/littlefs/favicon.ico",       // Common browser request
+        "/littlefs/rss.xml",           // Feed readers
+        "/littlefs/index.html",        // Regular HTML (fallback if no Brotli)
+        "/littlefs/robots.txt",        // Web crawler instructions
+        "/littlefs/sitemap.xml",       // SEO indexing
+        "/littlefs/sitemap_style.xsl", // Sitemap styling
+        "/littlefs/404.html.br",       // Brotli compressed 404 page
+        "/littlefs/404.html"           // Regular 404 page
+    };
+
+    // Initialize the cache with preselected files
+    jms_err_t cache_status = jms_cache_init(
+        cached_files, sizeof(cached_files) / sizeof(cached_files[0]), CACHE_MAX_SIZE);
+    JMS_HANDLE_ERR(TAG, cache_status);
+
+    // Register network event handlers
     ESP_ERROR_CHECK(
         esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, NULL));
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED,
                                                &disconnect_handler, NULL));
 
+    // Connect to network
     ESP_ERROR_CHECK(example_connect());
 }
