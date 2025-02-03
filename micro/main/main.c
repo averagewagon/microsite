@@ -28,7 +28,7 @@ static const char* TAG = "microsite";
 static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
 {
     jms_fs_handle_t file_handle;
-    char buffer[16384];
+    char buffer[4096];
     char brotli_filepath[256];
     size_t bytes_read = 0;
     const char* mime_type;
