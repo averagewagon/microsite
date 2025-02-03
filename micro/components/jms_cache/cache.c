@@ -1,8 +1,10 @@
 #include "jms_cache.h"
 #include "jms_error.h"
 #include "jms_filesystem.h"
+#include <dirent.h>
 #include <esp_heap_caps.h>
 #include <esp_log.h>
+#include <stdio.h>
 #include <string.h>
 
 #define TAG "JMS_CACHE"
@@ -21,6 +23,117 @@ static uint8_t* cache_region_front = NULL;
 static uint8_t* cache_region_back = NULL;
 static size_t cache_used = 0;
 static size_t cache_count = 0;
+
+/**
+ * @brief Attempts to cache a given file.
+ * @param path The file path to cache.
+ * @return JMS_OK if cached successfully, an error code otherwise.
+ */
+static jms_err_t cache_file(const char* path)
+{
+    // Validate file existence
+    if (jms_fs_exists(path) != JMS_OK)
+    {
+        return JMS_ERR_FS_FILE_NOT_FOUND;
+    }
+
+    // Open file in LittleFS
+    jms_fs_handle_t file_handle;
+    if (jms_fs_open(path, &file_handle) != JMS_OK)
+    {
+        ESP_LOGW(TAG, "File not found: %s", path);
+        return JMS_ERR_FS_FILE_NOT_FOUND;
+    }
+
+    size_t file_size = file_handle.file_size;
+    size_t path_length = strlen(path) + 1;
+    size_t metadata_size = sizeof(jms_cache_entry_t) + path_length;
+
+    // Check if space is available in cache
+    if (cache_region_front + metadata_size >= cache_region_back - file_size)
+    {
+        ESP_LOGW(TAG, "Skipping %s (not enough space)", path);
+        jms_fs_close(&file_handle);
+        return JMS_ERR_CACHE_FULL;
+    }
+
+    // Allocate metadata at the front
+    jms_cache_entry_t* new_entry = (jms_cache_entry_t*)cache_region_front;
+    cache_region_front += sizeof(jms_cache_entry_t);
+
+    new_entry->filepath = (char*)cache_region_front;
+    memcpy(new_entry->filepath, path, path_length);
+    cache_region_front += path_length;
+
+    // Allocate file data at the back
+    cache_region_back -= file_size;
+    new_entry->data = cache_region_back;
+    new_entry->size = file_size;
+
+    // Read file into allocated memory
+    size_t bytes_read;
+    if (jms_fs_read_chunk(&file_handle, new_entry->data, file_size, &bytes_read) != JMS_OK ||
+        bytes_read != file_size)
+    {
+        ESP_LOGE(TAG, "Failed to read file: %s", path);
+        cache_region_back += file_size; // Roll back allocation
+        cache_region_front -= metadata_size;
+        jms_fs_close(&file_handle);
+        return JMS_ERR_FS_READ_FAILED;
+    }
+
+    jms_fs_close(&file_handle);
+
+    cache_used += metadata_size + file_size;
+    cache_count++;
+
+    ESP_LOGI(TAG, "Cached file: %s (%zu bytes) - %zu/%zu bytes used", path, file_size, cache_used,
+             cache_region_size);
+    return JMS_OK;
+}
+
+/**
+ * @brief Iterates through LittleFS and caches additional files.
+ */
+static void cache_remaining_files()
+{
+    ESP_LOGI(TAG, "Expanding cache with additional files...");
+
+    DIR* dir = opendir("/littlefs/");
+    if (!dir)
+    {
+        ESP_LOGW(TAG, "Failed to open LittleFS root for scanning.");
+        return;
+    }
+
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL)
+    {
+        char full_path[256];
+        snprintf(full_path, sizeof(full_path), "/littlefs/%.245s", entry->d_name);
+
+        // Check if file is already cached
+        const uint8_t* cached_data;
+        size_t cached_size;
+        if (jms_cache_get(full_path, &cached_data, &cached_size) == JMS_OK)
+        {
+            ESP_LOGI(TAG, "Skipping %s (already cached)", full_path);
+            continue;
+        }
+
+        // If it's a file, attempt to cache it
+        if (entry->d_type == DT_REG)
+        {
+            if (cache_file(full_path) != JMS_OK)
+            {
+                ESP_LOGW(TAG, "Unable to cache %s (not enough space or error)", full_path);
+            }
+        }
+    }
+    closedir(dir);
+
+    ESP_LOGI(TAG, "Automatic caching complete.");
+}
 
 /**
  * @brief Initializes the cache with a fixed memory region and preloads files.
@@ -57,58 +170,12 @@ jms_err_t jms_cache_init(const char** files, size_t file_count, size_t max_cache
             continue;
         }
 
-        // Open file in LittleFS
-        jms_fs_handle_t file_handle;
-        if (jms_fs_open(files[i], &file_handle) != JMS_OK)
-        {
-            ESP_LOGW(TAG, "File not found: %s", files[i]);
-            continue;
-        }
-
-        size_t file_size = file_handle.file_size;
-        size_t path_length = strlen(files[i]) + 1;
-        size_t metadata_size = sizeof(jms_cache_entry_t) + path_length;
-
-        if (cache_region_front + metadata_size >= cache_region_back - file_size)
-        {
-            ESP_LOGW(TAG, "Skipping %s (not enough space), continuing to next file", files[i]);
-            jms_fs_close(&file_handle);
-            continue;
-        }
-
-        // Allocate metadata at front
-        jms_cache_entry_t* new_entry = (jms_cache_entry_t*)cache_region_front;
-        cache_region_front += sizeof(jms_cache_entry_t);
-
-        new_entry->filepath = (char*)cache_region_front;
-        memcpy(new_entry->filepath, files[i], path_length);
-        cache_region_front += path_length;
-
-        // Allocate file data at back
-        cache_region_back -= file_size;
-        new_entry->data = cache_region_back;
-        new_entry->size = file_size;
-
-        // Read file into allocated memory
-        size_t bytes_read;
-        if (jms_fs_read_chunk(&file_handle, new_entry->data, file_size, &bytes_read) != JMS_OK ||
-            bytes_read != file_size)
-        {
-            ESP_LOGE(TAG, "Failed to read file: %s", files[i]);
-            cache_region_back += file_size; // Roll back allocation
-            cache_region_front -= metadata_size;
-            jms_fs_close(&file_handle);
-            continue;
-        }
-
-        jms_fs_close(&file_handle);
-
-        cache_used += metadata_size + file_size;
-        cache_count++;
-
-        ESP_LOGI(TAG, "Cached file: %s (%zu bytes) - %zu/%zu bytes used", files[i], file_size,
-                 cache_used, cache_region_size);
+        // Cache the provided file
+        cache_file(files[i]);
     }
+
+    // Expand caching with additional files
+    cache_remaining_files();
 
     ESP_LOGI(TAG, "Cache initialization complete: %zu files, %zu bytes used", cache_count,
              cache_used);
