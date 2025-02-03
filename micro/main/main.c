@@ -215,15 +215,11 @@ void app_main(void)
 
     // Define the list of critical files for caching
     static const char* cached_files[] = {
-        "/littlefs/index.html.br",     // Brotli compressed HTML (preferred)
-        "/littlefs/favicon.ico",       // Common browser request
-        "/littlefs/rss.xml",           // Feed readers
-        "/littlefs/index.html",        // Regular HTML (fallback if no Brotli)
-        "/littlefs/robots.txt",        // Web crawler instructions
-        "/littlefs/sitemap.xml",       // SEO indexing
-        "/littlefs/sitemap_style.xsl", // Sitemap styling
-        "/littlefs/404.html.br",       // Brotli compressed 404 page
-        "/littlefs/404.html"           // Regular 404 page
+        "/littlefs/index.html.br", // Brotli compressed HTML (preferred)
+        "/littlefs/rss.xml",       // Feed readers
+        "/littlefs/index.html",    // Regular HTML (fallback if no Brotli)
+        "/littlefs/404.html.br",   // Brotli compressed 404 page
+        "/littlefs/404.html"       // Regular 404 page
     };
 
     // Initialize the cache with preselected files
