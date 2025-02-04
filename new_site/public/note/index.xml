@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes on A minimal Hugo website</title>
+    <link>http://localhost:1313/note/</link>
+    <description>Recent content in Notes on A minimal Hugo website</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 14 Jun 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Another Note on A blogdown Tutorial</title>
+      <link>http://localhost:1313/note/2017/06/14/another-note/</link>
+      <pubDate>Wed, 14 Jun 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/note/2017/06/14/another-note/</guid>
+      <description>&lt;p&gt;I just discovered &lt;a href=&#34;https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/&#34;&gt;an awesome tutorial&lt;/a&gt; on &lt;strong&gt;blogdown&lt;/strong&gt; written by Alison. I have to admit this is &lt;em&gt;the&lt;/em&gt; best &lt;strong&gt;blogdown&lt;/strong&gt; tutorial I have seen so far.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/03-blogdown-2021.png&#34; alt=&#34;Alison&amp;rsquo;s blogdown tutorial&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>A Quick Note on Two Beautiful Websites</title>
+      <link>http://localhost:1313/note/2017/06/13/a-quick-note/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/note/2017/06/13/a-quick-note/</guid>
+      <description>&lt;p&gt;To me, the two most impressive websites based on &lt;strong&gt;blogdown&lt;/strong&gt; are:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://robjhyndman.com&#34;&gt;Rob J Hyndman&lt;/a&gt;&amp;rsquo;s personal website.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://livefreeordichotomize.com&#34;&gt;Live Free or Dichotomize&lt;/a&gt; by Lucy and Nick &lt;em&gt;et al&lt;/em&gt;.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;I&amp;rsquo;m sure there will be more.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
