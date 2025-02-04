@@ -126,3 +126,7 @@ XUNIT_RESULT*.xml
 
 # ESP-IDF
 sdkconfig.old
+
+# Hugo
+.hugo_build.lock
+public
