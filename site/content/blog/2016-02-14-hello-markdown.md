@@ -64,7 +64,7 @@ Actually I recommend you to use the RStudio addin "New Post" instead:
 
 #### Fourth-level header
 
-{{< media "microsite.svg" "This is an SVGs" "max-width:15%;min-width:40px;" >}}
+{{< media "microsite.svg" "This is an SVG" "max-width:15%;min-width:40px;" >}}
 
 A paragraph (with a footnote):
 
