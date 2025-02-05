@@ -1,5 +1,0 @@
-favicon.ico
-robots.txt
-rss.xml
-sitemap_style.xsl
-sitemap.xml
