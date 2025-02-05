@@ -55,7 +55,7 @@ compress_with_brotli() {
 
 # Paths and variables
 REPO_ROOT=$(git rev-parse --show-toplevel)
-SITE_DIR="${REPO_ROOT}/site/build/output"
+SITE_DIR="${REPO_ROOT}/site/public"
 OUTPUT_DIR="${REPO_ROOT}/scripts/build"
 OUTPUT_RESOURCES="${OUTPUT_DIR}/resources"
 PARTITIONS_FILE="${REPO_ROOT}/micro/partitions.csv"
