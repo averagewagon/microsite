@@ -32,7 +32,11 @@ params:
 
 markup:
   highlight:
-    codeFences: false
+    codeFences: true
+    guessSyntax: true
+    style: "gruvbox"
+    lineNumbersInTable: false
+    tabWidth: 4
   goldmark:
     renderer:
       unsafe: true
