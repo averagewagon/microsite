@@ -35,9 +35,12 @@ a:visited:hover {
 .article-meta,
 .menu a {
   text-decoration: none;
-  background: #333;
+  background: #2c2c2c;
   padding: 10px;
-  border-radius: 5px;
+}
+
+.menu a {
+  margin: 5px;
 }
 
 .menu,
@@ -67,7 +70,8 @@ pre {
 }
 
 code {
-  background: #292929;
+  background: #000;
+  /* padding: .1em .2em; */
 }
 
 pre code {
@@ -79,6 +83,8 @@ img,
 iframe,
 video {
   max-width: 100%;
+  margin: auto;
+  display: block;
 }
 
 main {
@@ -93,6 +99,7 @@ blockquote {
 
 table {
   margin: auto;
+  overflow-x: auto;
 }
 
 table thead th {
@@ -107,5 +114,5 @@ td {
 
 thead,
 tfoot {
-  background: #666;
+  background: #353535;
 }
