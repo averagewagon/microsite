@@ -7,6 +7,7 @@
 
     {{- $style := resources.Get "css/style.css" | resources.Minify }}
     {{- $fonts := resources.Get "css/fonts.css" | resources.Minify }}
+    {{- $favicon := resources.Get "favicon.ico" }}
 
     {{- if $style }}
     <style>{{ $style.Content | safeCSS }}</style>
@@ -14,6 +15,10 @@
 
     {{- if $fonts }}
     <style>{{ $fonts.Content | safeCSS }}</style>
+    {{- end }}
+
+    {{- if $favicon }}
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,{{ $favicon.Content | base64Encode }}" />
     {{- end }}
 
   </head>
