@@ -89,6 +89,8 @@ A blockquote (a gray bar at the left and lightgray background):
 > tincidunt egestas. In et turpis at orci vestibulum ullamcorper. Aliquam sed
 > ante libero. Sed hendrerit arcu lacus.
 
+{{< media "sample.webm" "A webm video" >}}
+
 Some code (with a drop-shadow effect):
 
 ```js
