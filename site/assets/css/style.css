@@ -43,6 +43,10 @@ a:visited:hover {
   margin: 5px;
 }
 
+.tags a {
+  text-decoration: none;
+}
+
 .menu,
 .article-meta,
 footer {
@@ -60,6 +64,25 @@ footer a {
 hr {
   border-style: dashed;
   color: #ddd;
+}
+
+.post-navigation {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post-navigation a {
+  flex: 1;
+  text-decoration: none;
+  padding: 1em 0;
+}
+
+.prev-article {
+  text-align: left;
+}
+
+.next-article {
+  text-align: right;
 }
 
 /* code */

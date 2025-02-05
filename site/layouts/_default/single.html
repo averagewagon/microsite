@@ -1,4 +1,5 @@
 {{ partial "header.html" . }}
+
 <div class="article-meta">
     <h1><span class="title">{{ .Title | markdownify }}</span></h1>
     {{ with .Params.author }}<h2 class="author">{{ . }}</h2>{{ end }}
@@ -6,7 +7,6 @@
 
     {{ with .Params.tags }}
     <p class="tags">
-        Tags<br>
         {{ range $index, $tag := . }}
             {{- if $index }} | {{ end -}}
             <a href="{{ relURL (print "/tags/" ($tag | urlize)) }}">{{ $tag }}</a>
@@ -33,5 +33,16 @@
     </div>
 </main>
 
+<hr />
+
+<nav class="post-navigation">
+    {{ with .PrevInSection }}
+    <a href="{{ .RelPermalink }}" class="prev-article">← {{ .Title }}</a>
+    {{ end }}
+
+    {{ with .NextInSection }}
+    <a href="{{ .RelPermalink }}" class="next-article">{{ .Title }} →</a>
+    {{ end }}
+</nav>
 
 {{ partial "footer.html" . }}
