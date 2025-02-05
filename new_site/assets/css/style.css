@@ -71,7 +71,6 @@ pre {
 
 code {
   background: #000;
-  /* padding: .1em .2em; */
 }
 
 pre code {
@@ -137,4 +136,49 @@ tfoot {
 .table-wrapper table {
   width: 100%;
   border-collapse: collapse;
+}
+
+/* Table of Contents */
+.toc {
+  border-left: 4px solid #ccc;
+  padding-left: 1em;
+  margin-bottom: 2em;
+  background: #f8f8f8;
+  padding: 10px;
+  max-width: 300px;
+}
+
+.toc h2 {
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+/* Header Permalink Icon */
+.header-permalink {
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 0.9em;
+  color: #888;
+  visibility: hidden;
+}
+
+h1:hover .header-permalink,
+h2:hover .header-permalink,
+h3:hover .header-permalink,
+h4:hover .header-permalink,
+h5:hover .header-permalink,
+h6:hover .header-permalink {
+  visibility: visible;
+}
+
+.content h2 {
+  font-size: 2.5em;
+}
+
+.content h3 {
+  font-size: 1.8em;
+}
+
+.content h4 {
+  font-size: 1.3em;
 }
