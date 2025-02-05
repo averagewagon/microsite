@@ -116,3 +116,14 @@ thead,
 tfoot {
   background: #353535;
 }
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+}
