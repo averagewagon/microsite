@@ -1,6 +1,6 @@
-baseurl: "https://example.org/" # please update this to your actual URL
+baseurl: "https://joni-on-micro.site"
 languageCode: "en-us"
-title: "A minimal Hugo website"
+title: "Joni on Microsite"
 footnotereturnlinkcontents: "↩"
 
 permalinks:
@@ -30,6 +30,11 @@ params:
     "&copy; [Yihui Xie](https://yihui.org) 2017 -- {Year} |
     [Github](https://github.com/yihui) | [Twitter](https://twitter.com/xieyihui)"
 
+minify:
+  minifyOutput: true
+
+enableRobotsTXT: true
+
 markup:
   tableOfContents:
     startLevel: 2
@@ -56,6 +61,3 @@ markup:
           inline:
             - - \(
               - \)
-
-minify:
-  minifyOutput: true
