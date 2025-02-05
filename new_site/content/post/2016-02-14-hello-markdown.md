@@ -1,7 +1,8 @@
 ---
 title: A Plain Markdown Post
 author: Yihui Xie
-date: '2016-02-14'
+date: "2016-02-14"
+toc: true
 categories:
   - Example
   - Hugo
@@ -23,7 +24,7 @@ This is a post written in plain Markdown (`*.md`) instead of R Markdown
 (`*.Rmd`). The major differences are:
 
 1.  You cannot run any R code in a plain Markdown document, whereas in an R
-    Markdown document, you can embed R code chunks (```` ```{r} ````);
+    Markdown document, you can embed R code chunks (` ```{r} `);
 2.  A plain Markdown post is rendered through
     [Goldmark](https://gohugo.io/overview/configuration/) by default, and an R
     Markdown document is compiled by
@@ -35,21 +36,22 @@ Markdown. For example, Goldmark does not support LaTeX math and Pandoc does. I
 have added the KaTeX support to this theme (i.e.,
 [hugo-xmin](https://github.com/yihui/hugo-xmin))
 
-As of Hugo v0.122.0, you can enable typesetting \(\LaTeX\) math in Markdown using
-the standard syntax. To do so, you have make use of the goldmark `passthrough`
-extension inside your config file (e.g., `hugo.yaml`). Afterwards you can use
-standard \(\TeX\) syntax (inline: `\( ... \)`; display style: `$$ ... $$`) to
-display formulae, e.g., \(S_n = \sum_{i=1}^n X_i\). For details, please refer to
-the official [Hugo docs](https://gohugo.io/content-management/mathematics/).
-Alternatively, you may see
-[this post](https://yihui.org/en/2018/07/latex-math-markdown/) for a general
-solution, which works with any Hugo version and requires no configuration.
+As of Hugo v0.122.0, you can enable typesetting \(\LaTeX\) math in Markdown
+using the standard syntax. To do so, you have make use of the goldmark
+`passthrough` extension inside your config file (e.g., `hugo.yaml`). Afterwards
+you can use standard \(\TeX\) syntax (inline: `\( ... \)`; display style:
+`$$ ... $$`) to display formulae, e.g., \(S*n = \sum*{i=1}^n X_i\). For details,
+please refer to the official
+[Hugo docs](https://gohugo.io/content-management/mathematics/). Alternatively,
+you may see [this post](https://yihui.org/en/2018/07/latex-math-markdown/) for a
+general solution, which works with any Hugo version and requires no
+configuration.
 
 When creating a new post, you have to decide whether the post format is Markdown
 or R Markdown, and this can be done via the `rmd` argument of the function
 `blogdown::new_post()`, e.g.
 
-``` r
+```r
 blogdown::new_post("Post Title", rmd = FALSE)
 ```
 
@@ -68,7 +70,7 @@ Actually I recommend you to use the RStudio addin "New Post" instead:
 A paragraph (with a footnote):
 
 **Lorem ipsum** dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-tempor incididunt ut labore et dolore *magna aliqua*. Ut enim ad minim veniam,
+tempor incididunt ut labore et dolore _magna aliqua_. Ut enim ad minim veniam,
 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
 dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
@@ -90,17 +92,19 @@ A blockquote (a gray bar at the left and lightgray background):
 
 Some code (with a drop-shadow effect):
 
-``` js
-(function() {
-  var quotes = document.getElementsByTagName('blockquote'), i, quote;
+```js
+(function () {
+  var quotes = document.getElementsByTagName("blockquote"),
+    i,
+    quote;
   for (i = 0; i < quotes.length; i++) {
     quote = quotes[i];
     var n = quote.children.length;
     if (n === 0) continue;
     var el = quote.children[n - 1];
-    if (!el || el.nodeName !== 'P') continue;
+    if (!el || el.nodeName !== "P") continue;
     // right-align a quote footer if it starts with ---
-    if (/^—/.test(el.textContent)) el.style.textAlign = 'right';
+    if (/^—/.test(el.textContent)) el.style.textAlign = "right";
   }
 })();
 ```
@@ -108,7 +112,7 @@ Some code (with a drop-shadow effect):
 A table (centered by default):
 
 | Sepal.Length | Sepal.Width | Petal.Length | Petal.Width | Species |
-|-------------:|------------:|-------------:|------------:|:--------|
+| -----------: | ----------: | -----------: | ----------: | :------ |
 |          5.1 |         3.5 |          1.4 |         0.2 | setosa  |
 |          4.9 |         3.0 |          1.4 |         0.2 | setosa  |
 |          4.7 |         3.2 |          1.3 |         0.2 | setosa  |

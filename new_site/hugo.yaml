@@ -31,6 +31,10 @@ params:
     [Github](https://github.com/yihui) | [Twitter](https://twitter.com/xieyihui)"
 
 markup:
+  tableOfContents:
+    startLevel: 2
+    endLevel: 4
+    ordered: false
   highlight:
     codeFences: true
     guessSyntax: true
