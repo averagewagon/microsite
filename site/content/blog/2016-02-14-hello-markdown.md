@@ -54,7 +54,7 @@ blogdown::new_post("Post Title", rmd = FALSE)
 
 Actually I recommend you to use the RStudio addin "New Post" instead:
 
-![RStudio addin New Post](https://bookdown.org/yihui/blogdown/images/new-post.png)
+{{< media "new-post.png" "This is a PNG image">}}
 
 # 2. Sample Text
 
@@ -63,6 +63,8 @@ Actually I recommend you to use the RStudio addin "New Post" instead:
 ### Third-level header
 
 #### Fourth-level header
+
+{{< media "microsite.svg" "This is an SVGs" "max-width:15%;min-width:40px;" >}}
 
 A paragraph (with a footnote):
 
