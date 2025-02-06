@@ -21,6 +21,20 @@ ESP32-S3. It uses **LittleFS**, Brotli compression, and an optimized HTTP stack
 to deliver content efficiently. The goal is to explore the feasibility of
 embedded web hosting while keeping the system lean and performant.
 
+## Who is Joni?
+
+I’m Joni Hendrickson, a microcontroller and web hacker who loves working with
+resource-constrained systems and exploring the limits of tiny hardware. I’ve
+spent time coding for satellites, grocery stores, and working on the FreeRTOS
+team. I also run the cEDH Decklist Database website for Magic: The Gathering.
+I’m into code golf, unconventional builds, and projects that blend tech with
+other crafts. When I’m not tinkering with microcontrollers, I’m sewing,
+experimenting with fashion, woodworking, or cooking—anything that lets me create
+and explore with my hands.
+
+When this site is ready, I'll be hosting a blog about microcontrollers,
+robotics, making, and anything else which I find interesting.
+
 ## Project Goals
 
 - **Minimalist yet fully functional**: No dynamic content, no JavaScript
