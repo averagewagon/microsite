@@ -3,9 +3,6 @@ title: A Plain Markdown Post
 author: Yihui Xie
 date: "2016-02-14"
 toc: true
-categories:
-  - Example
-  - Hugo
 tags:
   - blogdown
   - Markdown

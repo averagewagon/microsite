@@ -4,31 +4,30 @@ title: "Joni on Microsite"
 footnotereturnlinkcontents: "↩"
 
 permalinks:
-  note: "/note/:year-:month-:day/:slug/"
-  post: "/note/:year-:month-:day/:slug/"
+  blog: "/blog/:year-:month-:day/:slug/"
 
 menu:
   main:
     - name: Home
       url: ""
       weight: 1
-    - name: About
-      url: "about/"
+    - name: Blog
+      url: "blog/"
       weight: 2
-    - name: Categories
-      url: "categories/"
+    - name: Resume
+      url: "resume/"
       weight: 3
-    - name: Tags
-      url: "tags/"
+    - name: Contact
+      url: "contact/"
       weight: 4
-    - name: RSS
-      url: "index.xml"
 
 params:
   description: "A website built through Hugo and blogdown."
   footer:
-    "&copy; [Yihui Xie](https://yihui.org) 2017 -- {Year} |
-    [Github](https://github.com/yihui) | [Twitter](https://twitter.com/xieyihui)"
+    "&copy; Jonathan Hendrickson 2024 -- {Year}<br>
+    [joni@jhendrickson.dev](mailto:joni@jhendrickson.dev)<br>
+    [Github](https://github.com/averagewagon) |
+    [LinkedIn](https://www.linkedin.com/in/jonathan-r-hendrickson/)"
 
 minify:
   minifyOutput: true
