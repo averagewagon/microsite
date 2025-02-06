@@ -1,5 +1,6 @@
 ---
 title: Contact Joni
+description: "Joni's contact information."
 ---
 
 # Contact Me
