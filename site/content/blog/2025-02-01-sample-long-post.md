@@ -11,8 +11,6 @@ tags:
   - Sample
 ---
 
-# Sample Long Post
-
 This page is a **testbed for Microsite’s CSS styling**. It contains sample
 content that exercises different formatting elements—headings, images, tables,
 lists, blockquotes, and embedded media. If you’re working on refining the site’s

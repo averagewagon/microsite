@@ -13,8 +13,6 @@ tags:
   - Styling
 ---
 
-# Image and Media Formatting Test
-
 This post is designed to test how images, GIFs, videos, and different file types
 interact with the layout of a blog post on Microsite. It includes a variety of
 media styles, some with size constraints, others positioned using float rules to

@@ -3,8 +3,6 @@ title: Contact Joni
 description: "Joni's contact information."
 ---
 
-# Contact Me
-
 If you want to talk about microcontrollers, embedded web hosting, or just have a
 question about Microsite, feel free to reach out.
 

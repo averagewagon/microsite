@@ -11,8 +11,6 @@ tags:
   - Sample
 ---
 
-# A Short Post for Testing Formatting
-
 This is a deliberately short post, meant to serve as an example of how brief
 content appears in Microsite’s blog layout. It contains just a couple of
 paragraphs, with no deep technical explanations—just enough text to visualize
