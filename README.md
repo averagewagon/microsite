@@ -1,31 +1,34 @@
 # Microsite - [joni-on-micro.site](https://joni-on-micro.site)
 
-**Microsite** is a static website hosted on an **ESP32-S3 microcontroller**.
-This project is an experiment in running a functional web server on
+Microsite is a static website hosted on an ESP32-S3 microcontroller. This
+project is an experiment in running a functional web server on
 resource-constrained hardware. You can check it out live at
-**[joni-on-micro.site](https://joni-on-micro.site)**.
+[joni-on-micro.site](https://joni-on-micro.site).
 
 ## Current Features
 
-- **ESP32-S3 Web Hosting**:
+### ESP32-S3 Web Hosting
 
-  - Hosted on an `ESP32-S3-DevKitC-1-N16R8` for its crypto capabilities and
-    ample memory/storage.
-  - Integrates LittleFS with Espressif's httpd to serve static files out of the
-    filesystem
-  - Handles basic web behavior like HTTPS session management, hierarchical
-    pages, brotli compression, hotcaching pages, 404 page redirection, etc.
+- Hosted on an `ESP32-S3-DevKitC-1-N16R8` for its crypto capabilities and ample
+  memory/storage.
+- Integrates LittleFS with Espressif's httpd to serve static files from the
+  filesystem.
+- Supports HTTPS session management, hierarchical pages, Brotli compression,
+  hotcaching pages, and 404 redirection.
 
-- **Custom Static Site Generator**:
+### Hugo-Based Static Site Generator
 
-  - Built as a POSIX shell-based static site generator that handles template
-    substitutions, Base64-encoded assets, and bundles all resources into a
-    single `.html` file.
-  - Designed to minimize HTTPS session overhead and reduce resource usage.
+- Uses Hugo to generate a fully static website, optimized for low-resource
+  deployment.
+- Every page is self-contained (HTML, CSS, images, videos, and fonts embedded
+  via Base64) to reduce HTTPS session overhead.
+- Minified and compressed for minimal file size and improved performance on
+  microcontroller hardware.
 
-- **Small Test Website**:
-  - Includes a simple test website created with the static site generator,
-    deployed on the ESP32-S3 to showcase its capabilities.
+### Small Test Website
+
+- Includes a simple test website built with Hugo, deployed on the ESP32-S3 to
+  demonstrate its capabilities.
 
 ## Future
 
@@ -45,8 +48,6 @@ resource-constrained hardware. You can check it out live at
 
   - Fork ESP-IDF `httpd` to allow more low-level control over request handling,
     remove unnecessary copies, etc.
-  - Make it tolerable to actually write for the blog, like a markdown-to-html
-    generator
   - Add table of contents generation and permalinkable headers
   - Host compressed `.webm` video content
 
