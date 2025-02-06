@@ -3,7 +3,18 @@
     <h1><span class="title">{{ .Title | markdownify }}</span></h1>
     {{ with .Params.author }}<h2 class="author">{{ . }}</h2>{{ end }}
     {{ if (gt .Params.date 0) }}<h2 class="date">{{ .Date.Format "2006/01/02" }}</h2>{{ end }}
+
+    {{ with .Params.tags }}
+    <p class="terms">
+        Tags<br>
+        {{ range $index, $tag := . }}
+            {{- if $index }} | {{ end -}}
+            <a href="{{ relURL (print "/tags/" ($tag | urlize)) }}">{{ $tag }}</a>
+        {{ end }}
+    </p>
+    {{ end }}
 </div>
+
 
 <main>
     {{- if and (.Params.toc) (gt (len .TableOfContents) 50) }}
