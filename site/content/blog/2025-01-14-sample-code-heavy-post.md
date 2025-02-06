@@ -1,6 +1,10 @@
 ---
 title: Sample Code-Heavy Post
 date: "2025-01-14"
+description:
+  "A post demonstrating syntax highlighting for multiple programming languages,
+  including C, Python, JavaScript, Shell, and Rust. Useful for testing
+  code-heavy formatting in Microsite."
 tags:
   - Code
   - Syntax Highlighting
@@ -15,6 +19,8 @@ This post exists to test syntax highlighting for different programming languages
 and see how a code-heavy post looks in Microsite's styling. Below are several
 code samples in different languages, including C, Python, JavaScript, Shell, and
 Rust.
+
+<!--more-->
 
 ## C: Serving a Static File in Microsite
 

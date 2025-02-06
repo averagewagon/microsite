@@ -1,6 +1,10 @@
 ---
 title: Sample Long Post
 date: "2025-02-01"
+description:
+  "A content-rich test post for evaluating Microsite’s styling. Showcases
+  formatting elements like headings, tables, lists, and embedded media for
+  refining the site’s appearance."
 tags:
   - Markdown
   - Microsite
