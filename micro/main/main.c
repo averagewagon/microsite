@@ -30,6 +30,7 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
     jms_fs_handle_t file_handle;
     char buffer[4096];
     char brotli_filepath[256];
+    char base_filepath[256];
     size_t bytes_read = 0;
     const char* mime_type;
     const char* selected_filepath = filepath;
@@ -48,6 +49,7 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
         {
             ESP_LOGI(TAG, "Serving Brotli version from cache: %s", brotli_filepath);
 
+            // Determine MIME type from the original file (without .br extension)
             if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
             {
                 mime_type = "application/octet-stream";
@@ -81,6 +83,24 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
             ESP_LOGI(TAG, "Using Brotli version from filesystem: %s", brotli_filepath);
             selected_filepath = brotli_filepath;
             content_encoding = "br";
+
+            // Extract base file path without .br extension
+            strncpy(base_filepath, filepath, sizeof(base_filepath));
+            base_filepath[sizeof(base_filepath) - 1] = '\0';
+
+            // Determine MIME type from the original file
+            if (jms_mime_get_type(base_filepath, &mime_type) != JMS_OK)
+            {
+                mime_type = "application/octet-stream";
+            }
+        }
+    }
+    else
+    {
+        // Determine MIME type from the original file
+        if (jms_mime_get_type(filepath, &mime_type) != JMS_OK)
+        {
+            mime_type = "application/octet-stream";
         }
     }
 
@@ -92,16 +112,10 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
         return JMS_ERR_FS_FILE_NOT_FOUND;
     }
 
-    // Step 5: Identify MIME type
-    if (jms_mime_get_type(selected_filepath, &mime_type) != JMS_OK)
-    {
-        mime_type = "application/octet-stream";
-    }
-
-    // Step 6: Set response headers
+    // Step 5: Set response headers
     jms_ws_set_response_headers(request, "200 OK", mime_type, content_encoding, "max-age=86400");
 
-    // Step 7: Stream file content in chunks
+    // Step 6: Stream file content in chunks
     while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) == JMS_OK &&
            bytes_read > 0)
     {
