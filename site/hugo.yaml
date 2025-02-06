@@ -19,7 +19,7 @@ menu:
       weight: 3
 
 params:
-  description: "A website built through Hugo and blogdown."
+  description: "Joni Hendrickson's personal website, hosted on an MCU."
   footer:
     "&copy; Jonathan Hendrickson 2024 -- {Year}<br>
     [joni@jhendrickson.dev](mailto:joni@jhendrickson.dev)<br>

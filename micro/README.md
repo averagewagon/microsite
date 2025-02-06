@@ -1,4 +1,4 @@
-# **Microsite MCU-Specific Code**
+# Microsite: MCU-Specific Code
 
 This is an ESP-IDF-based project for hosting a lightweight static website on an
 ESP32 microcontroller. Microsite organizes its code into modular components to
@@ -6,9 +6,9 @@ ensure clarity and maintainability in resource-constrained environments.
 
 ---
 
-## **Style Conventions**
+## Style Conventions
 
-### **1. Folder Structure**
+### 1. Folder Structure
 
 Organize code into modular directories with public headers exposing only the
 necessary interfaces. Private implementation details are kept in the same folder
@@ -31,12 +31,12 @@ but not exposed externally.
 
 ---
 
-### **2. File and Function Naming**
+### 2. File and Function Naming
 
-- **File Names**: Use lowercase words separated by underscores (e.g.,
-  `mime_hash.c`, `error.h`).
-- **Function Names**: Use `<module>_<submodule>_<action>` to indicate the module
-  of origin.
+- File Names: Use lowercase words separated by underscores (e.g., `mime_hash.c`,
+  `error.h`).
+- Function Names: Use `<module>_<submodule>_<action>` to indicate the module of
+  origin.
 
 ```c
 // Examples
@@ -46,7 +46,7 @@ in_word_set();      // Private gperf-generated function
 
 ---
 
-### **3. Includes**
+### 3. Includes
 
 Includes should reflect the folder structure for clarity and organization.
 
@@ -57,7 +57,7 @@ Includes should reflect the folder structure for clarity and organization.
 
 ---
 
-### **4. Error Handling**
+### 4. Error Handling
 
 - Use `jms_err_t` (a `uint16_t`) for error codes.
 - Define error codes as macros prefixed with `JMS_`.
@@ -86,9 +86,9 @@ typedef uint16_t jms_err_t;
 
 ---
 
-## **gperf Usage**
+## gperf Usage
 
-### **Workflow**
+### Workflow
 
 1. Edit the `mime.gperf` file in `jms/mime/` to update the MIME types or file
    extensions.
