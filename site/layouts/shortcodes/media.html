@@ -1,3 +1,37 @@
+{{/*
+Shortcode: media.html
+Purpose: Embeds images, SVGs, and videos directly into the page using Base64 encoding.
+
+Arguments:
+    1. (Required) `filename` - The name of the media file, located in `assets/media/`.
+    2. (Optional) `altText` - Alternative text for accessibility and captions (default: "").
+    3. (Optional) `showCaption` - Boolean (default: `"true"`). 
+    - If `"true"`, wraps the media in a `<figure>` and includes `<figcaption>`.
+    - If `"false"`, embeds the media directly without a wrapper.
+    4. (Optional) `mediaStyle` - CSS styles applied directly to the `<img>` or `<video>` element.
+    5. (Optional) `figureStyle` - CSS styles applied to the `<figure>` element (only if `$showCaption` is `"true"`).
+
+Usage Examples:
+
+- Basic usage (figure with caption):
+    {{< media "microsite.svg" "This is an SVG" >}}
+
+- Disable caption, embed only the media:
+    {{< media "microsite.svg" "This is an SVG" "false" >}}
+
+- Apply styles to `<img>` or `<video>`:
+    {{< media "microsite.svg" "This is an SVG" "true" "max-width: 50%;" >}}
+
+- Apply styles to `<figure>`:
+    {{< media "microsite.svg" "This is an SVG" "true" "" "border: 1px solid red; padding: 10px;" >}}
+
+- Apply styles to both `<img>` and `<figure>`:
+    {{< media "microsite.svg" "This is an SVG" "true" "max-width: 50%;" "border: 1px solid red;" >}}
+
+- No caption, style only the media:
+    {{< media "microsite.svg" "This is an SVG" "false" "border-radius: 10px;" >}}
+*/}}
+
 {{- $file := resources.Get (print "media/" (.Get 0)) -}}
 
 {{- if not $file -}}
@@ -6,18 +40,23 @@
 
     {{- $mediaType := $file.MediaType.SubType -}}
     {{- $alt := .Get 1 | default "" -}}
-    {{- $style := .Get 2 | default "" | safeCSS -}}
+    {{- $showCaption := .Get 2 | default "true" -}}
+    {{- $mediaStyle := .Get 3 | default "" | safeCSS -}}
+    {{- $figureStyle := .Get 4 | default "" | safeCSS -}}
 
-    <figure>
+    {{- if eq $showCaption "true" -}}
+    <figure {{ if $figureStyle }}style="{{ $figureStyle }}"{{ end }}>
+    {{- end -}}
+
         {{- if in (slice "svg" "svg+xml") $mediaType -}}
             {{- $encodedSVG := $file.Content | base64Encode -}}
-            <img src="data:image/svg+xml;base64,{{ $encodedSVG }}" alt="{{ $alt }}" {{ if $style }}style="{{ $style }}"{{ end }} />
+            <img src="data:image/svg+xml;base64,{{ $encodedSVG }}" alt="{{ $alt }}" {{ if $mediaStyle }}style="{{ $mediaStyle }}"{{ end }} />
 
         {{- else if in (slice "png" "jpeg" "gif" "webp") $mediaType -}}
-            <img src="data:image/{{ $mediaType }};base64,{{ $file.Content | base64Encode }}" alt="{{ $alt }}" {{ if $style }}style="{{ $style }}"{{ end }} />
+            <img src="data:image/{{ $mediaType }};base64,{{ $file.Content | base64Encode }}" alt="{{ $alt }}" {{ if $mediaStyle }}style="{{ $mediaStyle }}"{{ end }} />
 
         {{- else if in (slice "webm" "mp4" "ogg") $mediaType -}}
-            <video controls {{ if $style }}style="{{ $style }}"{{ end }}>
+            <video controls {{ if $mediaStyle }}style="{{ $mediaStyle }}"{{ end }}>
                 <source src="data:video/{{ $mediaType }};base64,{{ $file.Content | base64Encode }}" type="video/{{ $mediaType }}">
             </video>
 
@@ -25,7 +64,10 @@
             <p>Error: Unsupported file type '{{ $mediaType }}'.</p>
         {{- end -}}
 
-        {{- if $alt }}<figcaption>{{ $alt }}</figcaption>{{ end }}
+        {{- if and (eq $showCaption "true") $alt }}<figcaption>{{ $alt }}</figcaption>{{ end }}
+
+    {{- if eq $showCaption "true" -}}
     </figure>
+    {{- end -}}
 
 {{- end -}}

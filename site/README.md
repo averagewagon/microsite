@@ -37,24 +37,33 @@ embedding all assets directly.
 - Scrollable tables for mobile-friendly display.
 - Consistent visited/unvisited link colors, excluding navigation.
 
-### Static LaTeX Support
-
-- Uses KaTeX for fully static math rendering—no JavaScript required.
-
 ## Custom Media Shortcodes
 
-To keep images, videos, and SVGs fully self-contained, a custom Hugo shortcode
+To keep images, videos, and SVGs fully self-contained, a custom Hugo shortcode  
 (`media.html`) was implemented. It Base64-encodes and embeds assets within the
 page.
 
+### Usage
+
 ```md
-{{< media "microsite.svg" "This is an SVG" "max-width:15%;min-width:40px;" >}}
+{{< media "microsite.svg" "This is an SVG" >}}
 {{< media "new-post.png" "This is a PNG image">}}
 {{< media "sample.webm" "A webm video" >}}
 ```
 
-The shortcode fetches the file from `assets/media/`, determines its type, and
-either:
+### Arguments
+
+| Argument                      | Description                                                                                       | Default      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------- | ------------ |
+| 1. `filename` _(Required)_    | The media filename, located in `assets/media/`.                                                   | _(Required)_ |
+| 2. `altText` _(Optional)_     | Alternative text for accessibility and captions.                                                  | `""` (empty) |
+| 3. `showCaption` _(Optional)_ | `"true"`: Wraps media in a `<figure>` with `<figcaption>`. <br> `"false"`: Embeds media directly. | `"true"`     |
+| 4. `mediaStyle` _(Optional)_  | CSS styles applied to `<img>` or `<video>`.                                                       | `""` (none)  |
+| 5. `figureStyle` _(Optional)_ | CSS styles applied to `<figure>` (only if `showCaption` is `"true"`).                             | `""` (none)  |
+
+### How It Works
+
+The shortcode fetches the file from `assets/media/`, determines its type, and:
 
 - Embeds it as a Base64-encoded `<img>` for images (PNG, JPG, SVG, WebP).
 - Embeds it as a Base64-encoded `<video>` for videos (WebM, MP4, OGG).
