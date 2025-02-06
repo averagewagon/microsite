@@ -2,7 +2,7 @@
 title: Home
 ---
 
-<a href=https://github.com/averagewagon/microsite>{{< media "microsite.svg" "Link to Microsite's GitHub" "max-width:15%;min-width:40px;float:right;" >}}</a>
+<a href=https://github.com/averagewagon/microsite>{{< media "microsite.svg" "Microsite's GitHub" "true" "" "margin:1em;max-width:20%;min-width:40px;float:right;" >}}</a>
 
 # Joni on Microsite
 
