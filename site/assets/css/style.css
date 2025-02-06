@@ -19,7 +19,7 @@ body {
 
 header h2 {
   text-align: center;
-  font-size: 3em;
+  font-size: 3rem;
   margin: 0;
 }
 
@@ -28,15 +28,15 @@ header span a {
   text-decoration: none;
 }
 
-a {
-  color: #6ee3ff;
-}
-
 header span {
   text-align: center;
   width: 100%;
   display: inline-block;
-  font-size: 1.5em;
+  font-size: 1.5rem;
+}
+
+a {
+  color: #6ee3ff;
 }
 
 a:hover {
@@ -73,7 +73,7 @@ footer {
 }
 
 .title {
-  font-size: 1.1em;
+  font-size: 2.5rem;
 }
 
 footer a {
@@ -121,15 +121,20 @@ pre code {
 
 /* misc elements */
 .content h2 {
-  font-size: 2.5em;
+  font-size: 2.5rem;
 }
 
 .content h3 {
-  font-size: 1.8em;
+  font-size: 1.8rem;
 }
 
 .content h4 {
-  font-size: 1.3em;
+  font-size: 1.3rem;
+}
+
+.permalink {
+  text-decoration: none;
+  font-size: 1.1em;
 }
 
 img,
@@ -147,7 +152,7 @@ figure {
 }
 
 figcaption {
-  font-size: 0.9em;
+  font-size: 0.9rem;
   margin-top: 0.5em;
 }
 
@@ -203,6 +208,6 @@ tfoot {
 }
 
 .toc h2 {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   margin-bottom: 0.5em;
 }
