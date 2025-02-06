@@ -2,6 +2,8 @@
 
 <h1>{{ .Title | markdownify }}</h1>
 
+<a href="{{ .RelPermalink }}index.xml" title="RSS Feed">RSS Feed (index.xml)</a>
+
 <!-- Display all tags in a single line -->
 {{- $allTags := slice -}}
 {{- range .Site.Taxonomies.tags -}}
@@ -9,11 +11,11 @@
 {{- end -}}
 
 {{- if gt (len $allTags) 0 -}}
-<h2>Tags</h2>
+<h2>Browse Tags</h2>
 <p>
     {{- range $index, $tag := $allTags -}}
     {{- if $index }} | {{ end -}}
-    <a href="{{ relURL (print " /tags/" ($tag | urlize)) }}">{{ $tag }}</a>
+    <a href="{{ relURL (print "tags/" ($tag | urlize)) }}">{{ $tag }}</a>
     {{- end }}
 </p>
 {{- end }}
@@ -25,7 +27,7 @@
 <ul>
     {{ range .Pages }}
     <li>
-        <span class="date">{{ .Date.Format "2006/01/02" }}</span>
+        <span class="date">{{ .Date.Format "2006-01-02" }}</span>
         <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
     </li>
     {{ end }}
