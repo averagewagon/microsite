@@ -24,11 +24,19 @@
   </head>
 
   <body>
-    <nav>
-      <ul class="menu">
-        {{ range .Site.Menus.main }}
-        <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+    <header>
+      <h2><a href="/">Joni on Microsite</a></h2>
+      <span class="subtitle">
+        {{ with .Site.GetPage "about" }}
+        <a href="{{ .RelPermalink }}">This website runs on an MCU</a>
         {{ end }}
-      </ul>
+      </span>
+      <nav>
+        <ul class="menu">
+          {{ range .Site.Menus.main }}
+          <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+          {{ end }}
+        </ul>
+      </nav>
       <hr/>
-    </nav>
+    </header>

@@ -10,14 +10,33 @@ body {
 /* header and footer areas */
 .menu {
   padding: 0;
+  margin-bottom: 20px;
 }
 
 .menu li {
   display: inline-block;
 }
 
+header h2 {
+  text-align: center;
+  font-size: 3em;
+  margin: 0;
+}
+
+header h2 a,
+header span a {
+  text-decoration: none;
+}
+
 a {
   color: #6ee3ff;
+}
+
+header span {
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  font-size: 1.5em;
 }
 
 a:hover {
@@ -101,6 +120,18 @@ pre code {
 }
 
 /* misc elements */
+.content h2 {
+  font-size: 2.5em;
+}
+
+.content h3 {
+  font-size: 1.8em;
+}
+
+.content h4 {
+  font-size: 1.3em;
+}
+
 img,
 iframe,
 video {
@@ -174,34 +205,4 @@ tfoot {
 .toc h2 {
   font-size: 1.2em;
   margin-bottom: 0.5em;
-}
-
-/* Header Permalink Icon */
-.header-permalink {
-  text-decoration: none;
-  margin-left: 5px;
-  font-size: 0.9em;
-  color: #888;
-  visibility: hidden;
-}
-
-h1:hover .header-permalink,
-h2:hover .header-permalink,
-h3:hover .header-permalink,
-h4:hover .header-permalink,
-h5:hover .header-permalink,
-h6:hover .header-permalink {
-  visibility: visible;
-}
-
-.content h2 {
-  font-size: 2.5em;
-}
-
-.content h3 {
-  font-size: 1.8em;
-}
-
-.content h4 {
-  font-size: 1.3em;
 }
