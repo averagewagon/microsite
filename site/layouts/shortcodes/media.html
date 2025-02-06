@@ -1,0 +1,27 @@
+{{- $file := resources.Get (print "media/" (.Get 0)) -}}
+
+{{- if not $file -}}
+    <p>Error: File '{{ .Get 0 }}' not found.</p>
+{{- else -}}
+
+    {{- $mediaType := $file.MediaType.SubType -}}
+    {{- $alt := .Get 1 | default "" -}}
+    {{- $style := .Get 2 | default "" | safeCSS -}}
+
+    {{- if in (slice "svg" "svg+xml") $mediaType -}}
+        {{- $encodedSVG := $file.Content | base64Encode -}}
+        <img src="data:image/svg+xml;base64,{{ $encodedSVG }}" alt="{{ $alt }}" {{ if $style }}style="{{ $style }}"{{ end }} />
+
+    {{- else if in (slice "png" "jpeg" "gif" "webp") $mediaType -}}
+        <img src="data:image/{{ $mediaType }};base64,{{ $file.Content | base64Encode }}" alt="{{ $alt }}" {{ if $style }}style="{{ $style }}"{{ end }} />
+
+    {{- else if in (slice "webm" "mp4" "ogg") $mediaType -}}
+        <video controls {{ if $style }}style="{{ $style }}"{{ end }}>
+            <source src="data:video/{{ $mediaType }};base64,{{ $file.Content | base64Encode }}" type="video/{{ $mediaType }}">
+        </video>
+
+    {{- else -}}
+        <p>Error: Unsupported file type '{{ $mediaType }}'.</p>
+    {{- end -}}
+
+{{- end -}}
