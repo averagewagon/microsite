@@ -109,6 +109,7 @@ pre {
   border: 1px solid #ddd;
   padding: 1em;
   overflow-x: auto;
+  background-color: #131313 !important;
 }
 
 code {
