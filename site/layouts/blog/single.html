@@ -33,4 +33,16 @@
     </div>
 </main>
 
+<hr />
+
+<nav class="post-navigation">
+    {{ with .PrevInSection }}
+    <a href="{{ .RelPermalink }}" class="prev-article">← {{ .Title }}</a>
+    {{ end }}
+
+    {{ with .NextInSection }}
+    <a href="{{ .RelPermalink }}" class="next-article">{{ .Title }} →</a>
+    {{ end }}
+</nav>
+
 {{ partial "footer.html" . }}
