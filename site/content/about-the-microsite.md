@@ -1,17 +1,15 @@
 ---
-title: About Microsite
+title: About the Microsite
 description:
-  "An overview of Microsite, a fully static website hosted on an ESP32-S3.
+  "An overview of the Microsite, a fully static website hosted on an ESP32-S3.
   Details its design, filesystem, compression strategies, and deployment
   process."
 ---
 
-# About Microsite
-
-Microsite is an experiment in hosting a fully static website on an ESP32-S3. The
-goal is simple: take a tiny microcontroller with limited resources and make it
-serve a complete website efficiently. No dynamic content, no JavaScript bloat,
-no databases—just raw, optimized HTML served directly from flash storage.
+The Microsite is an experiment in hosting a fully static website on an ESP32-S3.
+The goal is simple: take a tiny microcontroller with limited resources and make
+it serve a complete website efficiently. No dynamic content, no JavaScript
+bloat, no databases—just raw, optimized HTML served directly from flash storage.
 
 This isn't just about proving it can be done; it's about exploring how far
 embedded hardware can go in real-world web hosting. The site is self-contained,
@@ -20,7 +18,7 @@ even a Raspberry Pi.
 
 ## How It Works
 
-Microsite is built from three main components:
+The Microsite is built from three main components:
 
 1. Firmware
    ([GitHub](https://github.com/averagewagon/microsite/tree/main/micro))  
