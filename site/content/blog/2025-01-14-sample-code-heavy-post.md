@@ -18,7 +18,7 @@ and see how a code-heavy post looks in Microsite's styling. Below are several
 code samples in different languages, including C, Python, JavaScript, Shell, and
 Rust.
 
-<!--more-->
+This page also shows `inline code`, so I can `preview what that's like`.
 
 ## C: Serving a Static File in Microsite
 
