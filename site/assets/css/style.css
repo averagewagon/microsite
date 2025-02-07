@@ -110,10 +110,14 @@ pre {
   padding: 1em;
   overflow-x: auto;
   background-color: #131313 !important;
+  font-size: .8em;
 }
 
-code {
-  background: #000;
+:not(pre)>code {
+  background-color: #2c2c2c;
+  padding: .2em .4em;
+  color: #ffffff;
+  font-size: .9em;
 }
 
 pre code {
