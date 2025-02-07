@@ -13,8 +13,6 @@ tags:
   - Markdown
 ---
 
-# Testing Code Formatting and Syntax Highlighting
-
 This post exists to test syntax highlighting for different programming languages
 and see how a code-heavy post looks in Microsite's styling. Below are several
 code samples in different languages, including C, Python, JavaScript, Shell, and

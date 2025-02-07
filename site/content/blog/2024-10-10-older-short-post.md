@@ -10,8 +10,6 @@ tags:
   - Sample
 ---
 
-# An Older Short Post
-
 This post exists solely to be an older entry in Microsite’s blog. It serves no
 other purpose beyond acting as a timestamped reference for sorting, pagination,
 and archive behavior.

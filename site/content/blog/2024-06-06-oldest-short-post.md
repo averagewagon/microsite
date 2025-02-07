@@ -10,8 +10,6 @@ tags:
   - Sample
 ---
 
-# The Oldest Short Post
-
 This is the oldest post on Microsite, created specifically to serve as the
 earliest entry in the blog.  
 It has no deeper purpose beyond existing for testing purposes.
