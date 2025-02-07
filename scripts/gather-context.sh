@@ -53,7 +53,7 @@ MICRO_DIR="$REPO_ROOT/micro"
 # Collect source files
 MICRO_CODE="$BUILD_DIR/micro_code.txt"
 echo "Collecting micro source files..."
-collect_sources "$MICRO_CODE" "$MICRO_DIR/main/main.c" "$(find "$MICRO_DIR/components" -type f \( -name "*.h" -o -name "*.c" \))"
+collect_sources "$MICRO_CODE" "$MICRO_DIR/main/main.c" "$(find "$MICRO_DIR/components" -type f \( -name "*.h" \))"
 
 # 2. Process site directory
 echo "Processing site/ directory..."
