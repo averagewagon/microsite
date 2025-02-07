@@ -101,6 +101,9 @@ cp -r "$SITE_DIR/"* "$OUTPUT_RESOURCES/"
 # Compress files with Brotli
 compress_with_brotli
 
+# Generate cache.txt, so the MCU knows what to cache
+"${REPO_ROOT}/scripts/generate-cachefile.sh"
+
 # Pre-check directory size
 check_directory_size
 
