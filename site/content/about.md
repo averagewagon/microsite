@@ -1,145 +1,137 @@
 ---
-title: About Hugo XMin
-author: Yihui Xie
+title: About Microsite
 ---
 
-**XMin** is the first Hugo theme I have designed. The original reason that I
-wrote it was I needed a minimal example of Hugo themes when I was writing the
-[**blogdown**](https://github.com/rstudio/blogdown) book. Basically I wanted a
-simple theme that supports a navigation menu, a home page, other single pages,
-lists of pages, blog posts, tags, and RSS. That is all. Nothing fancy. In terms
-of CSS and JavaScript, I really want to keep them minimal. In fact, this theme
-does not contain any JavaScript code at all, although on this example website I
-did introduce some JavaScript code (still relatively simple anyway). The theme
-does not contain any images, either, and is pretty much a plain-text theme.
+# About Microsite
 
-The theme name "XMin" can be interpreted as "**X**ie's **Min**imal theme" (Xie
-is my last name) or "e**X**tremely **Min**imal theme".
+Microsite is an experiment in hosting a fully static website on an ESP32-S3. The
+goal is simple: take a tiny microcontroller with limited resources and make it
+serve a complete website efficiently. No dynamic content, no JavaScript bloat,
+no databases—just raw, optimized HTML served directly from flash storage.
 
-## `hugo.yaml` (the config file)
+This isn't just about proving it can be done; it's about exploring how far
+embedded hardware can go in real-world web hosting. The site is self-contained,
+compressed, and structured to run on a system with a fraction of the power of
+even a Raspberry Pi.
 
-For this example site, I defined permalinks for two sections, `post` and `note`,
-so that the links to pages under these directories will contain the date info,
-e.g., `https://xmin.yihui.org/post/2016/02/14/a-plain-markdown-post/`. This is
-optional, and it is up to your personal taste of URLs.
+## How It Works
 
-```yaml
-permalinks:
-  note: "/note/:year/:month/:day/:slug/"
-  post: "/post/:year/:month/:day/:slug/"
+Microsite is built from three main components:
+
+1. Firmware
+   ([GitHub](https://github.com/averagewagon/microsite/tree/main/micro))  
+   The ESP32-S3 runs a custom web server based on ESP-IDF’s `httpd`, serving
+   files from LittleFS.
+
+2. Static Site
+   ([GitHub](https://github.com/averagewagon/microsite/tree/main/site))  
+   Hugo generates the site, embedding all assets inline to eliminate unnecessary
+   requests.
+
+3. Build & Flash Scripts
+   ([GitHub](https://github.com/averagewagon/microsite/tree/main/scripts))  
+   A set of scripts handle compression, filesystem packaging, and flashing to
+   the ESP32.
+
+## Webserver and Filesystem
+
+The ESP32 isn’t exactly built to be a web host, but that doesn’t mean it can’t
+be one. The server is based on ESP-IDF’s `httpd`, but with a few critical
+modifications:
+
+- It prioritizes caching where possible.
+- It streams files in chunks instead of loading them all at once.
+- It automatically serves compressed files if the client supports Brotli.
+
+Instead of a traditional file system, it uses LittleFS, a flash-friendly format
+designed to minimize wear. This is necessary because the ESP32's storage isn’t
+like an SSD—you can't just rewrite data indefinitely without degrading the
+hardware.
+
+## Compression and Optimization
+
+A standard HTML page has a lot of unnecessary weight. Microsite strips that down
+aggressively:
+
+- Brotli compression reduces file sizes before they even hit the ESP32.
+- Base64 encoding inlines images, CSS, and fonts directly into the page.
+- Pre-minification means the ESP32 never has to process or generate anything
+  dynamically.
+
+Every request gets the smallest possible file it can, already optimized before
+it's even flashed onto the device.
+
+### Example: Serving a Cached and Compressed File
+
+```c
+static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath) {
+    jms_fs_handle_t file_handle;
+    char buffer[4096];
+    size_t bytes_read = 0;
+    const char* mime_type;
+
+    ESP_LOGI("microsite", "Serving file: %s", filepath);
+
+    // Check cache first
+    if (jms_cache_get(filepath, &cached_data, &cached_size) == JMS_OK) {
+        jms_ws_set_response_headers(request, "200 OK", "text/html", NULL, "max-age=86400");
+        return jms_ws_response_send(request, (const char*)cached_data, cached_size);
+    }
+
+    // Open file from LittleFS if not cached
+    if (jms_fs_open(filepath, &file_handle) != JMS_OK) {
+        return JMS_ERR_FS_FILE_NOT_FOUND;
+    }
+
+    jms_ws_set_response_headers(request, "200 OK", "text/html", NULL, "max-age=86400");
+
+    while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) == JMS_OK && bytes_read > 0) {
+        jms_ws_response_send_chunk(request, buffer, bytes_read);
+    }
+
+    jms_ws_response_send_chunk(request, NULL, 0);
+    jms_fs_close(&file_handle);
+    return JMS_OK;
+}
 ```
 
-You can define the menu through `menu.main`, e.g.,
+This structure allows for fast, low-overhead serving of static content.
 
-```yaml
-menu:
-  main:
-    - name: Home
-      url: ""
-      weight: 1
-    - name: About
-      url: "about/"
-      weight: 2
-    - name: Tags
-      url: "tags/"
-      weight: 3
-    - name: Subscribe
-      url: "index.xml"
-```
+## Deployment Process
 
-Alternatively, you can add `menu: main` to the YAML metadata of any of your
-pages, so that these pages will appear in the menu.
+Everything is built, compressed, and flashed in a few steps:
 
-The page footer can be defined in `.Params.footer`, and the text is treated as
-Markdown, e.g.,
+1. Generate the static site
+   ```sh
+   hugo --minify
+   ```
+2. Compress files with Brotli
+   ```sh
+   brotli -f --best site/public/index.html -o site/public/index.html.br
+   ```
+3. Create a LittleFS image
+   ```sh
+   mklittlefs -c site/public -b 4096 -s 2MB littlefs_image.bin
+   ```
+4. Flash to the ESP32
+   ```sh
+   esptool.py --port /dev/ttyUSB0 write_flash 0x90000 littlefs_image.bin
+   ```
 
-```
-params:
-  footer: "&copy; [Yihui Xie](https://yihui.org) 2017 -- {Year}"
-```
+Once flashed, the ESP32 boots up and immediately starts serving files.
 
-Here `{Year}` means the year in which the site is built (usually the current
-year).
+## The Bigger Picture
 
-## Custom layouts
+This project is a proof of concept, but it’s not just an academic exercise. The
+long-term plan is to see how far this idea can go:
 
-There are two layout files under `layouts/partials/` that you may want to
-override: `head_custom.html` and `foot_custom.html`. This is how you inject
-arbitrary HTML code to the head and foot areas. For example, this site has a
-file `layouts/partials/foot_custom.html` to support LaTeX math via KaTeX and
-center images automatically:
+- Ethernet support – WiFi is fine, but wired connections are more stable.
+- SD card storage – Expanding beyond flash would allow for much larger sites.
+- Optimized request handling – ESP-IDF’s `httpd` is good, but it could be
+  better.
+- Live telemetry – A simple way to monitor uptime, request counts, and
+  performance.
 
-```html
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css" />
-<script
-  src="//cdn.jsdelivr.net/combine/npm/katex/dist/katex.min.js,npm/katex/dist/contrib/auto-render.min.js,npm/@xiee/utils/js/render-katex.js"
-  defer
-></script>
-
-<script
-  src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js"
-  defer
-></script>
-```
-
-You can certainly enable highlight.js for syntax highlighting by yourself
-through `head_custom.html` and `foot_custom.html` if you want.
-
-If you do not like the default fonts (e.g., `Palatino`), you may provide your
-own `static/css/fonts.css` under the root directory of your website to override
-the `fonts.css` in the theme.
-
-## Other features
-
-I could have added more features to this theme, but I decided not to, since I
-have no intention to make this theme feature-rich. However, I will teach you
-how. I have prepared several examples via pull requests at
-https://github.com/yihui/hugo-xmin/pulls, so that you can see the
-implementations of these features when you check out the diffs in the pull
-requests. For example, you can:
-
-- [Enable Google Analytics](https://github.com/yihui/hugo-xmin/pull/3)
-
-- [Enable Disqus comments](https://github.com/yihui/hugo-xmin/pull/4)
-
-- [Enable highlight.js for syntax highlighting of code blocks](https://github.com/yihui/hugo-xmin/pull/5)
-
-- [Display tags on a page](https://github.com/yihui/hugo-xmin/pull/2)
-
-- [Add a table of contents](https://github.com/yihui/hugo-xmin/pull/7)
-
-- [Add a link in the footer of each page to "Edit this page" on Github](https://github.com/yihui/hugo-xmin/pull/6)
-
-To fully understand these examples, you have to read
-[the section on Hugo templates](https://bookdown.org/yihui/blogdown/templates.html)
-in the **blogdown** book.
-
-# Design philosophy
-
-Lastly, a few words about my design philosophy for this theme: I have been
-relying on existing frameworks like Bootstrap for years since I'm not really a
-designer, and I was always scared by the complexity of CSS.
-
-When I started writing this theme, I asked myself, "_What if I just write from
-scratch?_" No Bootstrap. No Normalize.css. I don't care about IE (life could be
-so much easier without IE) or inconsistencies among browsers (for personal
-websites). As long as the theme looks okay in Chrome, Firefox, and Safari, I'm
-done. Thanks to the simplicity of Markdown, you cannot really produce very
-complicated HTML, and I think styling the HTML output from Markdown is much
-simpler than general HTML documents. For example, I do not need to care much
-about form elements like textareas or buttons.
-
-After I finished this theme, I started to wonder why I'd need `normalize.css` at
-all. The default appearance of modern browsers actually looks pretty good in my
-eyes, after I tweak the typeface a little bit.
-
-Compared to inconsistencies across browsers, I care much more about these
-properties of HTML elements:
-
-- Tables should always be centered, and striped tables are easier to read
-  especially when they are wide. Tables should not have vertical borders.
-- An image should be centered if it is the only child element of a paragraph.
-- The `max-width` of images, videos, and iframes should be `100%`.
-
-I hope you can enjoy this theme. The source code is
-[on Github](https://github.com/yihui/hugo-xmin). Happy hacking!
+This is also part of a broader interest in microcontroller-constrained web
+design—rethinking how websites are built when running on the absolute minimum
+hardware.
