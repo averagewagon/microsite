@@ -65,7 +65,7 @@ SITE_DIR="$REPO_ROOT/site"
 # Collect site content
 SITE_CODE="$BUILD_DIR/site_code.txt"
 echo "Collecting site content..."
-collect_sources "$SITE_CODE" "$SITE_DIR/hugo.yaml" "$(find "$SITE_DIR" -type f \( -name "*.html" -o -name "*.md" -o -name "*.css" \) ! -path "*/public/*" ! -path "*/resources/_gen/*")"
+collect_sources "$SITE_CODE" "$SITE_DIR/hugo.yaml" "$(find "$SITE_DIR" -type f \( -name "*.html" -o -name "*.md" -o -name "*.css" \) ! -path "*/public/*" ! -path "*/content/blog/*" ! -path "*/resources/_gen/*")"
 
 # 3. Process scripts directory
 echo "Processing scripts/ directory..."
