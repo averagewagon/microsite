@@ -1,5 +1,6 @@
 ---
 title: Resume
+description: "Joni's resume."
 ---
 
 # My Resume

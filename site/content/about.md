@@ -1,5 +1,9 @@
 ---
 title: About Microsite
+description:
+  "An overview of Microsite, a fully static website hosted on an ESP32-S3.
+  Details its design, filesystem, compression strategies, and deployment
+  process."
 ---
 
 # About Microsite

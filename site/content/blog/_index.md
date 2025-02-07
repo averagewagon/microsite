@@ -1,4 +1,4 @@
 ---
 title: "Joni's Blog"
-description: "A collection of all blog posts on the Microsite."
+description: "The archive of all of Joni's blog posts on the Microsite."
 ---
