@@ -34,7 +34,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>{{ .Site.Title }}</title>
-    <link>{{ .Permalink }}</link>
+    <link>{{ .Site.BaseURL }}</link>
     <description>{{ .Site.Params.description }}</description>
     <generator>Hugo</generator>
     <language>{{ site.Language.LanguageCode }}</language>{{ with $authorEmail }}
@@ -58,7 +58,7 @@
     <item>
       <title>More Posts Available on the Microsite Blog Archive</title>
       <link>{{ .Site.BaseURL }}blog/</link>
-      <pubDate>Mon, 01 Jan 20204 00:00:00</pubDate>
+      <pubDate>Mon, 01 Jan 20204 00:00:00 -0800</pubDate>
       <guid>{{ .Site.BaseURL }}blog/</guid>
       <description>Want to see more? Visit the <a href="{{ .Site.BaseURL }}blog/">the Microsite blog archive</a> for older posts.</description>
     </item>
