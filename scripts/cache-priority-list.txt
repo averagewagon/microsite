@@ -1,0 +1,8 @@
+index.html.br
+index.html
+index.xml
+favicon.ico
+sitemap.xml
+404.html.br
+404.html
+robots.txt
