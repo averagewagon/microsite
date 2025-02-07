@@ -34,6 +34,9 @@ typedef uint16_t jms_err_t;
 #define JMS_ERR_CACHE_FULL            ((jms_err_t)(6002))
 #define JMS_ERR_CACHE_ALLOC           ((jms_err_t)(6003))
 #define JMS_ERR_CACHE_NOT_INITIALIZED ((jms_err_t)(6004))
+#define JMS_ERR_CACHE_FILE_NOT_FOUND  ((jms_err_t)(6005))
+#define JMS_ERR_CACHE_FILE_READ       ((jms_err_t)(6006))
+#define JMS_ERR_CACHE_OVERSIZED_ENTRY ((jms_err_t)(6007))
 
 // Macro for handling and logging errors
 #define JMS_HANDLE_ERR(tag, jms_err_code)                                                          \

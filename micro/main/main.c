@@ -227,18 +227,8 @@ void app_main(void)
     ESP_LOGI(TAG, "Largest SPIRAM free block: %zu bytes",
              heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
 
-    // Define the list of critical files for caching
-    static const char* cached_files[] = {
-        "/littlefs/index.html.br", // Brotli compressed HTML (preferred)
-        "/littlefs/rss.xml",       // Feed readers
-        "/littlefs/index.html",    // Regular HTML (fallback if no Brotli)
-        "/littlefs/404.html.br",   // Brotli compressed 404 page
-        "/littlefs/404.html"       // Regular 404 page
-    };
-
-    // Initialize the cache with preselected files
-    jms_err_t cache_status = jms_cache_init(
-        cached_files, sizeof(cached_files) / sizeof(cached_files[0]), CACHE_MAX_SIZE);
+    // Initialize the cache
+    jms_err_t cache_status = jms_cache_init(CACHE_MAX_SIZE);
     JMS_HANDLE_ERR(TAG, cache_status);
 
     // Register network event handlers

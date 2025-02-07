@@ -3,7 +3,7 @@
 #include <esp_log.h>
 #include <string.h>
 
-#define TAG "jms_ws"
+#define TAG "JMS_WS"
 
 static jms_ws_handler_t request_handler = NULL;
 static httpd_handle_t server_handle = NULL;

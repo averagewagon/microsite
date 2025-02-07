@@ -9,6 +9,9 @@
 
 #define TAG "JMS_CACHE"
 
+#define CACHE_FILE_PATH "/littlefs/cache.txt"
+#define MAX_LINE_LENGTH 128
+
 typedef struct
 {
     char* filepath; // Pointer to file path (stored at cache_region_front)
@@ -93,52 +96,12 @@ static jms_err_t cache_file(const char* path)
 }
 
 /**
- * @brief Iterates through LittleFS and caches additional files.
+ * @brief Initializes the cache by preloading files listed in cache.txt into SPIRAM.
+ *
+ * @param max_cache_size The maximum memory (bytes) to use for caching.
+ * @return JMS_OK if cache initialized successfully, or an error code.
  */
-static void cache_remaining_files()
-{
-    ESP_LOGI(TAG, "Expanding cache with additional files...");
-
-    DIR* dir = opendir("/littlefs/");
-    if (!dir)
-    {
-        ESP_LOGW(TAG, "Failed to open LittleFS root for scanning.");
-        return;
-    }
-
-    struct dirent* entry;
-    while ((entry = readdir(dir)) != NULL)
-    {
-        char full_path[256];
-        snprintf(full_path, sizeof(full_path), "/littlefs/%.245s", entry->d_name);
-
-        // Check if file is already cached
-        const uint8_t* cached_data;
-        size_t cached_size;
-        if (jms_cache_get(full_path, &cached_data, &cached_size) == JMS_OK)
-        {
-            ESP_LOGI(TAG, "Skipping %s (already cached)", full_path);
-            continue;
-        }
-
-        // If it's a file, attempt to cache it
-        if (entry->d_type == DT_REG)
-        {
-            if (cache_file(full_path) != JMS_OK)
-            {
-                ESP_LOGW(TAG, "Unable to cache %s (not enough space or error)", full_path);
-            }
-        }
-    }
-    closedir(dir);
-
-    ESP_LOGI(TAG, "Automatic caching complete.");
-}
-
-/**
- * @brief Initializes the cache with a fixed memory region and preloads files.
- */
-jms_err_t jms_cache_init(const char** files, size_t file_count, size_t max_cache_size)
+jms_err_t jms_cache_init(size_t max_cache_size)
 {
     ESP_LOGI(TAG, "Initializing cache with max size: %zu bytes", max_cache_size);
 
@@ -150,34 +113,73 @@ jms_err_t jms_cache_init(const char** files, size_t file_count, size_t max_cache
         return JMS_ERR_CACHE_ALLOC;
     }
 
-    // Initialize pointers for split bump allocation
     cache_region_size = max_cache_size;
     cache_region_front = cache_region;
     cache_region_back = cache_region + max_cache_size;
 
-    for (size_t i = 0; i < file_count; i++)
+    ESP_LOGI(TAG, "Cache memory allocated successfully.");
+
+    // Open cache file
+    jms_fs_handle_t file_handle;
+    if (jms_fs_open(CACHE_FILE_PATH, &file_handle) != JMS_OK)
     {
-        if (cache_region_front >= cache_region_back)
+        ESP_LOGE(TAG, "Failed to open cache list file: %s", CACHE_FILE_PATH);
+        return JMS_ERR_CACHE_FILE_NOT_FOUND;
+    }
+
+    ESP_LOGI(TAG, "Opened cache file: %s", CACHE_FILE_PATH);
+
+    char line[MAX_LINE_LENGTH];
+    char full_path[MAX_LINE_LENGTH + 11]; // Extra space for "littlefs/"
+    size_t file_index = 0;
+
+    // Use fgets() to read one line at a time
+    while (fgets(line, sizeof(line), file_handle.file))
+    {
+        // Trim newline and carriage return characters
+        size_t len = strlen(line);
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r'))
         {
-            ESP_LOGW(TAG, "Cache is full, stopping at %zu bytes used", cache_used);
-            return JMS_OK;
+            line[--len] = '\0';
         }
 
-        // Validate file path length
-        if (strlen(files[i]) >= JMS_CACHE_MAX_PATH)
+        if (len == 0)
         {
-            ESP_LOGW(TAG, "Skipping %s (file path exceeds %d bytes)", files[i], JMS_CACHE_MAX_PATH);
+            continue; // Skip empty lines
+        }
+
+        // Prepend "littlefs/" to the path
+        snprintf(full_path, sizeof(full_path), "/littlefs/%s", line);
+
+        ESP_LOGI(TAG, "Processing file [%zu]: %s", file_index, full_path);
+
+        // Check if file exists before caching
+        if (jms_fs_exists(full_path) != JMS_OK)
+        {
+            ESP_LOGW(TAG, "File not found: %s", full_path);
+            file_index++;
             continue;
         }
 
-        // Cache the provided file
-        cache_file(files[i]);
+        ESP_LOGI(TAG, "Caching file [%zu]: %s", file_index, full_path);
+        jms_err_t cache_status = cache_file(full_path);
+
+        if (cache_status != JMS_OK)
+        {
+            ESP_LOGW(TAG, "Skipping %s (cache_file failed with error code: %d)", full_path,
+                     cache_status);
+        }
+        else
+        {
+            ESP_LOGI(TAG, "Cached file [%zu]: %s", file_index, full_path);
+        }
+
+        file_index++;
     }
 
-    // Expand caching with additional files
-    cache_remaining_files();
+    jms_fs_close(&file_handle);
 
-    ESP_LOGI(TAG, "Cache initialization complete: %zu files, %zu bytes used", cache_count,
+    ESP_LOGI(TAG, "Cache initialization complete. %zu files attempted, %zu bytes used", file_index,
              cache_used);
     return JMS_OK;
 }
