@@ -59,7 +59,7 @@ markup:
   highlight:
     codeFences: true
     guessSyntax: true
-    style: "gruvbox"
+    style: "base16-snazzy"
     lineNumbersInTable: false
     tabWidth: 4
   goldmark:
@@ -77,3 +77,4 @@ markup:
           inline:
             - - \(
               - \)
+# base16-snazzy
