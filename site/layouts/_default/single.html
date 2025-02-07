@@ -25,6 +25,7 @@
 
     <div class="content">
         {{ .Content 
+            | replaceRE "(<h([1-6]) id=\"([^\"]+)\">(.+?)</h[1-6]>)" "<h$2 id=\"$3\"><a href=\"#$3\" class=\"permalink\">§ </a>$4</h$2>" 
             | replaceRE "(<table[^>]*>)" "<div class='table-wrapper'>$1" 
             | replaceRE "(</table>)" "$1</div>" 
             | replaceRE "(<img src=\"([^\"]+)\" alt=\"([^\"]+)\" ?/?>)" "<figure><img src=\"$2\" alt=\"$3\" /><figcaption>$3</figcaption></figure>"
