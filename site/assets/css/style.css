@@ -143,11 +143,11 @@ video {
 figure {
   text-align: center;
   margin: 1em 0;
+  color: #ddd;
 }
 
 figcaption {
   font-size: 0.9em;
-  color: #ddd;
   margin-top: 0.5em;
 }
 
