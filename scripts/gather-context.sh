@@ -79,7 +79,19 @@ SCRIPTS_CODE="$BUILD_DIR/scripts_code.txt"
 echo "Collecting scripts..."
 collect_sources "$SCRIPTS_CODE" "$(find "$SCRIPTS_DIR" -type f -name "*.sh")"
 
-# 4. Copy and rename README files
+# 4. Process zephyr_micro directory
+echo "Processing zephyr_micro/ directory..."
+ZEPHYR_MICRO_DIR="$REPO_ROOT/zephyr_micro"
+
+# Generate tree structure (excluding build directory)
+(cd "$ZEPHYR_MICRO_DIR" && tree -I 'build' >"$BUILD_DIR/zephyr_micro_filetree.txt")
+
+# Collect source files
+ZEPHYR_MICRO_CODE="$BUILD_DIR/zephyr_micro_code.txt"
+echo "Collecting zephyr_micro source files..."
+collect_sources "$ZEPHYR_MICRO_CODE" "$(find "$ZEPHYR_MICRO_DIR" -type f \( -name "*.c" -o -name "*.h" -o -name "CMakeLists.txt" -o -name "*.conf" -o -name "*.overlay" \) ! -path "*/build/*")"
+
+# 5. Copy and rename README files
 echo "Copying and renaming README files..."
 rename_and_copy() {
     local source_path="$1"
