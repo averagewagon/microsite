@@ -5,30 +5,50 @@ project is an experiment in running a functional web server on
 resource-constrained hardware. You can check it out live at
 [joni-on-micro.site](https://joni-on-micro.site).
 
-## Current Features
+The project consists of three main components:
 
-### ESP32-S3 Web Hosting
+1. **MCU Firmware**: A custom ESP-IDF-based web server that:
 
-- Hosted on an `ESP32-S3-DevKitC-1-N16R8` for its crypto capabilities and ample
-  memory/storage.
-- Integrates LittleFS with Espressif's httpd to serve static files from the
-  filesystem.
-- Supports HTTPS session management, hierarchical pages, Brotli compression,
-  hotcaching pages, and 404 redirection.
+   - Uses LittleFS for efficient flash storage management
+   - Implements intelligent caching strategies
+   - Handles Brotli compression for HTML files
+   - Provides HTTPS support with built-in certificate management
 
-### Hugo-Based Static Site Generator
+2. **Static Site Generator**: A Hugo-based website that:
 
-- Uses Hugo to generate a fully static website, optimized for low-resource
-  deployment.
-- Every page is self-contained (HTML, CSS, images, videos, and fonts embedded
-  via Base64) to reduce HTTPS session overhead.
-- Minified and compressed for minimal file size and improved performance on
-  microcontroller hardware.
+   - Embeds all assets (images, CSS, fonts) directly into HTML files
+   - Implements Base64 encoding for media content
+   - Provides a blog system with tag filtering and RSS support
+   - Uses custom shortcodes for handling media embedding
 
-### Small Test Website
+3. **Build & Deployment Tools**: Shell scripts that:
+   - Generate and compress the static site
+   - Create LittleFS images
+   - Handle flashing to the ESP32
+   - Manage cache file generation
 
-- Includes a simple test website built with Hugo, deployed on the ESP32-S3 to
-  demonstrate its capabilities.
+Key technical features include:
+
+- Chunked file serving to minimize memory usage
+- Pre-cached files in SPIRAM for frequently accessed content
+- Modular component architecture with clear separation of concerns
+- Support for both compressed (.br) and uncompressed file variants
+- Custom error handling system with defined error codes
+
+The project's architecture emphasizes minimalism and efficiency, avoiding
+unnecessary abstractions and focusing on serving static content in a
+resource-constrained environment. Future plans include Ethernet support, SD card
+integration, and custom PCB development with HSM capabilities.
+
+Current limitations:
+
+- Maximum cache size of 7MB
+- WiFi-only networking
+- Flash storage constraints
+- Limited concurrent HTTPS sessions due to mbedtls restrictions
+
+The project serves as both a practical web hosting solution and an exploration
+of embedded web server capabilities on minimal hardware.
 
 ## Future
 
