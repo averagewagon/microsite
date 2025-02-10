@@ -1,6 +1,6 @@
 index.html.br
 index.html
-index.xml
+blog/index.xml
 favicon.ico
 sitemap.xml
 404.html.br
