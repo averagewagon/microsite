@@ -3,6 +3,15 @@
         zephyr,flash = &flash0;
         zephyr,sram = &sram0;
     };
+
+    soc {
+        psram0: psram@3c000000 {
+            device_type = "memory";
+            compatible = "mmio-sram";
+            reg = <0x3c000000 0x00800000>; // 8MB instead of 2MB
+            status = "okay";
+        };
+    };
 };
 
 &flash0 {
