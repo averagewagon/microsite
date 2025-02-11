@@ -54,7 +54,7 @@ void print_psram_info(void)
 
 void print_flash_info(void)
 {
-    const struct device* flash_dev = DEVICE_DT_GET_ANY(espressif_esp32_flash_controller);
+    const struct device* flash_dev = DEVICE_DT_GET(DT_PARENT(DT_NODELABEL(flash0)));
 
     if (!device_is_ready(flash_dev))
     {
