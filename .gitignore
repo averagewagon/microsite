@@ -134,3 +134,4 @@ public
 
 # Zephyr
 defconfig
+wifi_credentials.cmake
