@@ -2,13 +2,14 @@
     chosen {
         zephyr,flash = &flash0;
         zephyr,sram = &sram0;
+        zephyr,net-if = &wifi;
     };
 
     soc {
         psram0: psram@3c000000 {
             device_type = "memory";
             compatible = "mmio-sram";
-            reg = <0x3c000000 0x00800000>; // 8MB instead of 2MB
+            reg = <0x3c000000 0x00800000>;
             status = "okay";
         };
     };
@@ -17,4 +18,8 @@
 &flash0 {
     status = "okay";
     reg = <0x00000000 DT_SIZE_M(16)>;
+};
+
+&wifi {
+    status = "okay";
 };

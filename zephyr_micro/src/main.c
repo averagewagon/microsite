@@ -1,5 +1,7 @@
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/net/net_if.h>
+#include <zephyr/net/wifi_mgmt.h>
 
 // Heap stuff
 #include <soc/soc_memory_layout.h>
@@ -9,7 +11,108 @@
 #include <zephyr/drivers/flash.h>
 #include <zephyr/storage/flash_map.h>
 
-LOG_MODULE_REGISTER(BASIC_CHECKS, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(JMS_MAIN, LOG_LEVEL_INF);
+
+#ifndef WIFI_SSID
+#define WIFI_SSID "default_ssid"
+#endif
+
+#ifndef WIFI_PSK
+#define WIFI_PSK "default_psk"
+#endif
+
+static struct net_mgmt_event_callback wifi_cb;
+static struct net_mgmt_event_callback ipv4_cb;
+static K_SEM_DEFINE(wifi_connected, 0, 1);
+static K_SEM_DEFINE(ipv4_address_obtained, 0, 1);
+
+static void handle_wifi_connect_result(struct net_mgmt_event_callback* cb)
+{
+    const struct wifi_status* status = (const struct wifi_status*)cb->info;
+
+    if (status->status)
+    {
+        LOG_ERR("WiFi connection failed (%d)", status->status);
+    }
+    else
+    {
+        LOG_INF("WiFi connected!");
+        k_sem_give(&wifi_connected);
+    }
+}
+
+static void handle_wifi_disconnect_result(struct net_mgmt_event_callback* cb)
+{
+    LOG_WRN("WiFi disconnected");
+    k_sem_take(&wifi_connected, K_NO_WAIT);
+}
+
+static void handle_ipv4_result(struct net_if* iface)
+{
+    char buf[NET_IPV4_ADDR_LEN];
+
+    for (int i = 0; i < NET_IF_MAX_IPV4_ADDR; i++)
+    {
+        if (iface->config.ip.ipv4->unicast[i].ipv4.addr_type != NET_ADDR_DHCP)
+        {
+            continue;
+        }
+
+        LOG_INF("IPv4 Address: %s",
+                net_addr_ntop(AF_INET,
+                              &iface->config.ip.ipv4->unicast[i].ipv4.address.in_addr,
+                              buf, sizeof(buf)));
+        LOG_INF("Subnet: %s",
+                net_addr_ntop(AF_INET, &iface->config.ip.ipv4->unicast[i].netmask, buf,
+                              sizeof(buf)));
+        LOG_INF("Router: %s",
+                net_addr_ntop(AF_INET, &iface->config.ip.ipv4->gw, buf, sizeof(buf)));
+        LOG_INF("Lease time: %u seconds", iface->config.dhcpv4.lease_time);
+    }
+
+    k_sem_give(&ipv4_address_obtained);
+}
+
+static void wifi_mgmt_event_handler(struct net_mgmt_event_callback* cb,
+                                    uint32_t mgmt_event, struct net_if* iface)
+{
+    switch (mgmt_event)
+    {
+    case NET_EVENT_WIFI_CONNECT_RESULT:
+        handle_wifi_connect_result(cb);
+        break;
+    case NET_EVENT_WIFI_DISCONNECT_RESULT:
+        handle_wifi_disconnect_result(cb);
+        break;
+    case NET_EVENT_IPV4_ADDR_ADD:
+        handle_ipv4_result(iface);
+        break;
+    default:
+        break;
+    }
+}
+
+void wifi_connect(void)
+{
+    struct net_if* iface = net_if_get_default();
+    struct wifi_connect_req_params params = {0};
+
+    params.ssid = WIFI_SSID;
+    params.psk = WIFI_PSK;
+    params.ssid_length = strlen(WIFI_SSID);
+    params.psk_length = strlen(WIFI_PSK);
+    params.channel = WIFI_CHANNEL_ANY;
+    params.security = WIFI_SECURITY_TYPE_PSK;
+    params.band = WIFI_FREQ_BAND_2_4_GHZ;
+    params.mfp = WIFI_MFP_OPTIONAL;
+
+    LOG_INF("Connecting to SSID: %s", params.ssid);
+
+    if (net_mgmt(NET_REQUEST_WIFI_CONNECT, iface, &params, sizeof(params)))
+    {
+        LOG_ERR("WiFi Connection Request Failed");
+    }
+}
 
 void print_psram_info(void)
 {
@@ -110,10 +213,25 @@ int main(void)
     print_psram_info();
     print_flash_info();
 
-    while (1)
-    {
-        k_sleep(K_SECONDS(1));
-    }
+    LOG_INF("Starting WiFi Connection...");
+
+    LOG_INF("WiFi SSID: %s", WIFI_SSID);
+
+    net_mgmt_init_event_callback(&wifi_cb, wifi_mgmt_event_handler,
+                                 NET_EVENT_WIFI_CONNECT_RESULT |
+                                     NET_EVENT_WIFI_DISCONNECT_RESULT);
+    net_mgmt_init_event_callback(&ipv4_cb, wifi_mgmt_event_handler,
+                                 NET_EVENT_IPV4_ADDR_ADD);
+
+    net_mgmt_add_event_callback(&wifi_cb);
+    net_mgmt_add_event_callback(&ipv4_cb);
+
+    wifi_connect();
+
+    k_sem_take(&wifi_connected, K_FOREVER);
+    k_sem_take(&ipv4_address_obtained, K_FOREVER);
+
+    LOG_INF("WiFi Ready!");
 
     return 0;
 }
