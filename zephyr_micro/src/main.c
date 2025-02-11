@@ -1,93 +1,111 @@
-#include <zephyr/device.h>
-#include <zephyr/devicetree.h>
-#include <zephyr/drivers/flash.h>
 #include <zephyr/kernel.h>
-#include <zephyr/storage/flash_map.h>
-#include <zephyr/sys/printk.h>
+#include <zephyr/logging/log.h>
 
-#include <zephyr/devicetree.h>
-#include <zephyr/kernel.h>
-#include <zephyr/sys/printk.h>
+// Heap stuff
+#include <soc/soc_memory_layout.h>
+#include <zephyr/multi_heap/shared_multi_heap.h>
+
+// Flash stuff
+#include <zephyr/drivers/flash.h>
+#include <zephyr/storage/flash_map.h>
+
+LOG_MODULE_REGISTER(BASIC_CHECKS, LOG_LEVEL_INF);
 
 void print_psram_info(void)
 {
-    // TODO: This check is tautological - I can configure the devicetree parameter for psram0,
-    // so I'm pretty sure this isn't even checking anything.
-    printk("Checking PSRAM...\n");
+    uint32_t *p_mem, k;
 
-    if (DT_NODE_EXISTS(DT_NODELABEL(psram0)))
+    LOG_INF("Checking PSRAM...");
+
+    p_mem = shared_multi_heap_aligned_alloc(SMH_REG_ATTR_EXTERNAL, 32,
+                                            1024 * sizeof(uint32_t));
+
+    if (p_mem == NULL)
     {
-        size_t psram_size = DT_REG_SIZE(DT_NODELABEL(psram0));
-        printk("PSRAM detected: %d MB\n", psram_size / (1024 * 1024));
+        LOG_ERR("PSRAM memory allocation failed!");
+        return;
     }
-    else
+
+    for (k = 0; k < 1024; k++)
     {
-        printk("PSRAM not detected in devicetree\n");
+        p_mem[k] = k;
     }
+
+    for (k = 0; k < 1024; k++)
+    {
+        if (p_mem[k] != k)
+        {
+            LOG_ERR("p_mem[%" PRIu32 "]: %" PRIu32 " (expected value %" PRIu32 ")", k,
+                    p_mem[k], k);
+            break;
+        }
+    }
+
+    shared_multi_heap_free(p_mem);
+
+    if (k < 1024)
+    {
+        LOG_ERR("Failed checking memory contents.");
+        return;
+    }
+
+    LOG_INF("PSRAM check completed.");
 }
 
 void print_flash_info(void)
 {
-    // TODO: This function attempts to get flash memory size by multiplying the number of blocks
-    // by the size of the blocks. This results in a calculated size of ~32mb, which is blatantly
-    // wrong, As I know that I only have 16mb + internal flash.
-    printk("Checking flash memory size...\n");
-
-    /* Get flash controller device */
     const struct device* flash_dev = DEVICE_DT_GET_ANY(espressif_esp32_flash_controller);
+
     if (!device_is_ready(flash_dev))
     {
-        printk("Flash device not found or not ready!\n");
+        LOG_ERR("Flash device not ready!");
         return;
     }
 
-    /* Get total number of pages */
-    size_t page_count = flash_get_page_count(flash_dev);
-    printk("Flash Page Count: %zu\n", page_count);
+    size_t total_pages = flash_get_page_count(flash_dev);
+    struct flash_pages_info page_info;
 
-    struct flash_pages_info info;
-    size_t total_size = 0;
-
-    /* Try to get the first page's size */
-    if (flash_get_page_info_by_idx(flash_dev, 0, &info) == 0)
+    // Get size of the first page
+    if (flash_get_page_info_by_idx(flash_dev, 0, &page_info) != 0)
     {
-        printk("Flash Page Size (First Page): %zu bytes\n", info.size);
+        LOG_ERR("Failed to get flash page info");
+        return;
+    }
 
-        /* Check if pages are uniform */
-        bool uniform = true;
-        total_size = page_count * info.size;
+    size_t first_page_size = page_info.size;
+    bool uniform_size = true;
 
-        /* Iterate over all pages to check for non-uniform sizes */
-        for (uint32_t i = 1; i < page_count; i++)
+    // Iterate through all pages to check for size consistency
+    for (size_t i = 1; i < total_pages; i++)
+    {
+        if (flash_get_page_info_by_idx(flash_dev, i, &page_info) != 0)
         {
-            if (flash_get_page_info_by_idx(flash_dev, i, &info) == 0)
-            {
-                if (info.size != total_size / page_count)
-                {
-                    uniform = false;
-                }
-                total_size += info.size;
-            }
+            LOG_ERR("Error reading page %zu info", i);
+            return;
         }
 
-        if (uniform)
+        if (page_info.size != first_page_size)
         {
-            printk("Flash memory appears uniform.\n");
+            uniform_size = false;
+            LOG_ERR("Page %zu has different size: %zu bytes", i, page_info.size);
         }
-        else
-        {
-            printk("Flash memory has non-uniform pages; total size calculated iteratively.\n");
-        }
+    }
 
-        printk("Total Flash Memory Size: %zu bytes\n", total_size);
+    if (uniform_size)
+    {
+        size_t total_flash_size = total_pages * first_page_size;
+        LOG_INF("All flash pages have the same size: %zu bytes", first_page_size);
+        LOG_INF("Total available flash size: %zu bytes (%zu KB, %zu MB)",
+                total_flash_size, total_flash_size / 1024,
+                total_flash_size / (1024 * 1024));
     }
     else
     {
-        printk("Failed to get flash page info.\n");
+        LOG_INF("Flash pages have variable sizes");
     }
 }
 
-void main(void)
+int main(void)
 {
     print_psram_info();
     print_flash_info();
@@ -96,4 +114,6 @@ void main(void)
     {
         k_sleep(K_SECONDS(1));
     }
+
+    return 0;
 }
