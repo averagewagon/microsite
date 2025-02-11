@@ -1,5 +1,7 @@
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+
+// Wifi stuff
 #include <zephyr/net/net_if.h>
 #include <zephyr/net/wifi_mgmt.h>
 
