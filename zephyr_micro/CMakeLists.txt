@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20.0)
 
-set(BOARD esp32s3_devkitm/esp32s3/procpu)
+set(BOARD esp32s3_devkitc/esp32s3/procpu)
 
 # Merge both configuration files
 set(CONF_FILE
