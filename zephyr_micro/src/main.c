@@ -1,19 +1,62 @@
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 
+LOG_MODULE_REGISTER(JMS_MAIN, LOG_LEVEL_INF);
+
+// ------------------------------------------------------------
+// ---------------------- TLS ---------------------------------
+// ------------------------------------------------------------
+#include <zephyr/net/tls_credentials.h>
+
+// Define embedded certificate and key variables
+const uint8_t privkey_data[] = {
+#include "privkey.pem.inc"
+};
+
+const uint8_t cert_data[] = {
+#include "fullchain.pem.inc"
+};
+
+#define HTTP_SERVER_CERTIFICATE_TAG 1 // Security tag for Zephyr's TLS system
+
+static void setup_tls(void)
+{
+    LOG_INF("Registering TLS credentials...");
+
+    // Register server certificate
+    if (tls_credential_add(HTTP_SERVER_CERTIFICATE_TAG, TLS_CREDENTIAL_SERVER_CERTIFICATE,
+                           cert_data, // Now using the corrected variable
+                           sizeof(cert_data)) < 0)
+    {
+        LOG_ERR("Failed to register public certificate.");
+        return;
+    }
+
+    // Register private key
+    if (tls_credential_add(HTTP_SERVER_CERTIFICATE_TAG, TLS_CREDENTIAL_PRIVATE_KEY,
+                           privkey_data, // Now using the corrected variable
+                           sizeof(privkey_data)) < 0)
+    {
+        LOG_ERR("Failed to register private key.");
+        return;
+    }
+
+    LOG_INF("TLS certificates successfully registered.");
+}
+
+static void debug_certificate(void)
+{
+    LOG_INF("First bytes of certificate: %02X %02X %02X %02X %02X %02X %02X %02X...",
+            cert_data[0], cert_data[1], cert_data[2], cert_data[3], cert_data[4],
+            cert_data[5], cert_data[6], cert_data[7]);
+}
+
+// ------------------------------------------------------------
+// ---------------------- WIFI --------------------------------
+// ------------------------------------------------------------
 // Wifi stuff
 #include <zephyr/net/net_if.h>
 #include <zephyr/net/wifi_mgmt.h>
-
-// Heap stuff
-#include <soc/soc_memory_layout.h>
-#include <zephyr/multi_heap/shared_multi_heap.h>
-
-// Flash stuff
-#include <zephyr/drivers/flash.h>
-#include <zephyr/storage/flash_map.h>
-
-LOG_MODULE_REGISTER(JMS_MAIN, LOG_LEVEL_INF);
 
 #ifndef WIFI_SSID
 #define WIFI_SSID "default_ssid"
@@ -116,6 +159,13 @@ void wifi_connect(void)
     }
 }
 
+// -------------------------------------------------------------
+// ---------------------- PSRAM --------------------------------
+// -------------------------------------------------------------
+// Heap stuff
+#include <soc/soc_memory_layout.h>
+#include <zephyr/multi_heap/shared_multi_heap.h>
+
 void print_psram_info(void)
 {
     uint32_t *p_mem, k;
@@ -156,6 +206,13 @@ void print_psram_info(void)
 
     LOG_INF("PSRAM check completed.");
 }
+
+// -------------------------------------------------------------
+// ---------------------- FLASH --------------------------------
+// -------------------------------------------------------------
+// Flash stuff
+#include <zephyr/drivers/flash.h>
+#include <zephyr/storage/flash_map.h>
 
 void print_flash_info(void)
 {
@@ -210,10 +267,14 @@ void print_flash_info(void)
     }
 }
 
+// ------------------------------------------------------------
+// ---------------------- MAIN --------------------------------
+// ------------------------------------------------------------
+
 int main(void)
 {
-    print_psram_info();
-    print_flash_info();
+    // print_psram_info();
+    // print_flash_info();
 
     LOG_INF("Starting WiFi Connection...");
 
@@ -234,6 +295,10 @@ int main(void)
     k_sem_take(&ipv4_address_obtained, K_FOREVER);
 
     LOG_INF("WiFi Ready!");
+
+    // Initialize TLS before starting the server
+    setup_tls();
+    debug_certificate();
 
     return 0;
 }
