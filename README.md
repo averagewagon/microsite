@@ -27,66 +27,67 @@ The project consists of three main components:
    - Handle flashing to the ESP32
    - Manage cache file generation
 
-Key technical features include:
-
-- Chunked file serving to minimize memory usage
-- Pre-cached files in SPIRAM for frequently accessed content
-- Modular component architecture with clear separation of concerns
-- Support for both compressed (.br) and uncompressed file variants
-- Custom error handling system with defined error codes
-
-The project's architecture emphasizes minimalism and efficiency, avoiding
-unnecessary abstractions and focusing on serving static content in a
-resource-constrained environment. Future plans include Ethernet support, SD card
-integration, and custom PCB development with HSM capabilities.
-
-Current limitations:
-
-- Maximum cache size of 7MB
-- WiFi-only networking
-- Flash storage constraints
-- Limited concurrent HTTPS sessions due to mbedtls restrictions
-
-The project serves as both a practical web hosting solution and an exploration
-of embedded web server capabilities on minimal hardware.
-
 ## Future
 
-### Short-Term Goals
+- Set up a Raspberry Pi or such to act as a monitor and watchdog
 
-- MCU webserver improvements:
+  - Reboot the MCU if the website fails to load, check every 5 minutes
+  - Store the UART output of the device in files with timestamps
+  - Write some scripts so I can determine uptime, outages, traffic, etc. just
+    from the UART logs
 
-  - Implement smarter bootup caching logic, based on... something?
+- Conduct some stress testing of the website
+
+  - Website currently really struggles with concurrent connections, lots of
+    dropped things
+  - Should come up with benchmarks so that I can tune the ESP-IDF configuration,
+    and use these benchmarks in my first article
+  - When I make future improvements, the benchmarks will help me assess their
+    effectiveness
+
+- Write up the first article (on the Microsite progress up to this point)
+
+  - Reached a reasonable stopping point for "first draft", gotta write it down
+    before I forget
+
+### Maybes/Eventualies
+
+- Port the project to the Zephyr RTOS
+
+  - Check out their HTTPD implementation, maybe it solves some of my issues with
+    ESP-IDF's httpd
+  - Want to be able to more easily swap between development boards
+
+- Finish porting the project to the
+  [LILYGO T-ETH-LITE](https://lilygo.cc/products/t-eth-lite)
+
   - Replace WiFi with Ethernet for lower latency and better reliability
   - Add SD card support
-  - Finish porting the project to the
-    [LILYGO T-ETH-LITE](https://lilygo.cc/products/t-eth-lite)
-  - Implement a watchdog reset if the board becomes unresponsive
-  - Figure out if there's a way around the mbedtls 0x0050 concurrency bottleneck
 
-- Website improvements:
+- Create a custom PCB
 
-  - Fork ESP-IDF `httpd` to allow more low-level control over request handling,
-    remove unnecessary copies, etc.
-  - Add table of contents generation and permalinkable headers
-  - Host compressed `.webm` video content
+  - Add Ethernet support (W5500)
+    - Optional: POE?
+  - Add an SD card slot
+  - Use an HSM with a crypto coprocessor, maybe the NXP SE050
 
-### Long-Term Goals
+    - Will be a more secure way of handling my LetsEncrypt credentials than my
+      current solution of "put the HTTPS private key in the flash"
+    - Handles the ECDSA ServerKeyExchange message signing in hardware
+    - Handles the ECDHE session key generation in hardware
+    - ESP32-S3 already has accelerators for AES-256-GCM, which uses the session
+      key to encrypt payloads
 
-- Improving the "production-readiness" of the site:
+- Set up a "Microsite Server Rack" using 3.5 inch HDD cages
 
-  - Use OpenWRT-based router to enable round-robin load balancing across
-    multiple Microsite boards.
-  - Set up a way to monitor and update all boards remotely.
-  - Conduct stress testing to measure performance limits.
+  - Configure round-robin load balancing to distribute load between Microsite
+    boards
+  - Consider airflow, use a fan for cooling the rack
+  - House the custom PCBs in form factors that allow for hot-swapping, the same
+    way you'd hot swap a 3.5 inch drive
 
-- Custom Hardware & PCB:
-
-  - Create a custom PCB with HSM, Ethernet, SD card
-  - Design an enclosure sized to fit a 3.5-inch HDD drive cage, so it looks like
-    a tiny version of a server chassis
-
-- Creating content:
-  - Add a site statistics page showing: CPU usage, memory usage, uptime, and
-    request metrics.
-  - Write a blog post about making the website itself
+- Create a "site statistics" page showing information about the MCU itself
+  - CPU usage
+  - Memory usage
+  - Uptime
+  - Activity/request metrics
