@@ -1,0 +1,17 @@
+[Unit]
+Description=Monitor microsite and restart it if offline
+After=network.target
+
+[Service]
+ExecStart=/bin/sh -c ". $HOME/esp/esp-idf/export.sh && /usr/local/bin/monitor_website.sh"
+Restart=always
+RestartSec=300
+DynamicUser=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadOnlyPaths=/
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

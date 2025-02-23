@@ -1,0 +1,19 @@
+[Unit]
+Description=Microsite Monitoring Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/monitor_microsite.sh
+Restart=always
+RestartSec=5
+DynamicUser=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadOnlyPaths=/
+StateDirectory=monitor_microsite
+WorkingDirectory=/var/lib/private/monitor_microsite
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
