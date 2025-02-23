@@ -15,15 +15,23 @@ error() {
     printf "\033[31mError: %s\033[0m\n" "$1" >&2
 }
 
-# Define paths
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Determine the root of the Git repository
+REPO_ROOT=$(git rev-parse --show-toplevel)
+SERVICE_DIR="$REPO_ROOT/scripts/services"
+
+# Ensure the service directory exists
+if [ ! -d "$SERVICE_DIR" ]; then
+    error "Service directory $SERVICE_DIR not found."
+    exit 1
+fi
+
 BIN_DIR="/usr/local/bin"
 SYSTEMD_DIR="/etc/systemd/system"
 
-echo "Installing scripts and services from $SCRIPT_DIR..."
+echo "Installing scripts and services from $SERVICE_DIR..."
 
 # Symlink all .sh scripts into /usr/local/bin
-for script in "$SCRIPT_DIR"/*.sh; do
+for script in "$SERVICE_DIR"/*.sh; do
     if [ -f "$script" ]; then
         SCRIPT_NAME="$(basename "$script")"
         TARGET_SCRIPT="$BIN_DIR/$SCRIPT_NAME"
@@ -35,7 +43,7 @@ for script in "$SCRIPT_DIR"/*.sh; do
 done
 
 # Symlink and enable all .service files
-for service in "$SCRIPT_DIR"/*.service; do
+for service in "$SERVICE_DIR"/*.service; do
     if [ -f "$service" ]; then
         SERVICE_NAME="$(basename "$service")"
         TARGET_SERVICE="$SYSTEMD_DIR/$SERVICE_NAME"
