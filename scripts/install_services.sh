@@ -28,36 +28,66 @@ fi
 BIN_DIR="/usr/local/bin"
 SYSTEMD_DIR="/etc/systemd/system"
 
+echo "Resetting system user for microsite services..."
+
+# Remove the microsite user if it exists (clean state)
+if id -u microsite >/dev/null 2>&1; then
+    echo "Removing existing user: microsite"
+    sudo systemctl stop monitor_microsite || true
+    sudo systemctl disable monitor_microsite || true
+    sudo userdel -r microsite || true
+fi
+
+# Create a new system user
+echo "Creating new system user: microsite"
+sudo useradd --system --create-home --shell /usr/sbin/nologin --groups dialout microsite
+
 echo "Installing scripts and services from $SERVICE_DIR..."
 
-# Symlink all .sh scripts into /usr/local/bin
+# Copy all .sh scripts into /usr/local/bin
 for script in "$SERVICE_DIR"/*.sh; do
     if [ -f "$script" ]; then
         SCRIPT_NAME="$(basename "$script")"
         TARGET_SCRIPT="$BIN_DIR/$SCRIPT_NAME"
 
-        echo "Symlinking script: $SCRIPT_NAME -> $TARGET_SCRIPT"
-        sudo ln -sf "$script" "$TARGET_SCRIPT"
+        # Remove existing file to avoid conflicts
+        if [ -f "$TARGET_SCRIPT" ]; then
+            echo "Removing existing script: $TARGET_SCRIPT"
+            sudo rm -f "$TARGET_SCRIPT"
+        fi
+
+        echo "Copying script: $SCRIPT_NAME -> $TARGET_SCRIPT"
+        sudo cp "$script" "$TARGET_SCRIPT"
         sudo chmod +x "$TARGET_SCRIPT"
+        sudo chown microsite:microsite "$TARGET_SCRIPT"
     fi
 done
 
-# Symlink and enable all .service files
+# Copy and enable all .service files
 for service in "$SERVICE_DIR"/*.service; do
     if [ -f "$service" ]; then
         SERVICE_NAME="$(basename "$service")"
         TARGET_SERVICE="$SYSTEMD_DIR/$SERVICE_NAME"
 
-        echo "Symlinking systemd service: $SERVICE_NAME -> $TARGET_SERVICE"
-        sudo ln -sf "$service" "$TARGET_SERVICE"
+        # Remove existing service file to avoid conflicts
+        if [ -f "$TARGET_SERVICE" ]; then
+            echo "Removing existing systemd service: $TARGET_SERVICE"
+            sudo rm -f "$TARGET_SERVICE"
+        fi
+
+        echo "Copying systemd service: $SERVICE_NAME -> $TARGET_SERVICE"
+        sudo cp "$service" "$TARGET_SERVICE"
+
+        echo "Setting correct permissions..."
+        sudo chmod 644 "$TARGET_SERVICE"
 
         echo "Reloading systemd..."
         sudo systemctl daemon-reload
 
         SERVICE_UNIT="${SERVICE_NAME%.service}"
-        echo "Enabling and starting service: $SERVICE_UNIT"
+        echo "Enabling and restarting service: $SERVICE_UNIT"
         sudo systemctl enable "$SERVICE_UNIT"
-        sudo systemctl start "$SERVICE_UNIT"
+        sudo systemctl restart "$SERVICE_UNIT"
     fi
 done
 

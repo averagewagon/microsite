@@ -21,8 +21,10 @@ URL="https://joni-on-micro.site"
 # Timeout for HTTP request (in seconds)
 TIMEOUT=30
 
-# ESP32-S3 device
-ESP_PORT="/dev/ttyACM0"
+# uhubctl target hub and port (RPi4B default values)
+USB_HUB="1-1"
+USB_ACTION_OFF=0
+USB_ACTION_ON=1
 
 # Function to check website status
 check_website() {
@@ -34,19 +36,19 @@ check_website() {
     fi
 }
 
-# Function to restart the ESP32-S3 board
+# Function to restart the ESP32-S3 using uhubctl
 restart_board() {
-    if ! command -v esptool.py >/dev/null 2>&1; then
-        error "esptool.py not found. Cannot reset ESP32-S3."
+    if ! command -v uhubctl >/dev/null 2>&1; then
+        error "uhubctl not found. Cannot reset ESP32-S3."
         exit 1
     fi
 
-    if [ ! -e "$ESP_PORT" ]; then
-        error "ESP32-S3 device not found at $ESP_PORT."
-        exit 1
-    fi
+    echo "Turning off USB power..."
+    sudo uhubctl -l "$USB_HUB" -a "$USB_ACTION_OFF"
+    sleep 5 # Wait for power to fully discharge
 
-    esptool.py --chip esp32s3 --port "$ESP_PORT" reset
+    echo "Turning on USB power..."
+    sudo uhubctl -l "$USB_HUB" -a "$USB_ACTION_ON"
 }
 
 # Run the website check

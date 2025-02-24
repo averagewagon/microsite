@@ -3,13 +3,22 @@ Description=Monitor microsite and restart it if offline
 After=network.target
 
 [Service]
-ExecStart=/bin/sh -c ". $HOME/esp/esp-idf/export.sh && /usr/local/bin/monitor_website.sh"
+ExecStart=/usr/local/bin/watchdog.sh
 Restart=always
 RestartSec=300
-DynamicUser=yes
-ProtectSystem=strict
+
+# Use the dedicated microsite system user
+User=microsite
+Group=microsite
+
+# Allow USB control via uhubctl
+ReadWritePaths=/dev/bus/usb
+
+# Restrict modifications to system files
+ProtectSystem=full
 ProtectHome=yes
-ReadOnlyPaths=/
+
+# Direct service logs to systemd journal
 StandardOutput=journal
 StandardError=journal
 

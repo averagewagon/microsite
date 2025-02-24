@@ -3,15 +3,31 @@ Description=Microsite Monitoring Service
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/monitor_microsite.sh
+ExecStart=/usr/local/bin/monitor.sh
 Restart=always
-RestartSec=5
-DynamicUser=yes
-ProtectSystem=strict
-ProtectHome=yes
-ReadOnlyPaths=/
+RestartSec=300
+
+# Use the dedicated microsite system user
+User=microsite
+Group=microsite
+
+# Ensure systemd creates and manages these directories
 StateDirectory=monitor_microsite
-WorkingDirectory=/var/lib/private/monitor_microsite
+StateDirectoryMode=0755
+LogsDirectory=monitor_microsite
+LogsDirectoryMode=0755
+
+# Set the working directory to match systemd-managed paths
+WorkingDirectory=/var/lib/monitor_microsite
+
+# Explicitly allow writes to necessary locations
+ReadWritePaths=/var/lib/monitor_microsite /var/log/monitor_microsite /dev/ttyACM0
+
+# Restrict modifications to system files
+ProtectSystem=full
+ProtectHome=yes
+
+# Direct service logs to systemd journal
 StandardOutput=journal
 StandardError=journal
 
