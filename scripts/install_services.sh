@@ -27,6 +27,7 @@ fi
 
 BIN_DIR="/usr/local/bin"
 SYSTEMD_DIR="/etc/systemd/system"
+SUDOERS_FILE="/etc/sudoers.d/microsite_uhubctl"
 
 echo "Resetting system user for microsite services..."
 
@@ -34,13 +35,20 @@ echo "Resetting system user for microsite services..."
 if id -u microsite >/dev/null 2>&1; then
     echo "Removing existing user: microsite"
     sudo systemctl stop monitor_microsite || true
+    sudo systemctl stop watchdog_microsite || true
     sudo systemctl disable monitor_microsite || true
+    sudo systemctl disable watchdog_microsite || true
     sudo userdel -r microsite || true
 fi
 
 # Create a new system user
 echo "Creating new system user: microsite"
 sudo useradd --system --create-home --shell /usr/sbin/nologin --groups dialout microsite
+
+# Grant microsite permission to run uhubctl as root without a password
+echo "Configuring sudo access for uhubctl..."
+echo "microsite ALL=(ALL) NOPASSWD: /usr/sbin/uhubctl" | sudo tee "$SUDOERS_FILE" >/dev/null
+sudo chmod 440 "$SUDOERS_FILE"
 
 echo "Installing scripts and services from $SERVICE_DIR..."
 
