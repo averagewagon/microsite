@@ -17,7 +17,7 @@ error() {
 
 # Determine the root of the Git repository
 REPO_ROOT=$(git rev-parse --show-toplevel)
-SERVICE_DIR="$REPO_ROOT/scripts/services"
+SERVICE_DIR="$REPO_ROOT/services"
 
 # Ensure the service directory exists
 if [ ! -d "$SERVICE_DIR" ]; then

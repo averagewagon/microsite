@@ -5,36 +5,46 @@ project is an experiment in running a functional web server on
 resource-constrained hardware. You can check it out live at
 [joni-on-micro.site](https://joni-on-micro.site).
 
-The project consists of three main components:
+The project consists of four main components:
 
-1. **MCU Firmware**: A custom ESP-IDF-based web server that:
+1. **MCU Firmware** in `micro/`:
+
+   An ESP-IDF-based web server (using httpd).
 
    - Uses LittleFS for efficient flash storage management
    - Implements intelligent caching strategies
    - Handles Brotli compression for HTML files
    - Provides HTTPS support with built-in certificate management
 
-2. **Static Site Generator**: A Hugo-based website that:
+2. **Static Blog Site** in `site/`:
+
+   A Hugo-based personal blog.
 
    - Embeds all assets (images, CSS, fonts) directly into HTML files
    - Implements Base64 encoding for media content
    - Provides a blog system with tag filtering and RSS support
    - Uses custom shortcodes for handling media embedding
 
-3. **Build & Deployment Tools**: Shell scripts that:
+3. **Helper Scripts** in `scripts/`:
+
+   Build, deployment, and general helper scripts.
+
    - Generate and compress the static site
    - Create LittleFS images
    - Handle flashing to the ESP32
    - Manage cache file generation
+   - Install system services for monitoring the site
+
+4. **System Services** in `services/`:
+
+   A set of `systemd` helper services, intended to run on a Raspberry Pi.
+
+   - Capture and log UART output from the ESP32-S3
+   - Monitor website availability and restart the board via USB power cycling
+   - Run automatically on a Raspberry Pi 4B for continuous operation
+   - Are installed via `install-services.sh` in the `scripts/` folder
 
 ## Future
-
-- Set up a Raspberry Pi or such to act as a monitor and watchdog
-
-  - Reboot the MCU if the website fails to load, check every 5 minutes
-  - Store the UART output of the device in files with timestamps
-  - Write some scripts so I can determine uptime, outages, traffic, etc. just
-    from the UART logs
 
 - Conduct some stress testing of the website
 
@@ -51,6 +61,9 @@ The project consists of three main components:
     before I forget
 
 ### Maybes/Eventualies
+
+- Write some scripts which run against the monitor service's output so I can
+  determine uptime, outages, traffic, etc. just from the UART logs
 
 - Port the project to the Zephyr RTOS
 
@@ -86,7 +99,8 @@ The project consists of three main components:
   - House the custom PCBs in form factors that allow for hot-swapping, the same
     way you'd hot swap a 3.5 inch drive
 
-- Create a "site statistics" page showing information about the MCU itself
+- Create a dynamic "site statistics" page showing information about the MCU
+  itself
   - CPU usage
   - Memory usage
   - Uptime
