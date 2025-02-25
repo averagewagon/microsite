@@ -8,6 +8,7 @@
 
         {{ with .Params.tags }}
         <p class="tags">
+            Tags: 
             {{ range $index, $tag := . }}
                 {{- if $index }} | {{ end -}}
                 <a href="{{ relURL (print "/tags/" ($tag | urlize)) }}">{{ $tag }}</a>
@@ -16,12 +17,17 @@
         {{ end }}
 
         {{- if and (.Params.toc) (gt (len .TableOfContents) 50) }}
+
+        <hr />
+
         <aside class="table-of-contents">
             <h2>Table of Contents</h2>
             {{ .TableOfContents }}
         </aside>
         {{- end }}
     </div>
+
+    <hr />
 
     <div class="content">
         {{ .Content 

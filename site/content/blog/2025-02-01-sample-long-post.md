@@ -241,10 +241,10 @@ Tables should be properly formatted and legible:
 
 - Facilisi convallis dis urna, augue sed quam. Amet mollis per hac fames eu
   tortor bibendum. Nisi habitasse ultricies mauris; sed nisi taciti. Apenatibus
-  placerat morbi mauris dis mauris fringilla. Hac nisl finibus facilisis vitae;
-  netus nisi commodo. Eleifend vulputate class sapien orci aenean curabitur
-  justo consequat senectus. Nascetur justo per aenean adipiscing porttitor
-  parturient.
+  placerat morbi mauris dis mauris fringilla.
+  `Hac nisl finibus facilisis vitae; netus nisi commodo.` Eleifend vulputate
+  class sapien orci aenean curabitur justo consequat senectus. Nascetur justo
+  per aenean adipiscing porttitor parturient.
   - Laoreet placerat odio magna nostra enim torquent. Netus ullamcorper iaculis
     tempor pharetra pellentesque velit morbi sem sem. Fames vitae dapibus mi
     blandit, mattis magna lectus fusce mi. Congue volutpat maximus augue nec
@@ -329,7 +329,7 @@ The project is still evolving, with upcoming improvements including:
 
 ## Some other elements
 
-### **Table with Manual Alignment**
+### Table with Manual Alignment
 
 You can manually align table columns by using colons (`:`) in the table header
 row.
@@ -340,13 +340,13 @@ row.
 | Longer text  |     _Italic_      |            67890 |
 | Short        | ~~Strikethrough~~ | **_Emphasized_** |
 
-### **Superscript and Subscript**
+### Superscript and Subscript
 
 - This is **superscript:** `10^2^` → 10²
 - This is **subscript:** `H~2~O` → H₂O
 - Combining both: `E = mc^2^` → E = mc²
 
-### **Block Quote with Attribution**
+### Block Quote with Attribution
 
 > "The most dangerous phrase in the language is, 'We've always done it this
 > way.'"  

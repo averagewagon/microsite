@@ -49,11 +49,6 @@
     <style>{{ $style.Content | safeCSS }}</style>
     {{- end }}
 
-    {{- $fonts := resources.Get "css/fonts.css" | resources.Minify }}
-    {{- if $fonts }}
-    <style>{{ $fonts.Content | safeCSS }}</style>
-    {{- end }}
-
     {{- $favicon := resources.Get "favicon.ico" }}
     {{- if $favicon }}
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,{{ $favicon.Content | base64Encode }}" />
@@ -75,5 +70,5 @@
           {{ end }}
         </ul>
       </nav>
-      <hr/>
     </header>
+    <hr/>
