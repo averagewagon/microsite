@@ -20,6 +20,15 @@ typedef struct
 } jms_ws_request_t;
 
 /**
+ * @brief Struct representing a single HTTP header which should be set.
+ */
+typedef struct
+{
+    const char* key;
+    const char* value;
+} jms_header_t;
+
+/**
  * @brief Function pointer type for handling HTTP requests.
  *
  * @param request Parsed HTTP request details.
@@ -37,8 +46,8 @@ typedef jms_err_t (*jms_ws_handler_t)(const jms_ws_request_t* request);
  * @param pkey_len Length of the private key.
  * @return JMS_OK on success, `JMS_ERR_INVALID_ARG` if handler is NULL.
  */
-jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert, size_t cert_len,
-                       const unsigned char* pkey, size_t pkey_len);
+jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert,
+                       size_t cert_len, const unsigned char* pkey, size_t pkey_len);
 
 /**
  * @brief Stops the web server.
@@ -48,18 +57,34 @@ jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert, size
 jms_err_t jms_ws_stop(void);
 
 /**
- * @brief Sets response headers before sending content.
+ * @brief Sets the status line for the response.
  *
  * @param request The incoming request.
  * @param status The full status line (e.g., "200 OK").
- * @param content_type The MIME type (e.g., "text/html").
- * @param content_encoding The content encoding (e.g., "br", NULL if none).
- * @param cache_control The cache control policy (e.g., "max-age=86400").
  * @return JMS_OK on success, JMS_ERR_INVALID_ARG if parameters are invalid.
  */
-jms_err_t jms_ws_set_response_headers(const jms_ws_request_t* request, const char* status,
-                                      const char* content_type, const char* content_encoding,
-                                      const char* cache_control);
+jms_err_t jms_ws_set_response_status(const jms_ws_request_t* request, const char* status);
+
+/**
+ * @brief Sets the content type for the response.
+ *
+ * @param request The incoming request.
+ * @param content_type The MIME type (e.g., "text/html").
+ * @return JMS_OK on success, JMS_ERR_INVALID_ARG if parameters are invalid.
+ */
+jms_err_t jms_ws_set_response_content_type(const jms_ws_request_t* request,
+                                           const char* content_type);
+
+/**
+ * @brief Sets a custom header for the response.
+ *
+ * @param request The incoming request.
+ * @param header The header name.
+ * @param value The header value.
+ * @return JMS_OK on success, JMS_ERR_INVALID_ARG if parameters are invalid.
+ */
+jms_err_t jms_ws_set_response_header(const jms_ws_request_t* request, const char* header,
+                                     const char* value);
 
 /**
  * @brief Sends the entire response body in one call.

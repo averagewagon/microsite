@@ -55,8 +55,8 @@ static esp_err_t jms_ws_request_handler(httpd_req_t* req)
 /**
  * @brief Starts the web server with optional SSL certificates.
  */
-jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert, size_t cert_len,
-                       const unsigned char* pkey, size_t pkey_len)
+jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert,
+                       size_t cert_len, const unsigned char* pkey, size_t pkey_len)
 {
     if (!handler)
     {
@@ -123,24 +123,57 @@ jms_err_t jms_ws_stop(void)
 }
 
 /**
- * @brief Sets response headers before sending content.
+ * @brief Sets the status line for the response.
  */
-jms_err_t jms_ws_set_response_headers(const jms_ws_request_t* request, const char* status,
-                                      const char* content_type, const char* content_encoding,
-                                      const char* cache_control)
+jms_err_t jms_ws_set_response_status(const jms_ws_request_t* request, const char* status)
 {
-    if (!request || !request->internal_req || !status || !content_type)
+    if (!request || !request->internal_req || !status)
     {
         return JMS_ERR_INVALID_ARG;
     }
 
     httpd_req_t* req = (httpd_req_t*)request->internal_req;
+    if (httpd_resp_set_status(req, status) != ESP_OK)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
 
-    if (httpd_resp_set_status(req, status) != ESP_OK ||
-        httpd_resp_set_type(req, content_type) != ESP_OK ||
-        (content_encoding &&
-         httpd_resp_set_hdr(req, "Content-Encoding", content_encoding) != ESP_OK) ||
-        (cache_control && httpd_resp_set_hdr(req, "Cache-Control", cache_control) != ESP_OK))
+    return JMS_OK;
+}
+
+/**
+ * @brief Sets the content type for the response.
+ */
+jms_err_t jms_ws_set_response_content_type(const jms_ws_request_t* request,
+                                           const char* content_type)
+{
+    if (!request || !request->internal_req || !content_type)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    httpd_req_t* req = (httpd_req_t*)request->internal_req;
+    if (httpd_resp_set_type(req, content_type) != ESP_OK)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    return JMS_OK;
+}
+
+/**
+ * @brief Sets a custom header for the response.
+ */
+jms_err_t jms_ws_set_response_header(const jms_ws_request_t* request, const char* header,
+                                     const char* value)
+{
+    if (!request || !request->internal_req || !header || !value)
+    {
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    httpd_req_t* req = (httpd_req_t*)request->internal_req;
+    if (httpd_resp_set_hdr(req, header, value) != ESP_OK)
     {
         return JMS_ERR_INVALID_ARG;
     }

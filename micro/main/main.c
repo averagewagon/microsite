@@ -55,7 +55,11 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
                 mime_type = "application/octet-stream";
             }
 
-            jms_ws_set_response_headers(request, "200 OK", mime_type, "br", "max-age=86400");
+            jms_ws_set_response_header(request, "Status", "200 OK");
+            jms_ws_set_response_header(request, "Content-Type", mime_type);
+            jms_ws_set_response_header(request, "Content-Encoding", "br");
+            jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
+
             return jms_ws_response_send(request, (const char*)cached_data, cached_size);
         }
     }
@@ -70,7 +74,10 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
             mime_type = "application/octet-stream";
         }
 
-        jms_ws_set_response_headers(request, "200 OK", mime_type, NULL, "max-age=86400");
+        jms_ws_set_response_header(request, "Status", "200 OK");
+        jms_ws_set_response_header(request, "Content-Type", mime_type);
+        jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
+
         return jms_ws_response_send(request, (const char*)cached_data, cached_size);
     }
 
@@ -113,10 +120,17 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
     }
 
     // Step 5: Set response headers
-    jms_ws_set_response_headers(request, "200 OK", mime_type, content_encoding, "max-age=86400");
+    jms_ws_set_response_header(request, "Status", "200 OK");
+    jms_ws_set_response_header(request, "Content-Type", mime_type);
+    if (content_encoding)
+    {
+        jms_ws_set_response_header(request, "Content-Encoding", content_encoding);
+    }
+    jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
 
     // Step 6: Stream file content in chunks
-    while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) == JMS_OK &&
+    while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) ==
+               JMS_OK &&
            bytes_read > 0)
     {
         jms_ws_response_send_chunk(request, buffer, bytes_read);
@@ -150,6 +164,18 @@ static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
 
     ESP_LOGI(TAG, "Resolved file path: %s", filepath);
 
+    // Set common response headers
+    jms_ws_set_response_header(
+        request, "Content-Security-Policy",
+        "default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self';");
+    jms_ws_set_response_header(request, "Referrer-Policy",
+                               "strict-origin-when-cross-origin");
+    jms_ws_set_response_header(request, "Strict-Transport-Security",
+                               "max-age=31536000; includeSubDomains; preload");
+    jms_ws_set_response_header(request, "X-Content-Type-Options", "nosniff");
+    jms_ws_set_response_header(request, "X-Frame-Options", "SAMEORIGIN");
+    jms_ws_set_response_header(request, "Cross-Origin-Resource-Policy", "same-origin");
+
     // Step 2: Serve the file (handles Brotli fallback logic)
     if (serve_file(request, filepath) == JMS_OK)
     {
@@ -167,8 +193,12 @@ static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
 
     // Step 4: If 404.html is missing, serve built-in response
     ESP_LOGW(TAG, "404.html not found, serving built-in response.");
-    jms_ws_set_response_headers(request, "404 Not Found", "text/html", NULL, "max-age=60");
-    return jms_ws_response_send(request, "<h1>404 Not Found</h1>", 22);
+    jms_ws_set_response_header(request, "Status", "404 Not Found");
+    jms_ws_set_response_header(request, "Content-Type", "text/html");
+    jms_ws_set_response_header(request, "Cache-Control", "no-cache");
+
+    return jms_ws_response_send(
+        request, "<h1>404 Not Found (and my 404 page was broken, too?!?)</h1>", 22);
 }
 
 /**
@@ -187,7 +217,8 @@ static void connect_handler(void* arg, esp_event_base_t event_base, int32_t even
     const unsigned char* pkey = prvtkey_pem_start;
     size_t pkey_len = prvtkey_pem_end - prvtkey_pem_start;
 
-    JMS_HANDLE_ERR(TAG, jms_ws_start(microsite_request_handler, cert, cert_len, pkey, pkey_len));
+    JMS_HANDLE_ERR(
+        TAG, jms_ws_start(microsite_request_handler, cert, cert_len, pkey, pkey_len));
 }
 
 /**
@@ -223,7 +254,8 @@ void app_main(void)
     ESP_LOGI(TAG, "Total free heap: %zu bytes", heap_caps_get_free_size(MALLOC_CAP_8BIT));
     ESP_LOGI(TAG, "Largest free block: %zu bytes",
              heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
-    ESP_LOGI(TAG, "Total SPIRAM free heap: %zu bytes", heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+    ESP_LOGI(TAG, "Total SPIRAM free heap: %zu bytes",
+             heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
     ESP_LOGI(TAG, "Largest SPIRAM free block: %zu bytes",
              heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
 
@@ -232,8 +264,8 @@ void app_main(void)
     JMS_HANDLE_ERR(TAG, cache_status);
 
     // Register network event handlers
-    ESP_ERROR_CHECK(
-        esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, NULL));
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP,
+                                               &connect_handler, NULL));
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED,
                                                &disconnect_handler, NULL));
 
