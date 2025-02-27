@@ -167,8 +167,8 @@ static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
     // Set common response headers
     jms_ws_set_response_header(
         request, "Content-Security-Policy",
-        "default-src 'self'; script-src 'unsafe-inline'; "
-        "style-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline';");
+        "default-src 'self'; script-src 'unsafe-inline'; style-src 'self' "
+        "'unsafe-inline'; img-src 'self' data:; media-src 'self' data:;");
     jms_ws_set_response_header(request, "Referrer-Policy",
                                "strict-origin-when-cross-origin");
     jms_ws_set_response_header(request, "Strict-Transport-Security",
