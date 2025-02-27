@@ -55,8 +55,8 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
                 mime_type = "application/octet-stream";
             }
 
+            jms_ws_set_response_content_type(request, mime_type);
             jms_ws_set_response_header(request, "Status", "200 OK");
-            jms_ws_set_response_header(request, "Content-Type", mime_type);
             jms_ws_set_response_header(request, "Content-Encoding", "br");
             jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
 
@@ -74,8 +74,8 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
             mime_type = "application/octet-stream";
         }
 
+        jms_ws_set_response_content_type(request, mime_type);
         jms_ws_set_response_header(request, "Status", "200 OK");
-        jms_ws_set_response_header(request, "Content-Type", mime_type);
         jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
 
         return jms_ws_response_send(request, (const char*)cached_data, cached_size);
@@ -120,8 +120,8 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
     }
 
     // Step 5: Set response headers
+    jms_ws_set_response_content_type(request, mime_type);
     jms_ws_set_response_header(request, "Status", "200 OK");
-    jms_ws_set_response_header(request, "Content-Type", mime_type);
     if (content_encoding)
     {
         jms_ws_set_response_header(request, "Content-Encoding", content_encoding);
@@ -167,7 +167,8 @@ static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
     // Set common response headers
     jms_ws_set_response_header(
         request, "Content-Security-Policy",
-        "default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self';");
+        "default-src 'self'; script-src 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline';");
     jms_ws_set_response_header(request, "Referrer-Policy",
                                "strict-origin-when-cross-origin");
     jms_ws_set_response_header(request, "Strict-Transport-Security",
