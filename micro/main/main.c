@@ -58,7 +58,6 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
             jms_ws_set_response_content_type(request, mime_type);
             jms_ws_set_response_header(request, "Status", "200 OK");
             jms_ws_set_response_header(request, "Content-Encoding", "br");
-            jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
 
             return jms_ws_response_send(request, (const char*)cached_data, cached_size);
         }
@@ -76,7 +75,6 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
 
         jms_ws_set_response_content_type(request, mime_type);
         jms_ws_set_response_header(request, "Status", "200 OK");
-        jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
 
         return jms_ws_response_send(request, (const char*)cached_data, cached_size);
     }
@@ -126,7 +124,6 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
     {
         jms_ws_set_response_header(request, "Content-Encoding", content_encoding);
     }
-    jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
 
     // Step 6: Stream file content in chunks
     while (jms_fs_read_chunk(&file_handle, buffer, sizeof(buffer), &bytes_read) ==
@@ -145,21 +142,41 @@ static jms_err_t serve_file(const jms_ws_request_t* request, char* filepath)
 static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
 {
     char filepath[256];
+    size_t path_len;
 
     ESP_LOGI(TAG, "Incoming request: %s", request->path);
 
-    // Step 1: Determine base filepath
+    // Step 1: Validate and sanitize the request path
+    if (request->path == NULL || strlen(request->path) >= sizeof(filepath) - 10)
+    {
+        ESP_LOGE(TAG, "Invalid request path");
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    // Step 2: Determine base filepath
     if (strcmp(request->path, "/") == 0)
     {
-        strcpy(filepath, "/littlefs/index.html");
-    }
-    else if (request->path[strlen(request->path) - 1] == '/')
-    {
-        snprintf(filepath, sizeof(filepath), "/littlefs%sindex.html", request->path);
+        strncpy(filepath, "/littlefs/index.html", sizeof(filepath));
     }
     else
     {
         snprintf(filepath, sizeof(filepath), "/littlefs%s", request->path);
+
+        // Check if the path is a directory and append index.html if it is
+        path_len = strnlen(filepath, sizeof(filepath));
+        if (filepath[path_len - 1] != '/')
+        {
+            if (jms_fs_is_directory(filepath) == JMS_OK)
+            {
+                ESP_LOGI(TAG, "Path is a directory, trying index.html");
+                snprintf(filepath + path_len, sizeof(filepath) - path_len, "/index.html");
+            }
+        }
+        else
+        {
+            // If the path ends with a slash, append index.html directly
+            snprintf(filepath + path_len, sizeof(filepath) - path_len, "index.html");
+        }
     }
 
     ESP_LOGI(TAG, "Resolved file path: %s", filepath);
@@ -176,27 +193,28 @@ static jms_err_t microsite_request_handler(const jms_ws_request_t* request)
     jms_ws_set_response_header(request, "X-Content-Type-Options", "nosniff");
     jms_ws_set_response_header(request, "X-Frame-Options", "SAMEORIGIN");
     jms_ws_set_response_header(request, "Cross-Origin-Resource-Policy", "same-origin");
+    jms_ws_set_response_header(request, "Cache-Control", "max-age=86400");
 
-    // Step 2: Serve the file (handles Brotli fallback logic)
+    // Step 3: Serve the file (handles Brotli fallback logic)
     if (serve_file(request, filepath) == JMS_OK)
     {
         return JMS_OK;
     }
 
-    // Step 3: Serve 404.html if file is missing
+    // Step 4: Serve 404.html if file is missing
     ESP_LOGW(TAG, "File not found: %s, trying 404 fallback.", filepath);
     strcpy(filepath, "/littlefs/404.html");
-
+    // Disable the cache when serving 404
+    jms_ws_set_response_header(request, "Cache-Control", "no-cache");
     if (serve_file(request, filepath) == JMS_OK)
     {
         return JMS_OK;
     }
 
-    // Step 4: If 404.html is missing, serve built-in response
+    // Step 5: If 404.html is missing, serve built-in response
     ESP_LOGW(TAG, "404.html not found, serving built-in response.");
     jms_ws_set_response_header(request, "Status", "404 Not Found");
     jms_ws_set_response_header(request, "Content-Type", "text/html");
-    jms_ws_set_response_header(request, "Cache-Control", "no-cache");
 
     return jms_ws_response_send(
         request, "<h1>404 Not Found (and my 404 page was broken, too?!?)</h1>", 22);

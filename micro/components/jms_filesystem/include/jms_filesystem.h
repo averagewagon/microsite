@@ -27,6 +27,14 @@ jms_err_t jms_fs_init(void);
 jms_err_t jms_fs_exists(const char* path);
 
 /**
+ * @brief Checks if a path is a directory.
+ *
+ * @param path The file path.
+ * @return JMS_OK if the path is a directory, JMS_ERR_FS_NOT_A_FOLDER otherwise.
+ */
+jms_err_t jms_fs_is_directory(const char* path);
+
+/**
  * @brief Opens a file for reading.
  *
  * @param path The file path.

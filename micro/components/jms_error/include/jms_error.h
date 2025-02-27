@@ -24,6 +24,7 @@ typedef uint16_t jms_err_t;
 #define JMS_ERR_FS_READ_FAILED     ((jms_err_t)(3004))
 #define JMS_ERR_FS_INVALID_PATH    ((jms_err_t)(3005))
 #define JMS_ERR_FS_IS_DIRECTORY    ((jms_err_t)(3006))
+#define JMS_ERR_FS_NOT_A_FOLDER    ((jms_err_t)(3007))
 
 // MIME Errors
 #define JMS_ERR_MIME_NOT_FOUND ((jms_err_t)(5001))
@@ -39,15 +40,15 @@ typedef uint16_t jms_err_t;
 #define JMS_ERR_CACHE_OVERSIZED_ENTRY ((jms_err_t)(6007))
 
 // Macro for handling and logging errors
-#define JMS_HANDLE_ERR(tag, jms_err_code)                                                          \
-    do                                                                                             \
-    {                                                                                              \
-        if ((jms_err_code) > JMS_OK)                                                               \
-        {                                                                                          \
-            ESP_LOGE(tag, "JMS Error Code: %d | File: %s | Line: %d", (jms_err_code), __FILE__,    \
-                     __LINE__);                                                                    \
-            assert((jms_err_code) == JMS_OK);                                                      \
-        }                                                                                          \
+#define JMS_HANDLE_ERR(tag, jms_err_code)                                                \
+    do                                                                                   \
+    {                                                                                    \
+        if ((jms_err_code) > JMS_OK)                                                     \
+        {                                                                                \
+            ESP_LOGE(tag, "JMS Error Code: %d | File: %s | Line: %d", (jms_err_code),    \
+                     __FILE__, __LINE__);                                                \
+            assert((jms_err_code) == JMS_OK);                                            \
+        }                                                                                \
     } while (0)
 
 #endif // JMS_ERROR_H

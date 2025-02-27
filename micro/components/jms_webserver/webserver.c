@@ -69,6 +69,7 @@ jms_err_t jms_ws_start(jms_ws_handler_t handler, const unsigned char* cert,
     httpd_ssl_config_t conf = HTTPD_SSL_CONFIG_DEFAULT();
     conf.httpd.uri_match_fn = httpd_uri_match_wildcard;
     conf.httpd.max_uri_handlers = 1;
+    conf.httpd.max_resp_headers = 10;
 
     // Set up SSL only if cert and key are provided
     if (cert && cert_len > 0 && pkey && pkey_len > 0)

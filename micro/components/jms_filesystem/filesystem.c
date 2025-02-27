@@ -64,6 +64,31 @@ jms_err_t jms_fs_exists(const char* path)
 }
 
 /**
+ * @brief Checks if a path is a directory.
+ */
+jms_err_t jms_fs_is_directory(const char* path)
+{
+    if (!fs_initialized)
+    {
+        ESP_LOGE(TAG, "Filesystem not initialized");
+        return JMS_ERR_FS_NOT_INITIALIZED;
+    }
+    if (!path)
+    {
+        ESP_LOGE(TAG, "Invalid argument to jms_fs_is_directory");
+        return JMS_ERR_INVALID_ARG;
+    }
+
+    struct stat st;
+    if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+    {
+        return JMS_OK; // Path is a directory
+    }
+
+    return JMS_ERR_FS_NOT_A_FOLDER;
+}
+
+/**
  * @brief Opens a file for reading.
  */
 jms_err_t jms_fs_open(const char* path, jms_fs_handle_t* handle)
