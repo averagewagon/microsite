@@ -14,8 +14,8 @@ menu:
     - name: Resume
       url: "resume/"
       weight: 1
-    - name: Contact
-      url: "contact/"
+    - name: Projects
+      url: "projects/"
       weight: 3
 
 params:
