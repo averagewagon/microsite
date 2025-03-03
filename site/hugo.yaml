@@ -21,13 +21,13 @@ menu:
 params:
   author:
     name: Joni Hendrickson
-    email: joni@jhendrickson.dev
+    email: me@joni.site
   description:
     "Joni Hendrickson's MCU-hosted site about tiny software, tiny hardware, and
     tiny robots."
   footer:
     "&copy; Jonathan Hendrickson 2024 -- {Year}<br>
-    [joni@jhendrickson.dev](mailto:joni@jhendrickson.dev)<br>
+    [hendrickson@joni.site](mailto:hendrickson@joni.site)<br>
     [Github](https://github.com/averagewagon) |
     [LinkedIn](https://www.linkedin.com/in/jonathan-r-hendrickson/)"
 
