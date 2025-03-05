@@ -2,10 +2,6 @@
 title: Home
 ---
 
-<!-- <a href=https://github.com/averagewagon/microsite>{{< media "microsite.svg" "Microsite's GitHub" "true" "" "margin:1em;max-width:20%;min-width:40px;float:right;" >}}</a> -->
-
-# Joni on Microsite
-
 Welcome to the **Microsite**, my personal website and blog which is served from
 a single ESP32-S3 in my studio apartment up in Seattle, Washington. For more
 details, check out the ["About the
@@ -17,7 +13,7 @@ stores, virtual reality, FreeRTOS, and some other things. I made this website so
 that I could get better at writing, and so that I could talk about the things I
 make.
 
-{{< media "upscaled-headshot.webp" "A picture of Joni Hendrickson, in the electronics workshop at Seattle Makers" "true" "border:2px solid #ddd;padding: .5em;background-color: #131313 !important;">}}
+{{< media "headshot.webp" "A picture of Joni Hendrickson, in the electronics workshop at Seattle Makers" "true" "border:2px solid #ddd;padding: .5em;background-color: #131313 !important;">}}
 
 ## What am I working on?
 
@@ -27,7 +23,7 @@ some blog posts.
 
 Afterwards, there's a few things I may work on:
 
-- Making a small gantry robot which plays checkers
+- Making "Checkerbot" -- a small gantry robot which plays checkers
 - Porting the Microsite to the Zephyr RTOS
 - Designing some custom hardware for the Microsite
 

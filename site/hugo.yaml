@@ -28,8 +28,9 @@ params:
   footer:
     "&copy; Jonathan Hendrickson 2024 -- {Year}<br>
     [hendrickson@joni.site](mailto:hendrickson@joni.site)<br>
-    [Github](https://github.com/averagewagon) |
-    [LinkedIn](https://www.linkedin.com/in/jonathan-r-hendrickson/)"
+    [GitHub](https://github.com/averagewagon) |
+    [LinkedIn](https://www.linkedin.com/in/jonathan-r-hendrickson/) |
+    [RSS](/blog/index.xml)"
 
 minify:
   minifyOutput: true
