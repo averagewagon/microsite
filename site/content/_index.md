@@ -13,7 +13,7 @@ stores, virtual reality, FreeRTOS, and some other things. I made this website so
 that I could get better at writing, and so that I could talk about the things I
 make.
 
-{{< media "headshot.webp" "A picture of Joni Hendrickson, in the electronics workshop at Seattle Makers" "true" "border:2px solid #ddd;padding: .5em;background-color: #131313 !important;">}}
+{{< media "headshot.webp" "A picture of Joni Hendrickson, in the electronics workshop at Seattle Makers" "true" "border:2px solid #ddd;padding: .5em;background-color: #131313 !important; box-sizing: border-box;">}}
 
 ## What am I working on?
 
