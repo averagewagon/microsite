@@ -464,6 +464,59 @@ function exampleFunction(param1, param2) {
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon">github.com/averagewagon</a></footer>
 </div>
 
+<!-- 13.5 Code Slide with proper Hugo code block -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-code">
+      <style>
+      .slide-code {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .slide-code .code-container {
+        flex: 1;
+        background: #2a2a2a;
+        border-radius: 5px;
+        padding: 20px;
+        overflow: auto;
+        font-family: monospace;
+      }
+      .slide-code pre {
+        margin: 0;
+        white-space: pre;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+      </style>
+      <h2>Python HTTP Server Example</h2>
+      <div class="code-container">
+        {{< highlight python >}}
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+class MyHandler(SimpleHTTPRequestHandler): def do_GET(self):
+self.send_response(200) self.send_header("Content-type", "text/html")
+self.end_headers() self.wfile.write(b"Hello from Python!")
+
+server = HTTPServer(("0.0.0.0", 8000), MyHandler) print("Serving on port
+8000...") server.serve_forever() {{< /highlight >}} </div> </div>
+
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon">github.com/averagewagon</a>
+  </footer>
+</div>
+
 <!-- 14. Contact/Closing Slide -->
 <div class="slide-container">
   <header class="slide-header">
