@@ -7,47 +7,10 @@ code {
 }
 
 body {
-  max-width: 800px;
-  margin: 1em auto;
   color: #fff;
   background: #1e1e1e;
   line-height: 1.4;
   padding: 0 1em;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 1.5em;
-}
-
-header h2 {
-  font-size: 3rem;
-  margin: 0;
-}
-
-header h2 a,
-header span a {
-  text-decoration: none;
-}
-
-header span {
-  font-size: 1.5rem;
-}
-
-.menu {
-  padding: 0;
-  text-align: center;
-}
-
-.menu li {
-  display: inline-block;
-}
-
-.menu a {
-  text-decoration: none;
-  background: #2c2c2c;
-  padding: 10px;
-  margin: 5px;
 }
 
 footer {
@@ -92,11 +55,6 @@ hr {
   text-align: right;
 }
 
-/* Article */
-.article-meta {
-  background: #2c2c2c;
-  padding: 10px 20px;
-}
 
 /* code */
 pre {
@@ -175,4 +133,43 @@ tfoot {
 .table-wrapper table {
   width: 100%;
   border-collapse: collapse;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+
+header h2 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+header h2 a,
+header span a {
+  text-decoration: none;
+}
+
+header span {
+  font-size: 1.5rem;
+}
+
+.menu {
+  padding: 0;
+  text-align: center;
+}
+
+.menu li {
+  display: inline-block;
+}
+
+.menu a {
+  text-decoration: none;
+  background: #2c2c2c;
+  padding: 10px;
+  margin: 5px;
+}
+
+footer {
+  font-weight:normal !important;
 }

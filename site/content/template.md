@@ -199,13 +199,14 @@ body {
       .slide-full-image {width: 100%; height: 100%; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden;}
       .slide-full-image .image-container {width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;}
       .slide-full-image img {max-width: 100%; max-height: 100%; object-fit: contain;}
-      .slide-full-image .caption {position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; background: rgba(0,0,0,0.5); padding: 10px;}
+
       </style>
       <div class="image-container">
         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNjAwIDQwMCI+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=" alt="Full slide image">
       </div>
       <div class="caption">Descriptive caption for the image</div>
     </div>
+
   </div>
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon">github.com/averagewagon</a></footer>
 </div>

@@ -1,25 +1,7 @@
 {{ partial "header.html" . }}
 
 <main>
-    <h1>{{ .Title | markdownify }}</h1>
 
-    <a href="{{ .RelPermalink }}index.xml" title="RSS Feed">RSS Feed (index.xml)</a>
-
-    <!-- Display all tags in a single line -->
-    {{- $allTags := slice -}}
-    {{- range .Site.Taxonomies.tags -}}
-    {{- $allTags = $allTags | append .Page.Title -}}
-    {{- end -}}
-
-    {{- if gt (len $allTags) 0 -}}
-    <h2>Browse Tags</h2>
-    <p>
-        {{- range $index, $tag := $allTags -}}
-        {{- if $index }} | {{ end -}}
-        <a href="{{ relURL (print "tags/" ($tag | urlize)) }}">{{ $tag }}</a>
-        {{- end }}
-    </p>
-    {{- end }}
 
     <!-- List all blog posts -->
     <h2>

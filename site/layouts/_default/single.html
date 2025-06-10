@@ -1,34 +1,6 @@
 {{ partial "header.html" . }}
 
 <main>
-    <div class="article-meta">
-        <h1><span class="title">{{ .Title | markdownify }}</span></h1>
-        {{ with .Params.author }}<h2 class="author">{{ . }}</h2>{{ end }}
-        {{ if (gt .Params.date 0) }}<h2 class="date">{{ .Date.Format "2006-01-02" }}</h2>{{ end }}
-
-        {{ with .Params.tags }}
-        <p class="tags">
-            Tags: 
-            {{ range $index, $tag := . }}
-                {{- if $index }} | {{ end -}}
-                <a href="{{ relURL (print "/tags/" ($tag | urlize)) }}">{{ $tag }}</a>
-            {{ end }}
-        </p>
-        {{ end }}
-
-        {{- if and (.Params.toc) (gt (len .TableOfContents) 50) }}
-
-        <hr />
-
-        <aside class="table-of-contents">
-            <h2>Table of Contents</h2>
-            {{ .TableOfContents }}
-        </aside>
-        {{- end }}
-    </div>
-
-    <hr />
-
     <div class="content">
         {{ .Content 
             | replaceRE "(<table[^>]*>)" "<div class='table-wrapper'>$1" 
