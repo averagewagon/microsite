@@ -779,5 +779,223 @@ fclose(f);
   </footer>
 </div>
 
+<!-- Resource multiplexing -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">New Client Sessions are Expensive</h1>
+        <p>Resource multiplexing didn't come around until HTTP/2, and I don't have that</p>
+      </div>
+      <div class="image-container">
+        {{< media "pres/webserver_diagram.png" "Web server architecture - By Ade56facc - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=112590977" "true" "height: 450px;width:99%;" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<!-- Hugo shortcodes for media inclusion -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content" style=" margin-top: -40px;">
+    <div class="slide slide-code">
+      <style>
+      .slide-code {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .slide-code .code-container {
+        flex: 1;
+        background: #2a2a2a;
+        overflow: auto;
+        font-family: monospace;
+      }
+      .slide-code pre {
+        margin: 0;
+        white-space: pre;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+      </style>
+      <h2 style="font-size: 1.4em; padding: 0; margin:0; margin-bottom:20px;">Custom Hugo Shortcode for Base64 Media</h2>
+        <div class="code-container">
+{{< highlight html >}}
+<figure{{ if $figureStyle }}style="{{ $figureStyle }}"{{ end }}>
+
+    {{- if in (slice "svg" "svg+xml") $mediaType -}}
+        {{- $encodedSVG := $file.Content | base64Encode -}}
+        <img src="data:image/svg+xml;base64,{{ $encodedSVG }}" ... />
+
+    {{- else if in (slice "png" "jpeg" "gif" "webp") $mediaType -}}
+        <img src="data:image/{{ $mediaType }};base64,{{ $file.Content | base64Encode }}" ... />
+
+    {{- else if in (slice "webm" "mp4" "ogg") $mediaType -}}
+        <video controls {{ if $mediaStyle }}style="{{ $mediaStyle }}"{{ end }}>
+            <source src="data:video/{{ $mediaType }};base64,{{ $file.Content | base64Encode }}" ... >
+        </video>
+
+    {{- end -}}
+
+    {{- if and (eq $showCaption "true") $alt }}<figcaption>{{ $alt }}</figcaption>{{ end }}
+
+</figure>
+
+// In the actual source files, I write
+{{\< media "path/to/image.png" "custom alt text and figcaption">}}
+
+{{< /highlight >}}
+
+</div>
+</div>
+
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<!-- How load website? -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+<hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-section-divider">
+      <style>
+      .slide-section-divider {display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; text-align: center; padding: 20px; box-sizing: border-box;}
+      .slide-section-divider h1 {font-size: 3em; margin-bottom: 0;}
+      .slide-section-divider .divider {width: 200px; height: 2px; margin: 20px auto; background: #444;}
+      </style>
+      <h1>How do I load the website onto the ESP32-S3?</h1>
+    </div>
+  </div>
+  <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
+</div>
+
+<!-- Script to generate littlefs image and brotli-compress everything before going onto the ESP32-S3 -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content" style=" margin-top: -40px;">
+    <div class="slide slide-code">
+      <style>
+      .slide-code {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .slide-code .code-container {
+        flex: 1;
+        background: #2a2a2a;
+        overflow: auto;
+        font-family: monospace;
+      }
+      .slide-code pre {
+        margin: 0;
+        white-space: pre;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+      </style>
+      <h2 style="font-size: 1.4em; padding: 0; margin:0; margin-bottom:20px;">Converting Hugo Output into LittleFS Images</h2>
+        <div class="code-container">
+{{< highlight bash >}}
+# Copy all files from SITE_DIR to OUTPUT_RESOURCES
+echo "Copying files from $SITE_DIR to $OUTPUT_RESOURCES..."
+cp -r "$SITE_DIR/"* "$OUTPUT_RESOURCES/"
+
+#: Compress files with Brotli  
+compress_with_brotli
+
+#: Generate cache.txt, so the MCU knows what to cache  
+"${REPO_ROOT}/scripts/generate-cachefile.sh"
+
+#: Pre-check directory size  
+check_directory_size
+
+#: Package the resources directory into a LittleFS image  
+mklittlefs -c "$OUTPUT_RESOURCES" -p 256 -b 4096 -s "$PARTITION_SIZE" "$IMAGE"
+
+echo "LittleFS image created at $IMAGE"
+
+{{< /highlight >}}
+
+</div>
+</div>
+
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<!-- Showing the website, as it is -->
+
+<!-- Now what? -->
+
+<!-- Making it public (OpenWRT router stuff, can access through my router's Public IP)-->
+<!-- Making it public domain from Namecheap, Advanced DNS, -->
+<!-- Am I done NOW? -->
+<!-- Lock icon -->
+<!-- LetsEncrypt and cert-loading directly into the flash -->
+<!-- I'm done.... for now -->
+<!-- Performance measurements and conclusion -->
+
 </body>
 </html>
