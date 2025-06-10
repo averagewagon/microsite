@@ -622,5 +622,162 @@ fclose(f);
   </footer>
 </div>
 
+<!-- The Components -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">My components</h1>
+      </div>
+      <div class="image-container">
+        {{< media "pres/comps.png" "All written as ESP-IDF Components" "true" "height: 450px" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<!-- phew -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+<hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-section-divider">
+      <style>
+      .slide-section-divider {display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; text-align: center; padding: 20px; box-sizing: border-box;}
+      .slide-section-divider h1 {font-size: 3em; margin-bottom: 0;}
+      .slide-section-divider .divider {width: 200px; height: 2px; margin: 20px auto; background: #444;}
+      </style>
+      <h1>phew</h1>
+    </div>
+  </div>
+  <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
+</div>
+
+<!-- wait I still have to make a blog -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+<hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-section-divider">
+      <style>
+      .slide-section-divider {display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; text-align: center; padding: 20px; box-sizing: border-box;}
+      .slide-section-divider h1 {font-size: 3em; margin-bottom: 0;}
+      .slide-section-divider .divider {width: 200px; height: 2px; margin: 20px auto; background: #444;}
+      </style>
+      <h1>wait I still have to make the blog</h1>
+    </div>
+  </div>
+  <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
+</div>
+
+<!-- Hugo & Xmin -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-two-images">
+      <style>
+        .slide-two-images {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+        .slide-two-images .title {
+          text-align: center;
+          margin-bottom: 30px;
+          width: 100%;
+        }
+        .slide-two-images .images-container {
+          display: flex;
+          flex: 1;
+          width: 100%;
+        }
+        .slide-two-images .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-two-images .image-container:first-child {
+          margin-right: 20px;
+        }
+        .slide-two-images img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      </style>
+      <div style="font-size: .6em">
+        <h1>Using a Static Site Generator</h1>
+      </div>
+      <p>https://brutalist-web.design/</p>
+      <div class="images-container">
+        <div class="image-container">
+          {{< media "pres/hugo.png" "https://gohugo.io/" "true" "height: 400px;margin-bottom: 20px;width:99%;" "">}}
+        </div>
+        <div class="image-container">
+          {{< media "pres/xmin.png" "https://github.com/yihui/hugo-xmin" "true" "height: 400px;margin-bottom: 20px;width:99%;" "">}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
 </body>
 </html>
