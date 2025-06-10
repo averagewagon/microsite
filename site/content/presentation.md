@@ -986,8 +986,84 @@ echo "LittleFS image created at $IMAGE"
 </div>
 
 <!-- Showing the website, as it is -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">It's a blog!</h1>
+      </div>
+      <div class="image-container">
+        {{< media "pres/screenshott_blog.png" "A screenshot of the front page of the Microsite blog" "true" "height: 700px;width:99%;" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
 
-<!-- Now what? -->
+<!-- Funny how-to connect -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content" style="flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; min-height: calc(100vh - 110px); box-sizing: border-box;">
+    <div class="slide" style="width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+      <h1 style="font-size: 3em; margin-bottom: 30px; letter-spacing: 1px;">Instructions For Reading My Blog</h1>
+      <ul style="font-size: 1.5em; line-height: 1.6; width: 80%; margin-left: 300px; letter-spacing: 0.5px;">
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Come to my apartment</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Connect to the <code>brat wifi</code> network
+        <ul style="margin-top: 5px; font-size: .7em;">
+            <li>The password is <code>you want to guess</code></li>
+          </ul></li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Navigate to <code>192.168.1.181</code> in your favorite web browser</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">You're ready to start reading!</li>
+      </ul>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
 
 <!-- Making it public (OpenWRT router stuff, can access through my router's Public IP)-->
 <!-- Making it public domain from Namecheap, Advanced DNS, -->
