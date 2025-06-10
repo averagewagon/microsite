@@ -11,6 +11,7 @@ body {
    background: #1e1e1e;
    color: white;
    font-family: Arial, sans-serif;
+   letter-spacing: 0.3px;
 }
 .slide-container {
    width: 100%;
@@ -79,6 +80,16 @@ body {
    .slide {
       max-height: calc(100vh - 110px);
    }
+   Added these minimal print-specific rules
+   body {
+      letter-spacing: 0.2px !important;
+   }
+   h1, h2, h3, h4, h5, h6 {
+      letter-spacing: 0.3px !important;
+   }
+   p, li, a, span {
+      letter-spacing: 0.2px !important;
+   }
 }
 </style>
 </head>
@@ -99,6 +110,30 @@ body {
     </div>
   </div>
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon">github.com/averagewagon</a></footer>
+</div>
+
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content" style="flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; min-height: calc(100vh - 110px); box-sizing: border-box;">
+    <div class="slide" style="width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+      <h1 style="font-size: 3em; margin-bottom: 30px; letter-spacing: 1px;">Big Title Text</h1>
+      <ul style="font-size: 1.5em; line-height: 1.6; width: 80%; margin-left: 650px; letter-spacing: 0.5px;">
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">First bullet point with some text</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Second important point to make</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Third item in our list</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Final point to wrap up</li>
+      </ul>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon">github.com/averagewagon</a>
+  </footer>
 </div>
 
 <!-- 2. Two Column Layout -->

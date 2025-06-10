@@ -94,7 +94,7 @@ ul, ol {
 </head>
 <body>
 
-<!-- 1. Title Slide -->
+<!-- Title -->
 <div class="slide-container">
   <header class="slide-header">
     <h2><a href="/">Joni on Microsite</a></h2>
@@ -111,6 +111,7 @@ ul, ol {
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon">github.com/averagewagon</a></footer>
 </div>
 
+<!-- Hardware -->
 <div class="slide-container">
   <header class="slide-header">
     <h2><a href="/">Joni on Microsite</a></h2>
