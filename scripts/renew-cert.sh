@@ -38,10 +38,15 @@ else
 fi
 
 # Request a new ECDSA certificate using manual DNS challenge
+echo "Starting Certbot certificate request..."
 sudo certbot certonly --manual --preferred-challenges dns \
     --key-type ecdsa --elliptic-curve secp256r1 \
     --cert-name joni-on-micro.site \
-    -d joni-on-micro.site || error "Certbot certificate request failed."
+    -d joni-on-micro.site -v || {
+    echo "Certbot failed. Checking logs..."
+    sudo tail -n 20 /var/log/letsencrypt/letsencrypt.log
+    error "Certbot certificate request failed."
+}
 
 # Copy new certificates with date prefix (requires sudo)
 sudo cp "$CERTBOT_LIVE_DIR/fullchain.pem" "$SECRETS_DIR/$DATE_PREFIX-fullchain.pem" || error "Failed to copy fullchain.pem"
