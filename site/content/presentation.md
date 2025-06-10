@@ -111,5 +111,42 @@ ul, ol {
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon">github.com/averagewagon</a></footer>
 </div>
 
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-image-text">
+      <style>
+        .slide-image-text {display: flex; width: 100%; height: 100%; padding: 20px; box-sizing: border-box;}
+        .slide-image-text .image-container {flex: 1; display: flex; justify-content: center; align-items: center; margin-right: 20px; overflow: hidden;}
+        .slide-image-text .text-container {flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: auto;}
+        .slide-image-text img {max-width: 100%; max-height: 100%; object-fit: contain;}
+      </style>
+      <div class="image-container">
+        {{< media "pres/esp32s3_hand_crop.webp" "The ESP32-S3 dev kit, which now runs the Microsite" "true" "" "max-width: 80%">}}
+      </div>
+      <div class="text-container">
+        <h2 style="font-size: 2.5em">The Hardware - an ESP32-S3</h2>
+
+<div style="max-width: 80%">
+
+| Specification                 | ESP32-S3-DevKitC-1-N32R8V                                                                                       |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Cost (at time of writing)** | $13 ([DigiKey](https://www.digikey.com/en/products/detail/espressif-systems/ESP32-S3-DEVKITC-1U-N8R8/16162636)) |
+| **Processor**                 | 2 cores at 240 MHz                                                                                              |
+| **RAM**                       | 512 KB SRAM, 8 MB PSRAM                                                                                         |
+| **Flash Storage**             | 32 MB                                                                                                           |
+| **Wi-Fi**                     | 2.4 GHz                                                                                                         |
+
+</div>
+</div>
+</div>
+  </div>
+  <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon">github.com/averagewagon</a></footer>
+</div>
+
 </body>
 </html>

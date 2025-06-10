@@ -158,6 +158,54 @@ body {
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon">github.com/averagewagon</a></footer>
 </div>
 
+<!-- Two Images Layout -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-two-images">
+      <style>
+        .slide-two-images {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+        .slide-two-images .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-two-images .image-container:first-child {
+          margin-right: 20px;
+        }
+        .slide-two-images img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="image-container">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNjAwIDQwMCI+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=" alt="First image">
+      </div>
+      <div class="image-container">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNjAwIDQwMCI+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiNmMDAwZmYiLz48L3N2Zz4=" alt="Second image">
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon">github.com/averagewagon</a>
+  </footer>
+</div>
+
 <!-- 4. Bullet Points Only -->
 <div class="slide-container">
   <header class="slide-header">
