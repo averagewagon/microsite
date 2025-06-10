@@ -349,12 +349,64 @@ ul, ol {
 
 <p>Roughly analogous to a Power Mac G3 desktop from 1997</p>
 
-{{< media "pres/Beige_Power_Macintosh_G3_Minitower.jpg" "Power Macintosh G3<br>By fr:User:Klodo6975 - https://commons.wikimedia.org/wiki/File:Beige_Power_Macintosh_G3_Minitower.jpg<br>https://en.wikipedia.org/wiki/File:Power_Mac_G3_B%26W.jpg, Public Domain, https://en.wikipedia.org/w/index.php?curid=55165757" "true" "max-height: 160px;" "margin-right: 160px">}}
+{{< media "pres/Beige_Power_Macintosh_G3_Minitower.jpg" "Power Macintosh G3 - By fr:User:Klodo6975 - https://en.wikipedia.org/wiki/File:Power_Mac_G3_B%26W.jpg, Public Domain" "true" "max-height: 160px;" "margin-right: 160px">}}
 
 </div>
 </div>
   </div>
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
+</div>
+
+<!-- The Framework -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">The Framework - ESP-IDF</h1>
+      </div>
+      <div class="image-container">
+        {{< media "pres/espidf_full.png" "https://docs.espressif.com/projects/esp-idf/en/v5.4.1/esp32s3/index.html" "true" "max-height: 500px" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
 </div>
 
 </body>
