@@ -111,6 +111,69 @@ ul, ol {
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
 </div>
 
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-two-images">
+      <style>
+        .slide-two-images {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+        .slide-two-images .title {
+          text-align: center;
+          margin-bottom: 30px;
+          width: 100%;
+        }
+        .slide-two-images .images-container {
+          display: flex;
+          flex: 1;
+          width: 100%;
+        }
+        .slide-two-images .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-two-images .image-container:first-child {
+          margin-right: 20px;
+        }
+        .slide-two-images img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      </style>
+      <div style="font-size: .6em">
+        <h1>A Brief Overview of Webservers</h1>
+      </div>
+      <div class="images-container">
+        <div class="image-container">
+          {{< media "pres/webserver_diagram.png" "Web server architecture - By Ade56facc - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=112590977" "true" "height: 400px;margin-bottom: 20px;width:99%;" "">}}
+        </div>
+        <div class="image-container">
+          {{< media "pres/Wikimedia_Servers.jpg" "The Wikimedia server farm - By Helpameout - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=20337780" "true" "height: 400px;margin-bottom: 20px;width:99%;" "">}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
 <!-- Extra slide -->
 <div class="slide-container">
   <header class="slide-header">
