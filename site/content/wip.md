@@ -117,61 +117,17 @@ ul, ol {
     <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
     <hr/>
   </header>
-  <div class="slide-content" style=" margin-top: -40px;">
-    <div class="slide slide-code">
-      <style>
-      .slide-code {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-      }
-      .slide-code .code-container {
-        flex: 1;
-        background: #2a2a2a;
-        overflow: auto;
-        font-family: monospace;
-      }
-      .slide-code pre {
-        margin: 0;
-        white-space: pre;
-        font-size: 0.9em;
-        line-height: 1.4;
-      }
-      </style>
-      <h2 style="font-size: 1.4em; padding: 0; margin:0; margin-bottom:20px;">Example <code>esp-httpd</code> Usage</h2>
-        <div class="code-container">
-{{< highlight c >}}
-esp_err_t incoming_get_request_handler_example(httpd_req_t *req) {
-    if (strcmp(req->uri, "/") == 0) {
-        httpd_resp_set_status(req, "200 OK");
-        httpd_resp_set_type(req, "text/html");
-
-        httpd_resp_send(req, "<h1>Hello World!</h1>", HTTPD_RESP_USE_STRLEN);
-    }
-    else {
-        httpd_resp_set_status(req, "404 Not Found");
-        httpd_resp_send(req, "404 Not Found", HTTPD_RESP_USE_STRLEN);
-    }
-    return ESP_OK;
-
-}
-
-httpd_uri_t uri_handler = {  
- .uri = "/※",  
- .method = HTTP_GET,  
- .handler = incoming_get_request_handler_example,  
- .user_ctx = NULL  
-};
-
-httpd_register_uri_handler(server, &root_uri);
-
-{{< /highlight >}}
-
-</div>
-</div>
-
+  <div class="slide-content" style="flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; min-height: calc(100vh - 110px); box-sizing: border-box;">
+    <div class="slide" style="width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+      <h1 style="font-size: 3em; margin-bottom: 30px; letter-spacing: 1px;">What's Missing?</h1>
+      <ul style="font-size: 1.5em; line-height: 1.6; width: 80%; margin-left: 650px; letter-spacing: 0.5px;">
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">A filesystem</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">A way of hooking up the filesystem to requests</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">A cache, probably</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">URI parsing and HTTP status codes and MIME type handling and Content-Encoding and TLS credentials and HTTPS sessions and cache population and file compression and error handling and </li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Oh, and a blog.</li>
+      </ul>
+    </div>
   </div>
   <footer class="slide-footer">
     Teardown 2025 - Presentation<br>

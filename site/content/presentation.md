@@ -479,5 +479,60 @@ httpd_register_uri_handler(server, &root_uri);
   </footer>
 </div>
 
+<!-- Hello World -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-image-text">
+      <style>
+        .slide-image-text {display: flex; width: 100%; height: 100%; padding: 20px; box-sizing: border-box;}
+        .slide-image-text .image-container {flex: 1; display: flex; justify-content: center; align-items: center; margin-right: 20px; overflow: hidden;}
+        .slide-image-text .text-container {flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: auto;}
+        .slide-image-text img {max-width: 100%; max-height: 100%; object-fit: contain;}
+      </style>
+      <div class="image-container">
+        {{< media "pres/hello_world.png" "A screenshot of the website, served by the MCU" "true" "" "max-width: 80%">}}
+      </div>
+      <div class="text-container">
+        <h2 style="font-size: 2.5em">An MCU-Hosted Webpage!</h2>
+
+<p>We're done! It's a microcontroller web server!</p>
+
+</div>
+</div>
+  </div>
+  <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
+</div>
+
+<!-- What's missing? -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content" style="flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; min-height: calc(100vh - 110px); box-sizing: border-box;">
+    <div class="slide" style="width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+      <h1 style="font-size: 3em; margin-bottom: 30px; letter-spacing: 1px;">What's Missing?</h1>
+      <ul style="font-size: 1.5em; line-height: 1.6; width: 80%; margin-left: 650px; letter-spacing: 0.5px;">
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">A filesystem</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">A way of hooking up the filesystem to requests</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">A cache, probably</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">URI parsing and HTTP status codes and MIME type handling and Content-Encoding and TLS credentials and HTTPS sessions and cache population and file compression and error handling and filesystem image generation</li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">Oh, and a blog.</li>
+      </ul>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
 </body>
 </html>
