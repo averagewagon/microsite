@@ -111,6 +111,75 @@ ul, ol {
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
 </div>
 
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content" style=" margin-top: -40px;">
+    <div class="slide slide-code">
+      <style>
+      .slide-code {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .slide-code .code-container {
+        flex: 1;
+        background: #2a2a2a;
+        overflow: auto;
+        font-family: monospace;
+      }
+      .slide-code pre {
+        margin: 0;
+        white-space: pre;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+      </style>
+      <h2 style="font-size: 1.4em; padding: 0; margin:0; margin-bottom:20px;">Example <code>esp-httpd</code> Usage</h2>
+        <div class="code-container">
+{{< highlight c >}}
+esp_err_t incoming_get_request_handler_example(httpd_req_t *req) {
+    if (strcmp(req->uri, "/") == 0) {
+        httpd_resp_set_status(req, "200 OK");
+        httpd_resp_set_type(req, "text/html");
+
+        httpd_resp_send(req, "<h1>Hello World!</h1>", HTTPD_RESP_USE_STRLEN);
+    }
+    else {
+        httpd_resp_set_status(req, "404 Not Found");
+        httpd_resp_send(req, "404 Not Found", HTTPD_RESP_USE_STRLEN);
+    }
+    return ESP_OK;
+
+}
+
+httpd_uri_t uri_handler = {  
+ .uri = "/※",  
+ .method = HTTP_GET,  
+ .handler = incoming_get_request_handler_example,  
+ .user_ctx = NULL  
+};
+
+httpd_register_uri_handler(server, &root_uri);
+
+{{< /highlight >}}
+
+</div>
+</div>
+
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
 <!-- Extra slide -->
 <div class="slide-container">
   <header class="slide-header">
