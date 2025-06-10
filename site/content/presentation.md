@@ -579,5 +579,48 @@ fclose(f);
   <footer class="slide-footer">Teardown 2025 - Presentation<br><a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> | <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a></footer>
 </div>
 
+<!-- Cache -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content" style="flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; min-height: calc(100vh - 110px); box-sizing: border-box;">
+    <div class="slide" style="width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+      <h1 style="font-size: 3em; margin-bottom: 30px; letter-spacing: 1px;">The Cache</h1>
+      <ul style="font-size: 1.5em; line-height: 1.6; width: 80%; margin-left: 350px; letter-spacing: 0.5px;">
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">
+          Single SPIRAM memory block, about 7.5 MB
+        </li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">
+          Bidirectional allocation
+          <ul style="margin-top: 5px; font-size: .7em;">
+            <li>Metadata grows from front</li>
+            <li>File data grows from back</li>
+          </ul>
+        </li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">
+          No deallocator
+        </li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">
+          Populates with the files from LittleFS
+          <ul style="margin-top: 5px; font-size: .7em;">
+            <li>Chooses cache items using a cache-priority-list.txt I manually write</li>
+          </ul>
+        </li>
+        <li style="margin-bottom: 15px; text-align: left; letter-spacing: 0.5px;">
+          Linear performance for lookup
+        </li>
+      </ul>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
 </body>
 </html>
