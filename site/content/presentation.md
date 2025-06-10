@@ -1066,7 +1066,321 @@ echo "LittleFS image created at $IMAGE"
 </div>
 
 <!-- Making it public (OpenWRT router stuff, can access through my router's Public IP)-->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-two-images">
+      <style>
+        .slide-two-images {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+        .slide-two-images .title {
+          text-align: center;
+          margin-bottom: 30px;
+          width: 100%;
+        }
+        .slide-two-images .images-container {
+          display: flex;
+          flex: 1;
+          width: 100%;
+        }
+        .slide-two-images .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-two-images .image-container:first-child {
+          margin-right: 20px;
+        }
+        .slide-two-images img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      </style>
+      <div style="font-size: .6em">
+        <h1>Publishing my Website</h1>
+      </div>
+      <div class="images-container">
+        <div class="image-container">
+          {{< media "pres/openwrtone.webp" "My OpenWRT One router, nicknamed 'Wendy'" "true" "height: 400px;margin-bottom: 20px;width:99%;" "">}}
+        </div>
+        <div class="image-container">
+          {{< media "pres/portforward.png" "The actual documentation page on openwrt.org" "true" "height: 400px;margin-bottom: 20px;width:99%;" "">}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> | <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
 <!-- Making it public domain from Namecheap, Advanced DNS, -->
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">Now, you can read the blog online!</h1>
+      </div>
+      <div class="image-container">
+        {{< media "pres/ip.png" "A screenshot of the front page of the Microsite blog" "false" "max-height: 700px;width:99%;" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">Getting a Domain from Namecheap</h1>
+      </div>
+      <div class="image-container">
+        {{< media "pres/namecheap.jpg" "A screenshot of the front page of the Microsite blog" "false" "height: 400px;width:99%;" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">Indecision</h1>
+      </div>
+      <div class="image-container">
+        {{< media "pres/domains.png" "A screenshot of the front page of the Microsite blog" "false" "width: 500px;" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="title">
+        <h1 style="font-size: 1.6em;">Hooray!</h1>
+      </div>
+      <div class="image-container">
+        {{< media "pres/insecure.png" "A screenshot of the front page of the Microsite blog" "false" "max-height: 500px;width:99%;" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
+
+<div class="slide-container">
+  <header class="slide-header">
+    <h2><a href="/">Joni on Microsite</a></h2>
+    <span class="subtitle"><a href="/about-the-microsite">This website runs on an MCU</a></span>
+    <hr/>
+  </header>
+  <div class="slide-content">
+    <div class="slide slide-single-image">
+      <style>
+        .slide-single-image {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .slide-single-image .title {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .slide-single-image .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+        }
+        .slide-single-image img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+        }
+      </style>
+      <div class="image-container">
+        {{< media "pres/sadinsecure.png" "A screenshot of the front page of the Microsite blog" "false" "max-height: 500px;width:99%;" "">}}
+      </div>
+    </div>
+  </div>
+  <footer class="slide-footer">
+    Teardown 2025 - Presentation<br>
+    <a href="https://joni-on-micro.site">joni-on-micro.site</a> |
+    <a href="mailto:hendrickson@joni.site">hendrickson@joni.site</a> |
+    <a href="https://github.com/averagewagon/microsite">github.com/averagewagon/microsite</a>
+  </footer>
+</div>
 <!-- Am I done NOW? -->
 <!-- Lock icon -->
 <!-- LetsEncrypt and cert-loading directly into the flash -->
