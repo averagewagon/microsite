@@ -26,7 +26,9 @@ params:
     "Joni Hendrickson's MCU-hosted site about tiny software, tiny hardware, and
     tiny robots."
   footer:
-    "&copy; Jonathan Hendrickson 2024 -- {Year}<br>
+    "&copy; Jonathan Hendrickson<br>All content licensed under <a
+    href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA 4.0</a>
+    unless otherwise noted.<br>
     [hendrickson@joni.site](mailto:hendrickson@joni.site)<br>
     [GitHub](https://github.com/averagewagon) |
     [LinkedIn](https://www.linkedin.com/in/jonathan-r-hendrickson/) |
